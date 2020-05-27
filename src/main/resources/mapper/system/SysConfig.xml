@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.system.SysConfigDao">
+    <resultMap type="com.example.demo.entity.system.SysConfigDO" id="commonMap">
+        <result column="config_key" property="configKey"/>
+        <result column="config_value" property="configValue"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_config
+    </sql>
+
+    <sql id="columns">
+        config_key,
+        config_value,
+        create_time,
+        update_time
+    </sql>
+
+
+    <sql id="entities">
+        #{configKey},
+        #{configValue},
+        #{createTime},
+        #{updateTime}
+    </sql>
+
+
+    <insert id="save">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+        <include refid="tableName"/>
+        <set>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="configValue != null and configValue != ''">
+                config_value = #{configValue}
+            </if>
+        </set>
+        WHERE
+        config_key = #{configKey}
+    </update>
+
+    <select id="getByKey" resultMap="commonMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        config_key = #{configKey}
+    </select>
+
+    <select id="isExistByKey" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        configKey = #{configKey}
+        )
+    </select>
+
+</mapper>

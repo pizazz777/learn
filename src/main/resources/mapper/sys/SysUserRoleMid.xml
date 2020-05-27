@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysUserRoleMidDao">
+    <resultMap type="com.example.demo.entity.sys.SysUserRoleMidDO" id="commonMap">
+        <result column="create_time" property="createTime"/>
+        <result column="role_id" property="roleId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_user_role_mid
+    </sql>
+
+    <sql id="columns">
+        create_time,
+        role_id,
+        user_id
+    </sql>
+
+
+    <sql id="entities">
+        #{createTime},
+        #{roleId},
+        #{userId}
+    </sql>
+
+
+    <insert id="save" >
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.roleId != null and query.roleId > 0 ">
+                    AND
+                    role_id = #{query.roleId}
+                </if>
+                <if test="query.userId != null and query.userId > 0 ">
+                    AND
+                    user_id = #{query.userId}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

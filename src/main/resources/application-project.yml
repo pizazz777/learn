@@ -1,0 +1,59 @@
+project:
+  # 项目包路径
+  project-package: com.example.demo
+  # 项目名称
+  project-name: 这是项目名称
+  # 是否开启swagger
+  enable-swagger: true
+  # 项目描述
+  description: 这是描述
+  # 版本
+  version: 1.0.1
+  # 服务条款
+  terms-of-service-url: http://www.baidu.com
+  # 联系方式
+  contact-name: pizazz
+  contact-url: 18.179.14.91
+  contact-email: pizazz777@gmail.com
+  # 是否被其他服务器反向代理
+  reverse-proxy-by-other-server: true
+
+  auth:
+    # 测试模式
+    test-model: true
+    # 管理员账号密码
+    manager-name:
+    manager-password:
+    # 是否是后台管理系统
+    background-manage-system: true
+    # 登录方式
+    login-type-enum-list:
+      - account
+      - email
+      - mobile
+    # 开启缓存
+    caching-enabled: true
+    # 开启授权缓存
+    authorization-caching-enabled: true
+    # 开启认证缓存
+    authentication-caching-enabled: true
+  jwt:
+    # JWT 接收方
+    audience:
+    # JWT 签发方
+    issuer:
+    # JWT 签名过期时间(毫秒)
+    # jwt-time-to-live: 3600000L
+  file:
+    # 上传文件系统目录
+    upload-file-dir: D:/resource/f
+    # 上传文件访问地址前缀
+    upload-file-url: Http://127.0.0.1:9000/f
+  log:
+    # 日志展示时是否获取用户信息
+    show-user-info: true
+    # 是否记录到数据库
+    write-to-database: true
+  system:
+    # 缓存key前缀
+    prefix-cache-name: learn:conf

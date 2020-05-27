@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.log.ApiLogDao">
+    <resultMap type="com.example.demo.entity.log.ApiLogDO" id="commonMap">
+        <result column="id" property="id"/>
+        <result column="url" property="url"/>
+        <result column="method" property="method"/>
+        <result column="param" property="param"/>
+        <result column="response" property="response"/>
+        <result column="description" property="description"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <sql id="tableName">
+        api_log
+    </sql>
+
+    <sql id="columns">
+        url,
+        method,
+        param,
+        response,
+        description,
+        create_time
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{url},
+        #{method},
+        #{param},
+        #{response},
+        #{description},
+        #{createTime}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.url != null">
+                    AND
+                    url = #{query.url}
+                </if>
+                <if test="query.method != null">
+                    AND
+                    method = #{query.method}
+                </if>
+                <if test="query.startTime != null">
+                    AND
+                    create_time > #{query.startTime}
+                </if>
+                <if test="query.endTime != null">
+                    AND
+                    create_time <![CDATA[<]]> #{query.endTime}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

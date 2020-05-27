@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.customer.CustomerDao">
+    <resultMap type="com.example.demo.entity.customer.CustomerDO" id="commonMap">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="mobile" property="mobile"/>
+        <result column="sex" property="sex"/>
+        <result column="remark" property="remark"/>
+        <result column="belong_to_user_id" property="belongToUserId"/>
+        <result column="level" property="level"/>
+        <result column="source" property="source"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_user_id" property="createUserId"/>
+    </resultMap>
+
+    <sql id="tableName">
+        customer
+    </sql>
+
+    <sql id="columns">
+        username,
+        mobile,
+        sex,
+        remark,
+        belong_to_user_id,
+        level,
+        source,
+        create_time,
+        update_time,
+        create_user_id
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{username},
+        #{mobile},
+        #{sex},
+        #{remark},
+        #{belongToUserId},
+        #{level},
+        #{source},
+        #{createTime},
+        #{updateTime},
+        #{createUserId}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.customer.CustomerDO">
+        UPDATE
+        <include refid="tableName"/>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="belongToUserId != null">
+                belong_to_user_id = #{belongToUserId},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="source != null">
+                source = #{source},
+            </if>
+            update_time = #{updateTime},
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="isExistById" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+        )
+    </select>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.id != null and query.id > 0 ">
+                    AND
+                    id = #{query.id}
+                </if>
+                <if test="query.username != null">
+                    AND
+                    username = #{query.username}
+                </if>
+                <if test="query.mobile != null">
+                    AND
+                    mobile = #{query.mobile}
+                </if>
+                <if test="query.sex != null and query.sex > 0 ">
+                    AND
+                    sex = #{query.sex}
+                </if>
+                <if test="query.remark != null">
+                    AND
+                    remark = #{query.remark}
+                </if>
+                <if test="query.belongToUserId != null and query.belongToUserId > 0 ">
+                    AND
+                    belong_to_user_id = #{query.belongToUserId}
+                </if>
+                <if test="query.level != null and query.level > 0 ">
+                    AND
+                    level = #{query.level}
+                </if>
+                <if test="query.source != null and query.source > 0 ">
+                    AND
+                    source = #{query.source}
+                </if>
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.updateTime != null">
+                    AND
+                    update_time = #{query.updateTime}
+                </if>
+                <if test="query.createUserId != null and query.createUserId > 0 ">
+                    AND
+                    create_user_id = #{query.createUserId}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

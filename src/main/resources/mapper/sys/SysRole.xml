@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysRoleDao">
+    <resultMap type="com.example.demo.entity.sys.SysRoleDO" id="commonMap">
+        <result column="create_time" property="createTime"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="status" property="status"/>
+        <result column="title" property="title"/>
+        <result column="type" property="type"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_role
+    </sql>
+
+    <sql id="columns">
+        create_time,
+        name,
+        remark,
+        status,
+        title,
+        type,
+        update_time
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{createTime},
+        #{name},
+        #{remark},
+        #{status},
+        #{title},
+        #{type},
+        #{updateTime}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.sys.SysRoleDO">
+        UPDATE
+        <include refid="tableName"/>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            update_time = #{updateTime}
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="isExistById" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+        )
+    </select>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="listRoleNameByUserId" resultType="java.lang.String">
+        SELECT DISTINCT
+        t1.name
+        FROM
+        <include refid="tableName"/> t1
+        LEFT JOIN
+        sys_user_role_mid t2
+        ON
+        t1.id = t2.role_id
+        WHERE
+        t2.user_id = #{userId}
+        ORDER BY
+        CONVERT(t1.name USING GBK) ASC
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.id != null and query.id > 0 ">
+                    AND
+                    id = #{query.id}
+                </if>
+                <if test="query.name != null">
+                    AND
+                    name = #{query.name}
+                </if>
+                <if test="query.remark != null">
+                    AND
+                    remark = #{query.remark}
+                </if>
+                <if test="query.status != null and query.status > 0 ">
+                    AND
+                    status = #{query.status}
+                </if>
+                <if test="query.title != null">
+                    AND
+                    title = #{query.title}
+                </if>
+                <if test="query.type != null and query.type > 0 ">
+                    AND
+                    type = #{query.type}
+                </if>
+                <if test="query.updateTime != null">
+                    AND
+                    update_time = #{query.updateTime}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

@@ -1,0 +1,148 @@
+server:
+  port: 9000
+  # 请求头最大大小
+  max-http-header-size: 128KB
+  tomcat:
+    # tomcat 最大线程数
+    max-threads: 1000
+    # 请求体最大大小
+    max-swallow-size: 10MB
+    # 最大连接数
+    max-connections: 20000
+  jetty:
+    connection-idle-timeout: 60000
+spring:
+  data:
+    elasticsearch:
+      cluster-name:
+      cluster-nodes:
+  # 引入其他yml
+  profiles:
+#    active: @profiles.active@
+    active: project
+  # redis
+  redis:
+    host: 127.0.0.1
+    database: 7
+    password: 123456
+    port: 6379
+    # 连接超时时间(毫秒)
+    timeout: 2000
+    jedis:
+      pool:
+        max-active: 10
+        max-idle: 10
+  # 数据库
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/learn?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: test
+    password: 123456
+    druid:
+      # 配置 connection-properties，启用加密，配置公钥。
+      # connection-properties: clientEncoding=UTF-8;config.decrypt=false;config.decrypt.key=${submission.druid-public-key}
+      #统计stat,sql防火墙wall,config启用加密等
+      filter:
+        config:
+          # 启动ConfigFilter
+          enabled: true
+        stat:
+          enabled: true
+          log-slow-sql: true
+        wall:
+          ## 不允许的语句 ##
+          config:
+            alter-table-allow: false
+            create-table-allow: false
+            drop-table-allow: false
+            intersect-allow: false
+            # MINUS INTERSECT
+            minus-allow: false
+            # SELECT *
+            select-all-column-allow: true
+            truncate-allow: false
+          enabled: true
+          log-violation: true
+          throw-exception: false
+      filters: stat,wall,config
+      #初始化连接大小
+      initial-size: 10
+      #最大连接数
+      max-active: 100
+      #获取连接最大等待时间
+      max-wait: 10000
+      #最小空闲
+      min-idle: 3
+      #自动清除无用连接
+      remove-abandoned: true
+      #清除无用连接的等待时间
+      remove-abandoned-timeout: 1800
+      stat-view-servlet:
+        login-password: admin
+        login-username: admin
+        reset-enable: false
+      time-between-eviction-runs-millis: 60000
+  # task
+  task:
+    scheduling:
+      pool:
+        size: 10
+      thread-name-prefix: scheduling-
+  activiti:
+    # 建表规则
+    # false：默认值。activiti在启动时,会对比数据库表中保存的版本,如果没有表或者版本不匹配,将抛出异常。
+    # true：activiti会对数据库中所有表进行更新操作。如果表不存在,则自动创建。
+    # create_drop：在activiti启动时创建表,在关闭时删除表(必须手动关闭引擎，才能删除表)。
+    # drop-create：在activiti启动时删除原来的旧表,然后在创建新表(不需要手动关闭引擎)。
+    database-schema-update: true
+    # 校验流程文件,默认校验resources下的processes文件夹里的流程文件 true:开启(默认),false:关闭
+    check-process-definitions: false
+    #配置日志级别  有4个级别  none activity audit（默认） full
+    history-level: full
+    # 自定义流程文件位置
+  #    process-definition-location-prefix:
+#    process-definition-location-suffixes:
+  # 禁用 jpa 视图
+  jpa:
+    open-in-view: false
+  servlet:
+    multipart:
+      # 上传大小限制
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+      file-size-threshold: 0
+  mvc:
+    # 设定静态文件路径，js,css等
+    static-path-pattern: /static/**
+  cache:
+    type: redis
+  aop:
+    auto: true
+    proxy-target-class: true
+# page helper
+pagehelper:
+  params: pageNum=page;pageSize=pageSize
+  # 传入页数大于总页数,修改传入页数为总页数
+  reasonable: false
+mybatis:
+  configuration:
+    # 关闭侵入式延迟加载,字段按需加载
+    aggressive-lazy-loading: false
+    # 开启延迟加载,提高性能
+    lazy-loading-enabled: true
+    # 下划线与驼峰映射
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*/*.xml
+shiro:
+  enabled: false
+  web:
+    enabled: false
+logging:
+  level:
+    # 指定包下所有Class以debug级别输出
+    com:
+      example: debug
+    # root日志以info级别输出
+    root: info
+  file:
+    path: log/logs

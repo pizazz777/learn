@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysPermissionDao">
+    <resultMap type="com.example.demo.entity.sys.SysPermissionDO" id="commonMap">
+        <result column="create_time" property="createTime"/>
+        <result column="description" property="description"/>
+        <result column="icon" property="icon"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="p_title" property="pTitle"/>
+        <result column="pid" property="pid"/>
+        <result column="seq" property="seq"/>
+        <result column="status" property="status"/>
+        <result column="title" property="title"/>
+        <result column="type" property="type"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="url" property="url"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_permission
+    </sql>
+
+    <sql id="columns">
+        create_time,
+        description,
+        icon,
+        name,
+        p_title,
+        pid,
+        seq,
+        status,
+        title,
+        type,
+        update_time,
+        url
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{createTime},
+        #{description},
+        #{icon},
+        #{name},
+        #{pTitle},
+        #{pid},
+        #{seq},
+        #{status},
+        #{title},
+        #{type},
+        #{updateTime},
+        #{url}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.sys.SysPermissionDO">
+        UPDATE
+        <include refid="tableName"/>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="icon != null and icon != ''">
+                icon = #{icon},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="pTitle != null and pTitle != ''">
+                p_title = #{pTitle},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="seq != null">
+                seq = #{seq},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            update_time = #{updateTime},
+            <if test="url != null and url != ''">
+                url = #{url}
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="isExistById" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+        )
+    </select>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="listPermissionStringByUserId" resultType="java.lang.String">
+        SELECT DISTINCT
+        t1.permission
+        FROM
+        <include refid="tableName"/> t1
+        LEFT JOIN
+        sys_role_permission_mid t2
+        ON
+        t1.id = t2.permission_id
+        LEFT JOIN
+        sys_user_role_mid t3
+        ON
+        t2.role_id = t3.role_id
+        WHERE
+        t3.user_id = #{userId}
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.description != null">
+                    AND
+                    description = #{query.description}
+                </if>
+                <if test="query.icon != null">
+                    AND
+                    icon = #{query.icon}
+                </if>
+                <if test="query.id != null and query.id > 0 ">
+                    AND
+                    id = #{query.id}
+                </if>
+                <if test="query.name != null">
+                    AND
+                    name = #{query.name}
+                </if>
+                <if test="query.pTitle != null">
+                    AND
+                    p_title = #{query.pTitle}
+                </if>
+                <if test="query.pid != null and query.pid > 0 ">
+                    AND
+                    pid = #{query.pid}
+                </if>
+                <if test="query.seq != null and query.seq > 0 ">
+                    AND
+                    seq = #{query.seq}
+                </if>
+                <if test="query.status != null and query.status > 0 ">
+                    AND
+                    status = #{query.status}
+                </if>
+                <if test="query.title != null">
+                    AND
+                    title = #{query.title}
+                </if>
+                <if test="query.type != null and query.type > 0 ">
+                    AND
+                    type = #{query.type}
+                </if>
+                <if test="query.updateTime != null">
+                    AND
+                    update_time = #{query.updateTime}
+                </if>
+                <if test="query.url != null">
+                    AND
+                    url = #{query.url}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>
