@@ -1,6 +1,4 @@
-package com.example.demo.exception;
-
-import com.example.demo.component.exception.ServiceException;
+package com.example.demo.component.exception;
 
 /**
  * @author sqm

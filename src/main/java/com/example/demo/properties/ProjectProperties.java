@@ -2,8 +2,6 @@ package com.example.demo.properties;
 
 import com.example.demo.constant.sys.LoginTypeEnum;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +9,7 @@ import org.springframework.stereotype.Component;
  * @author Administrator
  * @date 2020-04-28 16:31
  */
-@Getter
-@Setter
+@Data
 @Component
 @ConfigurationProperties(prefix = "project")
 public class ProjectProperties {

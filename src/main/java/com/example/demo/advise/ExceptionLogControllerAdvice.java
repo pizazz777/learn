@@ -3,7 +3,7 @@ package com.example.demo.advise;
 import com.example.demo.component.exception.NoBackgroundAuthException;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
-import com.example.demo.exception.IllegalParamException;
+import com.example.demo.component.exception.IllegalParamException;
 import com.example.demo.manager.log.ExceptionLogRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

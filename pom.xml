@@ -37,6 +37,7 @@
         <commons-lang3.version>3.9</commons-lang3.version>
         <commons-pool2.version>2.7.0</commons-pool2.version>
         <commons-codec.version>1.14</commons-codec.version>
+        <elasticsearch.version>7.6.0</elasticsearch.version>
     </properties>
 
     <dependencies>
@@ -54,7 +55,7 @@
             <optional>false</optional>
         </dependency>
 
-        <!-- test -->
+        <!-- elasticsearch -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -122,11 +123,6 @@
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
 
-        <!--data-elasticsearch-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
         <!-- ↑↑↑ spring boot end ↑↑↑ -->
 
         <!-- mysql -->
@@ -139,6 +135,33 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- elasticsearch-rest-high-level-client -->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>${elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>${elasticsearch.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.elasticsearch</groupId>
+                    <artifactId>elasticsearch</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.elasticsearch.client</groupId>
+                    <artifactId>elasticsearch-rest-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- shiro -->

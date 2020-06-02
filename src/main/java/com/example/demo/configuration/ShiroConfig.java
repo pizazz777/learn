@@ -66,7 +66,7 @@ public class ShiroConfig {
         // 注意此处使用的是LinkedHashMap，是有顺序的，shiro会按从上到下的顺序匹配验证，匹配了就不再继续验证
         // 所以上面的url要苛刻，宽松的url要放在下面，尤其是"/**"要放到最下面，如果放前面的话其后的验证规则就没作用了。
         Map<String, String> filterChainDefinitionMap = Maps.newLinkedHashMap();
-//        filterChainDefinitionMap.put("/test/show", "anon");
+//        filterChainDefinitionMap.put("/elasticsearch/show", "anon");
         // swagger
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");

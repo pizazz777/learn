@@ -3,8 +3,6 @@ package com.example.demo.properties;
 import com.example.demo.constant.sys.LoginTypeEnum;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +12,7 @@ import java.util.List;
  * @author Administrator
  * @date 2020-04-29 15:19
  */
-@Getter
-@Setter
+@Data
 @Component
 @ConfigurationProperties(prefix = "project.auth")
 public class AuthProperties {

@@ -1,8 +1,6 @@
 package com.example.demo.properties;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +9,7 @@ import org.springframework.stereotype.Component;
  * @date 2020-05-18 13:37
  * @description: 用于获取系统配置
  */
-@Getter
-@Setter
+@Data
 @Component
 @ConfigurationProperties(prefix = "project.system")
 public class SystemProperties {
