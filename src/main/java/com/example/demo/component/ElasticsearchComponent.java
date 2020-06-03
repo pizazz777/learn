@@ -82,14 +82,14 @@ public interface ElasticsearchComponent {
     Boolean deleteDoc(String index, String docId) throws IOException;
 
     /**
-     * 查询
+     * 组合查询
      *
      * @param index 索引
-     * @param field 字段id
-     * @param key   要搜索的关键字
+     * @param field 字段名
+     * @param value 要搜索的关键字
      * @param from  开始的偏移量
      * @param size  大小
      */
-    SearchResponse search(String index, String field, String key, Integer from, Integer size) throws IOException;
+    SearchResponse search(String index, String field, String value, Integer from, Integer size) throws IOException;
 
 }

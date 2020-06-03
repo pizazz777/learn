@@ -3,13 +3,10 @@ package com.example.demo.controller.elasticsearch;
 import com.example.demo.annotation.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
-import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 import static com.example.demo.constant.log.ActionLogEnum.GET;
 import static com.example.demo.constant.log.ActionLogEnum.SAVE;
@@ -45,15 +42,15 @@ public class ElasticsearchController {
     @PostMapping(value = "/add_doc")
     @Action(type = SAVE, desc = ADD_DOC)
     public String addDoc(@RequestParam("index") String index, @RequestParam("docId") String docId) throws ServiceException {
-        CustomerDO customer = CustomerDO.builder()
-                .id(2L)
-                .username("张三")
-                .mobile("18581598259")
-                .level(3)
-                .sex(1)
-                .createTime(LocalDateTime.now())
-                .build();
-        ResResult result = elasticsearchService.addDoc(index, docId, customer);
+//        CustomerDO customer = CustomerDO.builder()
+//                .id(2L)
+//                .username("张三")
+//                .mobile("18581598259")
+//                .level(3)
+//                .sex(1)
+//                .createTime(LocalDateTime.now())
+//                .build();
+        ResResult result = elasticsearchService.addDoc(index, docId, "京东618");
         return result.getStr(ADD_DOC);
     }
 
@@ -75,10 +72,10 @@ public class ElasticsearchController {
     @Action(type = GET, desc = SEARCH)
     public String search(@RequestParam("index") String index,
                          @RequestParam("field") String field,
-                         @RequestParam("key") String key,
+                         @RequestParam("value") String value,
                          @RequestParam("from") Integer from,
                          @RequestParam("size") Integer size) throws ServiceException {
-        ResResult result = elasticsearchService.search(index, field, key, from, size);
+        ResResult result = elasticsearchService.search(index, field, value, from, size);
         return result.getStr(SEARCH);
     }
 

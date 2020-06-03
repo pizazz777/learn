@@ -1,6 +1,7 @@
 package com.example.demo.component;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -17,23 +18,18 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Administrator
@@ -115,12 +111,13 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     @Override
     public Boolean addDoc(String index, String docId, Object object) throws IOException {
         IndexRequest request = new IndexRequest(index);
-        request.id(docId);
+        if (StringUtils.isNotBlank(docId)) {
+            request.id(docId);
+        }
         request.timeout(TimeValue.timeValueSeconds(1));
-        request.timeout("1s");
         request.source(JSON.toJSONString(object), XContentType.JSON);
-        IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
-        RestStatus Status = indexResponse.status();
+        IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+        RestStatus Status = response.status();
         return Status == RestStatus.OK || Status == RestStatus.CREATED;
     }
 
@@ -149,10 +146,8 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         UpdateRequest request = new UpdateRequest(index, docId);
         request.doc(JSON.toJSONString(t));
         request.timeout(TimeValue.timeValueSeconds(1));
-        request.timeout("1s");
-        UpdateResponse updateResponse = client.update(
-                request, RequestOptions.DEFAULT);
-        return updateResponse.status() == RestStatus.OK;
+        UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
+        return response.status() == RestStatus.OK;
     }
 
     /**
@@ -165,42 +160,54 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     @Override
     public Boolean deleteDoc(String index, String docId) throws IOException {
         DeleteRequest request = new DeleteRequest(index, docId);
-        //timeout
-        request.timeout(TimeValue.timeValueSeconds(1));
-        DeleteResponse deleteResponse = client.delete(request, RequestOptions.DEFAULT);
-        return deleteResponse.status() == RestStatus.OK;
+        DeleteResponse response = client.delete(request, RequestOptions.DEFAULT);
+        return response.status() == RestStatus.OK;
     }
 
     /**
-     * 查询
+     * 组合查询
      *
      * @param index 索引
-     * @param field 字段id
-     * @param key   要搜索的关键字
+     * @param field 字段名
+     * @param value 要搜索的关键字
      * @param from  开始的偏移量
      * @param size  大小
      */
     @Override
-    public SearchResponse search(String index, String field, String key, Integer from, Integer size) throws IOException {
-        // 检索请求
-        SearchRequest searchRequest = new SearchRequest(index);
+    public SearchResponse search(String index, String field, String value, Integer from, Integer size) throws IOException {
         // 检索构建
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        // 从多少条开始
-        sourceBuilder.from(from);
-        // 返回多少条数据
-        sourceBuilder.size(size);
-        // 排序
-        sourceBuilder.sort(new FieldSortBuilder("id").order(SortOrder.DESC));
+        // 拼装查询条件
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        TermQueryBuilder query = QueryBuilders.termQuery("level", 3);
-        // 模糊匹配
-        MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery(field, key).fuzziness(Fuzziness.AUTO);
-        boolQueryBuilder.must(query).must(queryBuilder);
-        sourceBuilder.query(boolQueryBuilder);
-        // 最大搜索时间
-//        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        searchRequest.source(sourceBuilder);
-        return client.search(searchRequest, RequestOptions.DEFAULT);
+        // 精准查询
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery(field, value);
+        // 关键词查询
+        // MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(field, value);
+        // 模糊查询
+        // FuzzyQueryBuilder fuzzyQueryBuilder = QueryBuilders.fuzzyQuery("", "").fuzziness(Fuzziness.AUTO);
+        // 前缀查询
+        // PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery("", "");
+        // 范围查询 左右闭合
+        // RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("");
+        // rangeQueryBuilder.gte("");
+        // rangeQueryBuilder.lte("");
+
+        boolQueryBuilder
+//                .must(matchQueryBuilder)
+                .must(termQueryBuilder);
+        // 分页+排序+搜索时长
+        sourceBuilder.query(boolQueryBuilder)
+//                .sort(new FieldSortBuilder("id").order(SortOrder.DESC))
+                .from(from)
+                .size(size)
+                .timeout(TimeValue.timeValueSeconds(5));
+        // 第一个数组是需要获取的字段,第二个是过滤的字段,默认获取全部
+        // sourceBuilder.fetchSource(new String[] {"username","id","level"}, new String[] {"createTime"});
+
+        // 查询请求
+        SearchRequest request = new SearchRequest(index);
+        request.source(sourceBuilder);
+
+        return client.search(request, RequestOptions.DEFAULT);
     }
 }

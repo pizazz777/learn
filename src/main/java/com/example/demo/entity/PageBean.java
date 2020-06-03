@@ -14,15 +14,15 @@ public class PageBean {
     /**
      * 默认页码
      */
-    public static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_PAGE = 1;
     /**
      * 默认每页条数
      */
-    public static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int DEFAULT_PAGE_SIZE = 10;
     /**
      * 最少每页条数
      */
-    public static final int MIN_PAGE_SIZE = 1;
+    private static final int MIN_PAGE_SIZE = 1;
 
     /**
      * 第几页
