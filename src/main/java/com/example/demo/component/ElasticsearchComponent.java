@@ -116,4 +116,7 @@ public interface ElasticsearchComponent {
      */
     <T> List<T> search(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException;
 
+
+    <T> List<ElasticsearchHitResult<T>> searchWithHighlight(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException;
+
 }

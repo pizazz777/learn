@@ -2,6 +2,7 @@ package com.example.demo.service.elasticsearch.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.component.ElasticsearchComponent;
+import com.example.demo.component.ElasticsearchHitResult;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
@@ -9,15 +10,11 @@ import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
 import com.example.demo.util.container.ContainerUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Administrator
@@ -228,8 +225,8 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult search(String index, String field, String value, Integer from, Integer size) throws ServiceException {
         try {
-//            SearchResponse search = elasticsearchComponent.search(index, field, value, from, size);
-            List<CustomerDO> list = elasticsearchComponent.search(index, field, value, from, size, CustomerDO.class);
+//            SearchResponse searchWithHighlight = elasticsearchComponent.searchWithHighlight(index, field, value, from, size);
+            List<ElasticsearchHitResult<CustomerDO>> list = elasticsearchComponent.searchWithHighlight(index, field, value, from, size, CustomerDO.class);
             return ContainerUtil.isNotEmpty(list) ? ResResult.success(list) : ResResult.fail(ResCode.NOT_FOUND);
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());

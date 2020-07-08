@@ -20,9 +20,9 @@ spring:
   elasticsearch:
     # ES7.x版本中将弃用TransportClient客户端,且在8.0版本中完全移除它
     # 使用需要注意版本对应 https://www.elastic.co/cn/support/matrix#matrix_jvm
-    # 本项目ES的版本是7.6,使用High Level Rest Client操作ES
+    # 本项目ES的版本是7.6.0,使用High Level Rest Client操作ES
     rest:
-      # 地址
+      # 地址 默认http://localhost:9200
       uris:
         - http://localhost:9200
       # - http://localhost:9201

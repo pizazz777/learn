@@ -3,6 +3,7 @@ package com.example.demo.component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -20,6 +21,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.*;
@@ -27,12 +29,16 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Administrator
@@ -42,7 +48,7 @@ import java.util.List;
 public class ElasticsearchComponentImpl implements ElasticsearchComponent {
 
     /**
-     * {@link org.springframework.boot.autoconfigure.elasticsearch.rest RestClientConfigurations.RestHighLevelClientConfiguration}
+     * {@link org.springframework.boot.autoconfigure.elasticsearch.rest.RestClientConfigurations.RestHighLevelClientConfiguration#elasticsearchRestHighLevelClient}
      */
     private RestHighLevelClient client;
 
@@ -205,30 +211,64 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     public SearchResponse search(String index, String field, String value, Integer from, Integer size) throws IOException {
         // 检索构建
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        // 拼装查询条件,复合查询
+        // 拼装查询条件,合并查询
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        // 通配符查询,?匹配单个字符,*匹配多个字符
+        WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(field, value);
+        // 词条查询 注:会对传入的文本原封不动地(不分词)去查询,所以使用该查询需要在建立索引的时候没有使用分词器(no_analyze)
+        // TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("remark", "过期手机号码".toLowerCase());
+        // 匹配查询,会对传入的文本进行分词处理后再去查询,部分命中的结果也会按照评分由高到底显示出来
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("remark", "茅台");
+        // 短语查询,会先进行分词,然后文档需要包含分词后的所有词并且还要保持这些分词的相对顺序和文档中的一致
+        // MatchPhrasePrefixQueryBuilder matchPhrasePrefixQueryBuilder = QueryBuilders.matchPhrasePrefixQuery(field, value);
         // 匹配所有
         // MatchAllQueryBuilder matchAllQueryBuilder = QueryBuilders.matchAllQuery();
-        // 精准查询
-        // TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery(field, value);
-        // 模糊查询,?匹配单个字符,*匹配多个字符
-        WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(field, value);
         // id查询
         // IdsQueryBuilder idsQueryBuilder = QueryBuilders.idsQuery();
         // idsQueryBuilder.addIds("id1", "id2", "id3");
-        // 匹配单个字段,匹配字段名为field,值为value的文档
-        // MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(field, value);
-        // 匹配多个字段,匹配字段名为field1,filed2,值为value的文档
+        // 多字段匹配查询,匹配字段名为field1,filed2,值为value的文档
         // MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(value, filed1, filed2);
         // 模糊查询,不能用通配符
-        // FuzzyQueryBuilder fuzzyQueryBuilder = QueryBuilders.fuzzyQuery("", "").fuzziness(Fuzziness.AUTO);
+        // FuzzyQueryBuilder fuzzyQueryBuilder = QueryBuilders.fuzzyQuery(field, value).fuzziness(Fuzziness.AUTO);
         // 前缀查询
-        // PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery("", "");
+        // PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery(field, value);
         // 范围查询 左右闭合
-        // RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("");
-        // rangeQueryBuilder.gte("");
-        // rangeQueryBuilder.lte("");
-//        MoreLikeThisQueryBuilder moreLikeThisQueryBuilder = QueryBuilders.moreLikeThisQuery(new String[]{}, new String[]{});
+        // RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("filed");
+        // rangeQueryBuilder.gte("max");
+        // rangeQueryBuilder.lte("min");
+        // 查询解析查询字符串
+        // QueryStringQueryBuilder queryStringQueryBuilder = QueryBuilders.queryStringQuery("");
+        // 跨度查询
+        // SpanFirstQueryBuilder spanFirstQueryBuilder = QueryBuilders.spanFirstQuery(QueryBuilders.spanTermQuery(field, value), 3000);
+        // 筛选查询
+        // SpanNearQueryBuilder spanNearQueryBuilder = QueryBuilders.spanNearQuery(QueryBuilders.spanTermQuery(field, value), 2000).addClause(QueryBuilders.spanTermQuery(field, value)).inOrder(false);
+        // 筛选查询 参数1: 匹配的字段的值, 参数2: 排除的字段的值
+        // SpanNotQueryBuilder spanNotQueryBuilder = QueryBuilders.spanNotQuery(QueryBuilders.spanTermQuery(field, value), QueryBuilders.spanTermQuery(field, value));
+        // 正则查询, value可以是正则表达式
+        // RegexpQueryBuilder regexpQueryBuilder = QueryBuilders.regexpQuery(field, value);
+        // 实现基于内容推荐,支持实现一句话相似文章查询
+        // fields: 要匹配的字段,不填默认_all, likeTexts: 匹配的文本, likeItems: 明细
+        // MoreLikeThisQueryBuilder moreLikeThisQueryBuilder = QueryBuilders.moreLikeThisQuery(new String[]{"field1", "field2"}, new String[]{"要查询的文本"}, null);
+        // 一篇文档中一个词语至少出现次数,小于这个值的词将被忽略,默认值2
+        // moreLikeThisQueryBuilder.minTermFreq(2);
+        // 一条查询语句中允许最多查询词语的个数,默认是25
+        // moreLikeThisQueryBuilder.maxQueryTerms(25);
+        // 停止词,匹配时会忽略停止词
+        // moreLikeThisQueryBuilder.stopWords("stop");
+        // 一个词语最少在多少篇文档中出现,小于这个值的词会将被忽略,默认5
+        // moreLikeThisQueryBuilder.minDocFreq(5);
+        // 一个词语最多在多少篇文档中出现,大于这个值的词会将被忽略,默认是int最大值
+        // moreLikeThisQueryBuilder.maxDocFreq(Integer.MAX_VALUE);
+        // 最小的词语长度,默认是0
+        // moreLikeThisQueryBuilder.minWordLength(0);
+        // 最多的词语长度,默认是0
+        // moreLikeThisQueryBuilder.maxWordLength(0);
+        // 设置词语权重,默认是1
+        // moreLikeThisQueryBuilder.boostTerms(1);
+        // 设置查询权重,默认是1
+        // moreLikeThisQueryBuilder.boost(1.0f);
+        // 设置使用的分词器,使用该字段指定的分词器
+        // moreLikeThisQueryBuilder.analyzer("分词器");
 
         // 对子查询的结果做union, score沿用子查询的最大值, 广泛用于multi-field查询
         // DisMaxQueryBuilder disMaxQueryBuilder = QueryBuilders.disMaxQuery();
@@ -236,28 +276,41 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
 
         // 组合查询
         boolQueryBuilder
-                // should == or
+                // must=and 代表返回的文档必须满足must子句的条件,会参与计算分值
+                .must(matchQueryBuilder)
+                // mustNot=not 代表必须不满足子句的条件
+                // .mustNot(termQueryBuilder)
+                // filter=and 代表返回的文档必须满足filter子句的条件,但不会参与计算分值
+                // .filter(rangeQueryBuilder)
+                // should=or 代表返回的文档可能满足should子句的条件,也可能不满足,有多个should时满足任何一个就可以
                 .should(wildcardQueryBuilder);
-                // must == and
-//                .must(matchQueryBuilder);
-                // mustNot == not
-//                .mustNot(termQueryBuilder);
 
         // 分页+排序+搜索时长
         sourceBuilder.query(boolQueryBuilder)
                 // 第一个数组是需要获取的字段,第二个是过滤的字段,默认获取全部
-//                .fetchSource(new String[] {"username","id","level"}, new String[] {"createTime"})
+                // .fetchSource(new String[] {"username","id","level"}, new String[] {"createTime"})
                 // 排序
-//                .sort(new FieldSortBuilder("id").order(SortOrder.DESC))
+                // .sort(new FieldSortBuilder("id").order(SortOrder.DESC))
                 .timeout(TimeValue.timeValueSeconds(5))
                 // 开始的偏移量,从0开始!!! 从0开始!!! 从0开始!!!
                 .from(from)
                 // 大小
                 .size(size);
 
+        // 设置高亮字段 注: 高亮只会对进行查询了的字段有效,没有被查询的字段使用高度会无效
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        // 高亮的前缀标签和结束标签
+        highlightBuilder.preTags("<red>");
+        highlightBuilder.postTags("</red>");
+        // 设置高亮字段
+        highlightBuilder.field(field);
+        highlightBuilder.field("remark");
+        sourceBuilder.highlighter(highlightBuilder);
+
         // 查询请求
         SearchRequest request = new SearchRequest(index);
         request.source(sourceBuilder);
+
         return client.search(request, RequestOptions.DEFAULT);
     }
 
@@ -278,6 +331,26 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         SearchHits hits = search.getHits();
         List<T> list = Lists.newArrayList();
         hits.forEach(hit -> list.add(JSONObject.parseObject(hit.getSourceAsString(), clz)));
+        return list;
+    }
+
+
+    @Override
+    public <T> List<ElasticsearchHitResult<T>> searchWithHighlight(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException {
+        SearchResponse search = this.search(index, field, value, from, size);
+        SearchHits hits = search.getHits();
+        List<ElasticsearchHitResult<T>> list = Lists.newArrayList();
+        hits.forEach(hit -> {
+            ElasticsearchHitResult<T> result = new ElasticsearchHitResult<>();
+            result.setObject(JSONObject.parseObject(hit.getSourceAsString(), clz));
+
+            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+            Map<String, Object> highlightMap = Maps.newHashMap();
+            highlightFields.forEach((k, v) -> highlightMap.put(k, Arrays.stream(v.getFragments()).map(Text::string).collect(Collectors.toList())));
+            result.setHighlightMap(highlightMap);
+
+            list.add(result);
+        });
         return list;
     }
 }
