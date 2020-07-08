@@ -1,15 +1,23 @@
 package com.example.demo.service.elasticsearch.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.component.ElasticsearchComponent;
 import com.example.demo.component.exception.ServiceException;
+import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
-import org.elasticsearch.action.get.GetResponse;
+import com.example.demo.util.container.ContainerUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Administrator
@@ -89,15 +97,16 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     /**
      * 添加文档
      *
-     * @param index 索引
-     * @param docId 文档id
-     * @param t     对象
-     * @return r
+     * @param index  索引
+     * @param docId  文档id
+     * @param object 对象
+     * @return 生成的id
      */
     @Override
-    public ResResult addDoc(String index, String docId, Object t) throws ServiceException {
+    public ResResult addDoc(String index, String docId, Object object) throws ServiceException {
         try {
-            return elasticsearchComponent.addDoc(index, docId, t) ? ResResult.success() : ResResult.fail();
+            String id = elasticsearchComponent.addDoc(index, docId, object);
+            return StringUtils.isNotBlank(id) ? ResResult.success(id) : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -113,59 +122,61 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult getDoc(String index, String docId) throws ServiceException {
         try {
-            GetResponse response = elasticsearchComponent.getDoc(index, docId);
+//            GetResponse response = elasticsearchComponent.getDoc(index, docId);
+            CustomerDO customer = elasticsearchComponent.getDoc(index, docId, CustomerDO.class);
+
             // 返回key value形式
-//            Map<String, Object> source = response.getSource();
+            // Map<String, Object> source = response.getSource();
             // 返回json格式
-//            String json = response.getSourceAsString();
-//            CustomerDO customer = JSON.parseObject(json, CustomerDO.class);
+            // String json = response.getSourceAsString();
+            // CustomerDO customer = JSON.parseObject(json, CustomerDO.class);
             // 也是kv形式
-//            Map<String, Object> sourceAsMap = response.getSourceAsMap();
+            // Map<String, Object> sourceAsMap = response.getSourceAsMap();
             /*
-{
-    "code": 1000,
-    "msg": "获取文档:请求成功",
-    "data": {
-        "exists": true,
-        "fields": {},
-        "fragment": false,
-        "id": "zs",
-        "index": "people",
-        "primaryTerm": 1,
-        "seqNo": 1,
-        "source": {
-            "createTime": "2020-06-02T15:58:01.756",
-            "level": 3,
-            "sex": 1,
-            "mobile": "18581598259",
-            "start": 0,
-            "id": 2,
-            "username": "张三"
-        },
-        "sourceAsBytes": "eyJjcmVhdGVUaW1lIjoiMjAyMC0wNi0wMlQxNTo1ODowMS43NTYiLCJpZCI6MiwibGV2ZWwiOjMsIm1vYmlsZSI6IjE4NTgxNTk4MjU5Iiwic2V4IjoxLCJzdGFydCI6MCwidXNlcm5hbWUiOiLlvKDkuIkifQ==",
-        "sourceAsBytesRef": {
-            "fragment": true
-        },
-        "sourceAsMap": {
-            "createTime": "2020-06-02T15:58:01.756",
-            "level": 3,
-            "sex": 1,
-            "mobile": "18581598259",
-            "start": 0,
-            "id": 2,
-            "username": "张三"
-        },
-        "sourceAsString": "{\"createTime\":\"2020-06-02T15:58:01.756\",\"id\":2,\"level\":3,\"mobile\":\"18581598259\",\"sex\":1,\"start\":0,\"username\":\"张三\"}",
-        "sourceEmpty": false,
-        "sourceInternal": {
-            "fragment": true
-        },
-        "type": "_doc",
-        "version": 2
-    }
-}
+                {
+                    "code": 1000,
+                    "msg": "获取文档:请求成功",
+                    "data": {
+                        "exists": true,
+                        "fields": {},
+                        "fragment": false,
+                        "id": "zs",
+                        "index": "people",
+                        "primaryTerm": 1,
+                        "seqNo": 1,
+                        "source": {
+                            "createTime": "2020-06-02T15:58:01.756",
+                            "level": 3,
+                            "sex": 1,
+                            "mobile": "18581598259",
+                            "start": 0,
+                            "id": 2,
+                            "username": "张三"
+                        },
+                        "sourceAsBytes": "eyJjcmVhdGVUaW1lIjoiMjAyMC0wNi0wMlQxNTo1ODowMS43NTYiLCJpZCI6MiwibGV2ZWwiOjMsIm1vYmlsZSI6IjE4NTgxNTk4MjU5Iiwic2V4IjoxLCJzdGFydCI6MCwidXNlcm5hbWUiOiLlvKDkuIkifQ==",
+                        "sourceAsBytesRef": {
+                            "fragment": true
+                        },
+                        "sourceAsMap": {
+                            "createTime": "2020-06-02T15:58:01.756",
+                            "level": 3,
+                            "sex": 1,
+                            "mobile": "18581598259",
+                            "start": 0,
+                            "id": 2,
+                            "username": "张三"
+                        },
+                        "sourceAsString": "{\"createTime\":\"2020-06-02T15:58:01.756\",\"id\":2,\"level\":3,\"mobile\":\"18581598259\",\"sex\":1,\"start\":0,\"username\":\"张三\"}",
+                        "sourceEmpty": false,
+                        "sourceInternal": {
+                            "fragment": true
+                        },
+                        "type": "_doc",
+                        "version": 2
+                    }
+                }
              */
-            return ResResult.success(response);
+            return ResResult.success(customer);
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -174,15 +185,16 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     /**
      * 修改文档
      *
-     * @param index 索引
-     * @param docId 文档id
-     * @param t     t
+     * @param index  索引
+     * @param docId  文档id
+     * @param jsonString object
      * @return r
      */
     @Override
-    public ResResult updateDoc(String index, String docId, Object t) throws ServiceException {
+    public ResResult updateDoc(String index, String docId, String jsonString) throws ServiceException {
         try {
-            return elasticsearchComponent.updateDoc(index, docId, t) ? ResResult.success() : ResResult.fail();
+            CustomerDO customer = JSONObject.parseObject(jsonString, CustomerDO.class);
+            return elasticsearchComponent.updateDoc(index, docId, customer) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -216,8 +228,9 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult search(String index, String field, String value, Integer from, Integer size) throws ServiceException {
         try {
-            SearchResponse search = elasticsearchComponent.search(index, field, value, from, size);
-            return ResResult.success(search);
+//            SearchResponse search = elasticsearchComponent.search(index, field, value, from, size);
+            List<CustomerDO> list = elasticsearchComponent.search(index, field, value, from, size, CustomerDO.class);
+            return ContainerUtil.isNotEmpty(list) ? ResResult.success(list) : ResResult.fail(ResCode.NOT_FOUND);
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }

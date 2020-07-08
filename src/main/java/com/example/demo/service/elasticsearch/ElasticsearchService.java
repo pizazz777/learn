@@ -49,7 +49,7 @@ public interface ElasticsearchService {
      * @param docId 文档id
      * @return r
      */
-    ResResult addDoc(String index, String docId, Object t) throws ServiceException;
+    ResResult addDoc(String index, String docId, Object object) throws ServiceException;
 
     /**
      * 获取文档
@@ -67,7 +67,7 @@ public interface ElasticsearchService {
      * @param docId 文档id
      * @return r
      */
-    ResResult updateDoc(String index, String docId, Object t) throws ServiceException;
+    ResResult updateDoc(String index, String docId, String jsonString) throws ServiceException;
 
     /**
      * 删除文档

@@ -4,6 +4,7 @@ import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -50,9 +51,9 @@ public interface ElasticsearchComponent {
      *
      * @param index 索引
      * @param docId 文档id
-     * @return Boolean
+     * @return String
      */
-    Boolean addDoc(String index, String docId, Object t) throws IOException;
+    String addDoc(String index, String docId, Object t) throws IOException;
 
     /**
      * 获取文档
@@ -64,13 +65,23 @@ public interface ElasticsearchComponent {
     GetResponse getDoc(String index, String docId) throws IOException;
 
     /**
+     * 获取文档并转为对应对象
+     *
+     * @param index 索引
+     * @param docId 文档id
+     * @param clz   对象类型
+     * @return GetResponse
+     */
+    <T> T getDoc(String index, String docId, Class<T> clz) throws IOException;
+
+    /**
      * 修改文档
      *
      * @param index 索引
      * @param docId 文档id
      * @return Boolean
      */
-    Boolean updateDoc(String index, String docId, Object t) throws IOException;
+    Boolean updateDoc(String index, String docId, Object object) throws IOException;
 
     /**
      * 删除文档
@@ -91,5 +102,18 @@ public interface ElasticsearchComponent {
      * @param size  大小
      */
     SearchResponse search(String index, String field, String value, Integer from, Integer size) throws IOException;
+
+
+    /**
+     * 组合查询
+     *
+     * @param index 索引
+     * @param field 字段名
+     * @param value 要搜索的关键字
+     * @param from  开始的偏移量
+     * @param size  大小
+     * @param clz   对象类型
+     */
+    <T> List<T> search(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException;
 
 }
