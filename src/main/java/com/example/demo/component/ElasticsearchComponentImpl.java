@@ -149,7 +149,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
      * @return String
      */
     @Override
-    public String addDoc(String docId, Object object) throws IOException {
+    public Boolean addDoc(String docId, Object object) throws IOException {
         Document document = object.getClass().getDeclaredAnnotation(Document.class);
         String index;
         if (Objects.isNull(document)) {
@@ -168,7 +168,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
      * @return String
      */
     @Override
-    public String addDoc(String index, String docId, Object object) throws IOException {
+    public Boolean addDoc(String index, String docId, Object object) throws IOException {
         IndexRequest request = new IndexRequest(index);
         if (StringUtils.isNotBlank(docId)) {
             request.id(docId);
@@ -177,7 +177,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         request.source(JSON.toJSONString(object), XContentType.JSON);
         IndexResponse response = client.index(request, RequestOptions.DEFAULT);
         RestStatus Status = response.status();
-        return Status == RestStatus.OK || Status == RestStatus.CREATED ? response.getId() : "";
+        return Status == RestStatus.OK || Status == RestStatus.CREATED;
     }
 
     /**

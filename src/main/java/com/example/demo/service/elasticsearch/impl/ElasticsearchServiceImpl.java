@@ -102,8 +102,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult addDoc(String docId, Object object) throws ServiceException {
         try {
-            String id = elasticsearchComponent.addDoc(docId, object);
-            return StringUtils.isNotBlank(id) ? ResResult.success(id) : ResResult.fail();
+            return elasticsearchComponent.addDoc(docId, object) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }

@@ -62,19 +62,20 @@ public interface ElasticsearchComponent {
      *
      * @param docId  文档id
      * @param object 保存的数据
-     * @return String
+     * @return Boolean
      */
-    String addDoc(String docId, Object object) throws IOException;
+    Boolean addDoc(String docId, Object object) throws IOException;
 
 
     /**
      * 添加文档
      *
-     * @param index 索引
-     * @param docId 文档id
-     * @return String
+     * @param index  索引
+     * @param docId  文档id
+     * @param object object
+     * @return Boolean
      */
-    String addDoc(String index, String docId, Object t) throws IOException;
+    Boolean addDoc(String index, String docId, Object object) throws IOException;
 
     /**
      * 获取文档
