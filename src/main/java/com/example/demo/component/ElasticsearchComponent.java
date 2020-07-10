@@ -139,6 +139,16 @@ public interface ElasticsearchComponent {
     <T> List<T> search(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException;
 
 
+    /**
+     * 组合查询(包含高亮)
+     *
+     * @param index 索引
+     * @param field 字段名
+     * @param value 要搜索的关键字
+     * @param from  开始的偏移量
+     * @param size  大小
+     * @param clz   对象类型
+     */
     <T> List<ElasticsearchHitResult<T>> searchWithHighlight(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException;
 
 }

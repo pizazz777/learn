@@ -14,7 +14,7 @@ server:
 spring:
   # 引入其他yml
   profiles:
-#    active: @profiles.active@
+    #    active: @profiles.active@
     active: project
   # elasticsearch
   elasticsearch:
@@ -93,12 +93,47 @@ spring:
         login-username: admin
         reset-enable: false
       time-between-eviction-runs-millis: 60000
-  # task
+  # Spring自带定时器
   task:
     scheduling:
       pool:
         size: 10
       thread-name-prefix: scheduling-
+  # 定时器quartz
+  quartz:
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            #调度标识名 集群中每一个实例都必须使用相同的名称
+            instanceName: clusteredScheduler
+            #ID设置为自动获取 每一个必须不同
+            instanceId: AUTO
+          jobStore:
+            #数据保存方式为持久化
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            #数据库平台
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            #表的前缀
+            tablePrefix: QRTZ_
+            #加入集群
+            isClustered: false
+            #调度实例失效的检查时间间隔
+            clusterCheckinInterval: 10000
+            #设置为TRUE不会出现序列化非字符串类到 BLOB 时产生的类版本问题
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            #线程数量
+            threadCount: 10
+            #线程优先级
+            threadPriority: 5
+            #自创建父线程
+            threadsInheritContextClassLoaderOfInitializingThread: true
+    job-store-type: jdbc
+  # 流程引擎activiti
   activiti:
     # 建表规则
     # false：默认值。activiti在启动时,会对比数据库表中保存的版本,如果没有表或者版本不匹配,将抛出异常。
@@ -112,7 +147,7 @@ spring:
     history-level: full
     # 自定义流程文件位置
   #    process-definition-location-prefix:
-#    process-definition-location-suffixes:
+  #    process-definition-location-suffixes:
   # 禁用 jpa 视图
   jpa:
     open-in-view: false

@@ -142,7 +142,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     }
 
     /**
-     * 添加文档
+     * 添加文档,使用对象注解中的索引名称或默认索引名称
      *
      * @param docId  文档id
      * @param object 保存的数据
@@ -161,7 +161,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     }
 
     /**
-     * 添加文档
+     * 添加文档,自定义索引名称
      *
      * @param index 索引
      * @param docId 文档id
