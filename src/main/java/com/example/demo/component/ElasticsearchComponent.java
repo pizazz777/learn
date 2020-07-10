@@ -2,6 +2,7 @@ package com.example.demo.component;
 
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +31,15 @@ public interface ElasticsearchComponent {
     Boolean createIndex(String index) throws IOException;
 
     /**
+     * 创建索引
+     *
+     * @param index   索引
+     * @param builder mapping设置
+     * @return Boolean
+     */
+    Boolean createIndex(String index, XContentBuilder builder) throws IOException;
+
+    /**
      * 删除索引
      *
      * @param index 索引
@@ -45,6 +55,17 @@ public interface ElasticsearchComponent {
      * @return Boolean
      */
     Boolean existsByDoc(String index, String docId) throws IOException;
+
+
+    /**
+     * 添加文档
+     *
+     * @param docId  文档id
+     * @param object 保存的数据
+     * @return String
+     */
+    String addDoc(String docId, Object object) throws IOException;
+
 
     /**
      * 添加文档

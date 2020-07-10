@@ -46,7 +46,7 @@ public class ElasticsearchController {
     @ApiOperation(value = ADD_DOC)
     @PostMapping(value = "/add_doc")
     @Action(type = SAVE, desc = ADD_DOC)
-    public String addDoc(@RequestParam("index") String index, @RequestParam("docId") String docId) throws ServiceException {
+    public String addDoc(@RequestParam("docId") String docId) throws ServiceException {
         CustomerDO customer = CustomerDO.builder()
                 .id(1L)
                 .username("李四")
@@ -54,11 +54,17 @@ public class ElasticsearchController {
                 .level(1)
                 .sex(1)
                 .createTime(LocalDateTime.now())
-                .remark("过期手机号码")
+                .remark("所有发布的视频中，多为唱歌或与女子的\"合拍\"视频，其中夹杂着生活随手拍，神态轻松面带微笑。从视频配的文字可以看出，" +
+                        "张某钢经常在视频中征婚，他曾说\"想找我自己的另一半\"。" +
+                        "从时间上来看，张某钢更新动态频率很高，事发前2天还发布了唱歌的视频，12天前还帮老父亲剪了指甲、一起吃了饭。" +
+                        "7月7日12时30分，贵州安顺一辆2路车突然冲进水库。有目击者表示：公交车落水后，几乎一瞬间就被淹没了。" +
+                        "视频画面显示：公交车冲撞护栏的前49秒中，前45秒都是缓慢行驶，最后4秒钟，车子突然向左转向，穿过5排车道后，" +
+                        "直接撞向护栏，随后坠入水中。转向时，左右车道均无来往车辆。" +
+                        "监控画面显示：车内并没有人与司机发生过任何肢体冲突，车内乘客也称司机没有什么异常的表现。")
                 .belongToUserId(1L)
                 .updateTime(LocalDateTime.now())
                 .build();
-        ResResult result = elasticsearchService.addDoc(index, docId, customer);
+        ResResult result = elasticsearchService.addDoc(docId, customer);
         return result.getStr(ADD_DOC);
     }
 

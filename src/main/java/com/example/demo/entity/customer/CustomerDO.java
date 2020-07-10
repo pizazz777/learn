@@ -1,5 +1,9 @@
 package com.example.demo.entity.customer;
 
+import com.example.demo.annotation.elasticsearch.Document;
+import com.example.demo.annotation.elasticsearch.Mapping;
+import com.example.demo.constant.es.AnalyzerTypeEnum;
+import com.example.demo.constant.es.FieldTypeEnum;
 import com.example.demo.entity.PageBean;
 import lombok.*;
 
@@ -12,14 +16,13 @@ import java.time.LocalDateTime;
  * @date 2020/04/28
  * @description: 类描述: 客户 Model
  **/
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 /*
- * @Document
+ * org.springframework.data.elasticsearch.annotations @Document
  * indexName: 索引库的名字,建议以项目的名称命名
  * type: 类型,建议以实体的名称命名
  * shards: 默认分区数
@@ -29,20 +32,17 @@ import java.time.LocalDateTime;
  * createIndex: 是否创建索引
  */
 //@Document(indexName = "learn", type = "customer", shards = 3)
+@Document(indexName = "customer")
 public class CustomerDO extends PageBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
      * 主键
      */
-    // 主键注解
-//    @Id
     private Long id;
     /**
      * 姓名
      */
-    // @Field默认是可以不加的,默认会把所有属性都添加到ES中.加上@Field后,@Document默认把所有字段加上索引失效,只有加@Field才会被索引
-//    @Field
     private String username;
     /**
      * 手机号码
@@ -55,6 +55,7 @@ public class CustomerDO extends PageBean implements Serializable {
     /**
      * 备注
      */
+    @Mapping(type = FieldTypeEnum.Text, analyzer = AnalyzerTypeEnum.ik_max_word)
     private String remark;
     /**
      * 归属用户
@@ -82,5 +83,8 @@ public class CustomerDO extends PageBean implements Serializable {
     private Long createUserId;
 
     /* ------------------ 非数据库数据分割线 ------------------ */
+
+
+    private String intro;
 
 }

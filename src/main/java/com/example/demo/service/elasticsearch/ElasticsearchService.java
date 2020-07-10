@@ -45,11 +45,10 @@ public interface ElasticsearchService {
     /**
      * 添加文档
      *
-     * @param index 索引
      * @param docId 文档id
      * @return r
      */
-    ResResult addDoc(String index, String docId, Object object) throws ServiceException;
+    ResResult addDoc(String docId, Object object) throws ServiceException;
 
     /**
      * 获取文档

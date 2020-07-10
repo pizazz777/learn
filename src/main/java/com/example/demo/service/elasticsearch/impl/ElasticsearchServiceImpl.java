@@ -100,9 +100,9 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
      * @return 生成的id
      */
     @Override
-    public ResResult addDoc(String index, String docId, Object object) throws ServiceException {
+    public ResResult addDoc(String docId, Object object) throws ServiceException {
         try {
-            String id = elasticsearchComponent.addDoc(index, docId, object);
+            String id = elasticsearchComponent.addDoc(docId, object);
             return StringUtils.isNotBlank(id) ? ResResult.success(id) : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());

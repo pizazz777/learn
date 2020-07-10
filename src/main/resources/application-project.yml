@@ -47,7 +47,7 @@ project:
   file:
     # 上传文件系统目录
     upload-file-dir: D:/resource/f
-    # 上传文件访问地址前缀
+    # 上传文件访问地址前缀,使用nginx代理
     upload-file-url: Http://127.0.0.1:9000/f
   log:
     # 日志展示时是否获取用户信息
@@ -57,3 +57,9 @@ project:
   system:
     # 缓存key前缀
     prefix-cache-name: learn:conf
+  es:
+    # Elasticsearch index自动生成策略, true:存在先删除再重新设置, false:存在跳过
+    es-index-schema-update: false
+    # Elasticsearch需要扫描的注解包,用来在项目启动的时候根据类的注解生成index,analyzer等
+    scan-package-list:
+      - com.example.demo.entity

@@ -2,6 +2,8 @@ package com.example.demo.component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.annotation.elasticsearch.Document;
+import com.example.demo.constant.es.AnalyzerTypeEnum;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -23,8 +25,11 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -38,7 +43,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.example.demo.constant.es.IndexConst.DEFAULT_INDEX_NAME;
 
 /**
  * @author Administrator
@@ -69,19 +77,42 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     }
 
     /**
-     * 创建索引
+     * 默认方式创建索引
      *
      * @param index 索引
      * @return Boolean
      */
     @Override
     public Boolean createIndex(String index) throws IOException {
-        if (this.existsByIndex(index)) {
+        if (!this.existsByIndex(index)) {
             CreateIndexResponse response = client.indices().create(new CreateIndexRequest(index), RequestOptions.DEFAULT);
             return response.isAcknowledged();
         }
         return true;
     }
+
+
+    /**
+     * 自定义创建索引
+     *
+     * @param index   索引
+     * @param builder mapping设置
+     * @return Boolean
+     */
+    @Override
+    public Boolean createIndex(String index, XContentBuilder builder) throws IOException {
+        if (!this.existsByIndex(index)) {
+            if (Objects.isNull(builder)) {
+                return createIndex(index);
+            }
+            CreateIndexRequest request = new CreateIndexRequest(index);
+            request.mapping(builder);
+            CreateIndexResponse response = client.indices().create(request, RequestOptions.DEFAULT);
+            return response.isAcknowledged();
+        }
+        return true;
+    }
+
 
     /**
      * 删除索引
@@ -108,6 +139,25 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         request.fetchSourceContext(new FetchSourceContext(false));
         request.storedFields("_none_");
         return client.exists(request, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 添加文档
+     *
+     * @param docId  文档id
+     * @param object 保存的数据
+     * @return String
+     */
+    @Override
+    public String addDoc(String docId, Object object) throws IOException {
+        Document document = object.getClass().getDeclaredAnnotation(Document.class);
+        String index;
+        if (Objects.isNull(document)) {
+            index = DEFAULT_INDEX_NAME;
+        } else {
+            index = document.indexName();
+        }
+        return this.addDoc(index, docId, object);
     }
 
     /**
@@ -214,11 +264,11 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         // 拼装查询条件,合并查询
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         // 通配符查询,?匹配单个字符,*匹配多个字符
-        WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(field, value);
+        // WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(field, value);
         // 词条查询 注:会对传入的文本原封不动地(不分词)去查询,所以使用该查询需要在建立索引的时候没有使用分词器(no_analyze)
         // TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("remark", "过期手机号码".toLowerCase());
         // 匹配查询,会对传入的文本进行分词处理后再去查询,部分命中的结果也会按照评分由高到底显示出来
-        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("remark", "茅台");
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(field, value).analyzer(AnalyzerTypeEnum.ik_max_word.getValue());
         // 短语查询,会先进行分词,然后文档需要包含分词后的所有词并且还要保持这些分词的相对顺序和文档中的一致
         // MatchPhrasePrefixQueryBuilder matchPhrasePrefixQueryBuilder = QueryBuilders.matchPhrasePrefixQuery(field, value);
         // 匹配所有
@@ -277,13 +327,13 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         // 组合查询
         boolQueryBuilder
                 // must=and 代表返回的文档必须满足must子句的条件,会参与计算分值
-                .must(matchQueryBuilder)
-                // mustNot=not 代表必须不满足子句的条件
-                // .mustNot(termQueryBuilder)
-                // filter=and 代表返回的文档必须满足filter子句的条件,但不会参与计算分值
-                // .filter(rangeQueryBuilder)
-                // should=or 代表返回的文档可能满足should子句的条件,也可能不满足,有多个should时满足任何一个就可以
-                .should(wildcardQueryBuilder);
+                .must(matchQueryBuilder);
+        // mustNot=not 代表必须不满足子句的条件
+        // .mustNot(termQueryBuilder)
+        // filter=and 代表返回的文档必须满足filter子句的条件,但不会参与计算分值
+        // .filter(rangeQueryBuilder)
+        // should=or 代表返回的文档可能满足should子句的条件,也可能不满足,有多个should时满足任何一个就可以
+        // .should(wildcardQueryBuilder)
 
         // 分页+排序+搜索时长
         sourceBuilder.query(boolQueryBuilder)
@@ -291,20 +341,19 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
                 // .fetchSource(new String[] {"username","id","level"}, new String[] {"createTime"})
                 // 排序
                 // .sort(new FieldSortBuilder("id").order(SortOrder.DESC))
-                .timeout(TimeValue.timeValueSeconds(5))
+                // .timeout(TimeValue.timeValueSeconds(5))
                 // 开始的偏移量,从0开始!!! 从0开始!!! 从0开始!!!
                 .from(from)
                 // 大小
                 .size(size);
 
-        // 设置高亮字段 注: 高亮只会对进行查询了的字段有效,没有被查询的字段使用高度会无效
+        // 设置高亮字段 注: 高亮只会对进行查询了的字段有效,没有被查询的字段使用会无效
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         // 高亮的前缀标签和结束标签
-        highlightBuilder.preTags("<red>");
-        highlightBuilder.postTags("</red>");
+        // highlightBuilder.preTags("<red>");
+        // highlightBuilder.postTags("</red>");
         // 设置高亮字段
         highlightBuilder.field(field);
-        highlightBuilder.field("remark");
         sourceBuilder.highlighter(highlightBuilder);
 
         // 查询请求
@@ -343,7 +392,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
         hits.forEach(hit -> {
             ElasticsearchHitResult<T> result = new ElasticsearchHitResult<>();
             result.setObject(JSONObject.parseObject(hit.getSourceAsString(), clz));
-
+            // 设置高亮字段
             Map<String, HighlightField> highlightFields = hit.getHighlightFields();
             Map<String, Object> highlightMap = Maps.newHashMap();
             highlightFields.forEach((k, v) -> highlightMap.put(k, Arrays.stream(v.getFragments()).map(Text::string).collect(Collectors.toList())));

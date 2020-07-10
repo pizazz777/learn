@@ -40,9 +40,9 @@
         <commons-codec.version>1.14</commons-codec.version>
         <elasticsearch.version>7.6.0</elasticsearch.version>
         <jsoup.version>1.13.1</jsoup.version>
-
-        <custom.baseurl>127.0.0.1:9000</custom.baseurl>
         <swagger2markup.version>1.3.1</swagger2markup.version>
+
+        <!--<custom.baseurl>127.0.0.1:9000</custom.baseurl>
         <asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
         <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
         <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
@@ -50,7 +50,7 @@
         <asciidoctor.html.output.directory>${project.build.directory}/asciidoc/html</asciidoctor.html.output.directory>
         <asciidoctor.pdf.output.directory>${project.build.directory}/asciidoc/pdf</asciidoctor.pdf.output.directory>
 
-        <swagger.input>${swagger.output.dir}/swagger.json</swagger.input>
+        <swagger.input>${swagger.output.dir}/swagger.json</swagger.input>-->
     </properties>
 
     <dependencies>
@@ -349,9 +349,42 @@
             <version>${jsoup.version}</version>
         </dependency>
 
+        <!--<dependency>
+            <groupId>org.wltea.ik-analyzer</groupId>
+            <artifactId>ik-analyzer</artifactId>
+            <version>3.2.8</version>
+        </dependency>-->
+
+        <!--<dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>-->
+
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -368,7 +401,7 @@
                 </includes>
             </resource>
         </resources>
-        <plugins>
+        <!--<plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -386,7 +419,7 @@
                 </configuration>
             </plugin>
 
-            <!-- First, use the swagger2markup plugin to generate asciidoc -->
+            &lt;!&ndash; First, use the swagger2markup plugin to generate asciidoc &ndash;&gt;
             <plugin>
                 <groupId>io.github.swagger2markup</groupId>
                 <artifactId>swagger2markup-maven-plugin</artifactId>
@@ -438,13 +471,13 @@
                 </executions>
             </plugin>
 
-            <!-- Run the generated asciidoc through Asciidoctor to generate
-                 other documentation types, such as PDFs or HTML5 -->
+            &lt;!&ndash; Run the generated asciidoc through Asciidoctor to generate
+                 other documentation types, such as PDFs or HTML5 &ndash;&gt;
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.3</version>
-                <!-- Include Asciidoctor PDF for pdf generation -->
+                &lt;!&ndash; Include Asciidoctor PDF for pdf generation &ndash;&gt;
                 <dependencies>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
@@ -457,7 +490,7 @@
                         <version>1.7.21</version>
                     </dependency>
                 </dependencies>
-                <!-- Configure generic document generation settings -->
+                &lt;!&ndash; Configure generic document generation settings &ndash;&gt;
                 <configuration>
                     <sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
                     <sourceDocumentName>index.adoc</sourceDocumentName>
@@ -472,8 +505,8 @@
                         <generated>${generated.asciidoc.directory}</generated>
                     </attributes>
                 </configuration>
-                <!-- Since each execution can only handle one backend, run
-                     separate executions for each desired output type -->
+                &lt;!&ndash; Since each execution can only handle one backend, run
+                     separate executions for each desired output type &ndash;&gt;
                 <executions>
                     <execution>
                         <id>output-html</id>
@@ -502,7 +535,7 @@
                 </executions>
             </plugin>
 
-            <!-- specify the main class for the manifest -->
+            &lt;!&ndash; specify the main class for the manifest &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -518,7 +551,7 @@
                 </configuration>
             </plugin>
 
-            <!-- copy dependencies to the lib directory -->
+            &lt;!&ndash; copy dependencies to the lib directory &ndash;&gt;
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -534,7 +567,7 @@
                 </executions>
             </plugin>
 
-            <!-- copy the generated documents -->
+            &lt;!&ndash; copy the generated documents &ndash;&gt;
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.7</version>
@@ -560,7 +593,7 @@
                 </executions>
             </plugin>
 
-        </plugins>
+        </plugins>-->
     </build>
 
     <profiles>
@@ -571,6 +604,17 @@
             </activation>
             <properties>
                 <profiles.active>project</profiles.active>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>jar</id>
+            <activation>
+                <!--默认激活-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <packaging.type>jar</packaging.type>
             </properties>
         </profile>
     </profiles>
