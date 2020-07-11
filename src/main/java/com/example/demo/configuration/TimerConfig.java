@@ -3,6 +3,7 @@ package com.example.demo.configuration;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
  * @author Administrator
@@ -43,6 +44,10 @@ public class TimerConfig {
         scheduler.pauseTrigger(triggerKey);
         // 移除触发器
         scheduler.unscheduleJob(triggerKey);
+    }
+
+    public void  createJob(Class<? extends QuartzJobBean> jobClass, CronScheduleBuilder cronScheduleBuilder) {
+
     }
 
     /**
