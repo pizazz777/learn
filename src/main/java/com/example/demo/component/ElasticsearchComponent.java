@@ -97,6 +97,15 @@ public interface ElasticsearchComponent {
     <T> T getDoc(String index, String docId, Class<T> clz) throws IOException;
 
     /**
+     * 获取文档并转为对应对象
+     *
+     * @param docId 文档id
+     * @param clz   对象类型
+     * @return GetResponse
+     */
+    <T> T getDoc(String docId, Class<T> clz) throws IOException;
+
+    /**
      * 修改文档
      *
      * @param index 索引

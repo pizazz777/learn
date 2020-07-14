@@ -218,6 +218,23 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     }
 
     /**
+     * 获取文档并转为对应对象
+     *
+     * @param docId 文档id
+     * @param clz   对象类型
+     * @return GetResponse
+     */
+    @Override
+    public <T> T getDoc(String docId, Class<T> clz) throws IOException {
+        Document document = clz.getDeclaredAnnotation(Document.class);
+        if (Objects.isNull(document)) {
+            throw new IllegalArgumentException("没有设置索性!");
+        }
+        String indexName = document.indexName();
+        return getDoc(indexName, docId, clz);
+    }
+
+    /**
      * 修改文档
      *
      * @param index  索引
