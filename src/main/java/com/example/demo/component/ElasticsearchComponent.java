@@ -1,5 +1,6 @@
 package com.example.demo.component;
 
+import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.xcontent.XContentBuilder;

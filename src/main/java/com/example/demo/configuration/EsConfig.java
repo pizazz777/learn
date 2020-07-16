@@ -40,11 +40,15 @@ public class EsConfig implements ApplicationRunner {
      * Callback used to run the bean.
      *
      * @param args incoming application arguments
-     * @throws Exception on error
      */
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        init();
+    public void run(ApplicationArguments args) {
+        try {
+            init();
+        } catch (IOException | ClassNotFoundException e) {
+            log.error("项目初始化Elasticsearch Mapping失败!");
+            e.printStackTrace();
+        }
     }
 
     private void init() throws IOException, ClassNotFoundException {

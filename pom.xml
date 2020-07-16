@@ -385,6 +385,7 @@
                 <artifactId>maven-source-plugin</artifactId>
             </plugin>
         </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -604,6 +605,7 @@
             </activation>
             <properties>
                 <profiles.active>project</profiles.active>
+                <profiles.database-platform>mysql</profiles.database-platform>
             </properties>
         </profile>
 

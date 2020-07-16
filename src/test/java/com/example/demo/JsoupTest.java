@@ -33,7 +33,10 @@ public class JsoupTest {
 //         name = "太丘之上";
 //         name = "仙魔同修";
 //         name = "牧龙师";
-        String read = read(name);
+//         name = "剑仙在此";
+//         name = "渡劫之王";
+         name = "我有一座超级海岛";
+        String read = read(name, "http://www.biquge.se/24031/40932726.html");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
         String suffixUrl = read.substring(index);
@@ -92,7 +95,7 @@ public class JsoupTest {
                 .get();
     }
 
-    private static String read(String name) throws IOException {
+    private static String read(String name, String newUrl) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
             String url;
             while (StringUtils.isNotBlank(url = reader.readLine())) {
@@ -100,23 +103,33 @@ public class JsoupTest {
                     return url.split("-")[1];
                 }
             }
+            if (StringUtils.isBlank(url)) {
+                return newUrl;
+            }
             throw new IOException("没有匹配到地址!");
         }
     }
 
     private static void write(String url, String name) throws IOException {
         StringBuilder text = new StringBuilder();
+        boolean hasUrlFlag = true;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
             if (StringUtils.isNotBlank(url)) {
                 String line;
                 while (StringUtils.isNotBlank(line = reader.readLine())) {
                     if (line.startsWith(name)) {
                         text.append(name).append("-").append(url).append("\n");
+                        if (hasUrlFlag) {
+                            hasUrlFlag = false;
+                        }
                     } else {
                         text.append(line).append("\n");
                     }
                 }
             }
+        }
+        if (hasUrlFlag) {
+            text.append(name).append("-").append(url).append("\n");
         }
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
             writer.write(text.toString());

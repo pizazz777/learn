@@ -106,7 +106,7 @@ public class DateConst {
     }
 
     /**
-     * 项目默认的 formatter yyyy-MM-dd HH:mm:ss
+     * formatter y-M-d H:m:s.S
      */
     public static final DateTimeFormatter DATE_TIME_SINGLE;
 
@@ -129,7 +129,7 @@ public class DateConst {
     public static final DateTimeFormatter DATE_SLASH_SINGLE = DateTimeFormatter.ofPattern("y/M/d");
 
     /**
-     * formatter yyyy/MM/dd HH:mm:ss
+     * formatter yyyy/MM/dd HH:mm:ss.SSS
      */
     public static final DateTimeFormatter DATE_TIME_SLASH;
 

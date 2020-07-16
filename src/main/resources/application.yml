@@ -14,8 +14,7 @@ server:
 spring:
   # 引入其他yml
   profiles:
-    #    active: @profiles.active@
-    active: project
+    active: @profiles.active@
   # elasticsearch
   elasticsearch:
     # ES7.x版本中将弃用TransportClient客户端,且在8.0版本中完全移除它
@@ -46,7 +45,7 @@ spring:
         max-idle: 10
   # 数据库
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/learn?characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:@profiles.database-platform@://127.0.0.1:3306/learn?characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
     username: test
     password: 123456
     druid:
@@ -93,6 +92,12 @@ spring:
         login-username: admin
         reset-enable: false
       time-between-eviction-runs-millis: 60000
+    # 根据脚本在项目启动时自动创建数据库
+    schema:
+      - classpath:sql
+    sql-script-encoding: UTF-8
+    platform: @profiles.database-platform@
+    initialization-mode: always
   # Spring自带定时器
   task:
     scheduling:
@@ -100,6 +105,7 @@ spring:
         size: 10
       thread-name-prefix: scheduling-
   # 定时器quartz
+  # 建表脚本 https://github.com/quartz-scheduler/quartz/blob/9f9e400733f51f7cb658e3319fc2c140ab8af938/quartz-core/src/main/resources/org/quartz/impl/jdbcjobstore/tables_mysql_innodb.sql
   quartz:
     jdbc:
       initialize-schema: never
