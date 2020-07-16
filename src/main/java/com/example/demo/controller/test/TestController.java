@@ -18,7 +18,7 @@ import static com.example.demo.constant.log.ActionLogEnum.GET;
  * @date 2020-07-16 11:32
  * @description: 用来测试
  */
-@Api(tags = "test-测试")
+@Api(tags = "test模块-测试")
 @RestController
 @RequestMapping("/test")
 public class TestController {

@@ -4,7 +4,7 @@ import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.annotation.elasticsearch.Mapping;
 import com.example.demo.component.ElasticsearchComponent;
 import com.example.demo.properties.EsProperties;
-import com.example.demo.util.clz.ClassUtil;
+import com.example.demo.util.clazz.ClassUtil;
 import com.example.demo.util.container.ContainerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.xcontent.XContentBuilder;

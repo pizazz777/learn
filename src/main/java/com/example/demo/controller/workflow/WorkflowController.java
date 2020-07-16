@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Administrator
  * @date 2020-05-07 17:16
  */
-@Api(tags = "调用工作流模块")
+@Api(tags = "workflow模块-工作流activiti")
 @RequestMapping("/workflow")
 @RestController
 public class WorkflowController {

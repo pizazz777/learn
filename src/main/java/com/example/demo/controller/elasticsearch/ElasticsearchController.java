@@ -1,12 +1,12 @@
 package com.example.demo.controller.elasticsearch;
 
-import com.alibaba.fastjson.JSON;
 import com.example.demo.annotation.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import static com.example.demo.constant.log.ActionLogEnum.*;
  * @author Administrator
  * @date 2020-06-02 14:31
  */
+@Api(tags = "elasticsearch模块-全文搜索")
 @RestController
 @RequestMapping("/elasticsearch")
 public class ElasticsearchController {

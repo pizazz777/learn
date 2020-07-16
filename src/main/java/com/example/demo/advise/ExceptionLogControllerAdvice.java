@@ -2,6 +2,7 @@ package com.example.demo.advise;
 
 import com.example.demo.component.exception.NoBackgroundAuthException;
 import com.example.demo.component.exception.ServiceException;
+import com.example.demo.component.exception.UploadException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.component.exception.IllegalParamException;
 import com.example.demo.manager.log.ExceptionLogRequest;
@@ -78,6 +79,10 @@ public class ExceptionLogControllerAdvice {
         Class clazz = e.getClass();
         // 自定义异常
         if (clazz.equals(ServiceException.class) && StringUtils.isNotBlank(e.getMessage())) {
+            result.setMsg(e.getMessage());
+            return result;
+        }
+        if (clazz.equals(UploadException.class)) {
             result.setMsg(e.getMessage());
             return result;
         }

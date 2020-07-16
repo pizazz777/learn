@@ -1,4 +1,4 @@
-package com.example.demo.util.clz;
+package com.example.demo.util.clazz;
 
 import com.example.demo.util.container.ContainerUtil;
 import com.google.common.collect.Lists;
