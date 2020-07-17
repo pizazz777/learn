@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 public class JsoupTest {
 
+    // 模拟浏览器请求
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36";
     private static final String EXIST = "123";
@@ -35,8 +36,8 @@ public class JsoupTest {
 //         name = "牧龙师";
 //         name = "剑仙在此";
 //         name = "渡劫之王";
-         name = "我有一座超级海岛";
-        String read = read(name, "http://www.biquge.se/24031/40932726.html");
+//         name = "我有一座超级海岛";
+        String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
         String suffixUrl = read.substring(index);
@@ -96,15 +97,15 @@ public class JsoupTest {
     }
 
     private static String read(String name, String newUrl) throws IOException {
+        if (StringUtils.isNotBlank(newUrl)) {
+            return newUrl;
+        }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
             String url;
             while (StringUtils.isNotBlank(url = reader.readLine())) {
                 if (url.startsWith(name)) {
                     return url.split("-")[1];
                 }
-            }
-            if (StringUtils.isBlank(url)) {
-                return newUrl;
             }
             throw new IOException("没有匹配到地址!");
         }

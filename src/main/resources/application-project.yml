@@ -63,3 +63,10 @@ project:
     # Elasticsearch需要扫描的注解包,用来在项目启动的时候根据类的注解生成index,analyzer等
     scan-package-list:
       - com.example.demo.entity
+  office:
+    # open office配置
+    open-office:
+      # 软件安装路径 windows和Linux不一样
+      path: C:/Program Files (x86)/OpenOffice 4/
+      # 启动端口 默认8100
+      port: 8100

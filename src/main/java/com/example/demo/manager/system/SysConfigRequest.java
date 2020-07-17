@@ -37,6 +37,6 @@ public interface SysConfigRequest {
      *
      * @return Duration
      */
-    public Duration generateCacheTimeOut();
+    Duration generateCacheTimeOut();
 
 }

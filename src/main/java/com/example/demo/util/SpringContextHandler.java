@@ -7,9 +7,8 @@ import org.springframework.lang.NonNull;
 import java.util.Objects;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/21
+ * @author administrator
+ * @date 2020/05/15
  * @description: 类描述: 用于没有注册 bean 的类获取 spring 中的 bean {@link ApplicationContext#getBean(String)}
  **/
 public class SpringContextHandler implements ApplicationContextAware {
