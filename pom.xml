@@ -35,7 +35,7 @@
         <itext-asian.version>5.2.0</itext-asian.version>
         <jodconverter.version>1.0.5</jodconverter.version>
         <thumbnailator.version>0.4.11</thumbnailator.version>
-        <shiro.version>1.4.0</shiro.version>
+        <shiro.version>1.5.3</shiro.version>
         <shiro-redis.version>3.2.3</shiro-redis.version>
         <mybatis.version>3.5.0</mybatis.version>
         <mybatis-spring.version>2.0.0</mybatis-spring.version>
