@@ -6,12 +6,12 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.security.MessageDigest;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/04/29
+ * @author administrator
+ * @date 2020/07/24
  * @description: 类描述: md5工具类
  **/
 public class Md5Util {
+
     private Md5Util() {
     }
 

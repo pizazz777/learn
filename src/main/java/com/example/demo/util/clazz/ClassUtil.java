@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
  */
 public class ClassUtil {
 
+    private ClassUtil() {
+    }
+
     /**
      * 从包package中获取所有的Class
      *

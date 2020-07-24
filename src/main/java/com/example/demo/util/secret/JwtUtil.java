@@ -16,8 +16,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author SQM
- * @date 2019/02/12
+ * @author administrator
+ * @date 2020/07/24
  * @description 类说明：Json Web Token 工具
  */
 public class JwtUtil {
@@ -28,8 +28,8 @@ public class JwtUtil {
     /**
      * 通过 request 获取 subject(如用户名,手机号,邮箱等)
      *
-     * @param request
-     * @return
+     * @param request 请求对象
+     * @return r
      */
     public static String getIdentify(HttpServletRequest request) {
         Claims claims = JwtUtil.parseJwt(JwtUtil.getToken(request), JwtConst.JWT_SECRET);
@@ -39,8 +39,8 @@ public class JwtUtil {
     /**
      * 通过 request 获取 token
      *
-     * @param request
-     * @return
+     * @param request 请求对象
+     * @return r
      */
     public static String getToken(HttpServletRequest request) {
         String token = request.getHeader(JwtConst.AUTHORIZATION);

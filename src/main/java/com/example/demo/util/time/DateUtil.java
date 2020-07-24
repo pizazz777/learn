@@ -10,9 +10,8 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/12
+ * @author administrator
+ * @date 2020/07/24
  * @description: 类描述: 时间\日期处理工具类
  **/
 public class DateUtil {

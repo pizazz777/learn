@@ -21,13 +21,13 @@ import java.util.Objects;
  **/
 public class ExcelUtil {
 
+    private ExcelUtil() {
+    }
+
     /**
      * Content Type
      */
     private static final String CONTENT_TYPE = "application/msexcel";
-
-    private ExcelUtil() {
-    }
 
     /**
      * 设置 Excel 文件流响应属性

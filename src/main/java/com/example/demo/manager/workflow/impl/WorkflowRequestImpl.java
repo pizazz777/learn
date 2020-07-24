@@ -44,12 +44,12 @@ import static com.example.demo.constant.workflow.ProcessConst.*;
 
 /**
  * @author Administrator
- * @version 1.0.0
  * @date 2020-05-07 15:47
  * @description: 工作流通用逻辑处理类
  */
 @Service
 public class WorkflowRequestImpl implements WorkflowRequest {
+
 
     private RepositoryService repositoryService;
     private RuntimeService runtimeService;
@@ -58,6 +58,13 @@ public class WorkflowRequestImpl implements WorkflowRequest {
     private ManagementService managementService;
     private AuthComponent authComponent;
 
+    /**
+     * {@link org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration#repositoryServiceBean(ProcessEngine)}
+     * {@link org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration#runtimeServiceBean(ProcessEngine)}
+     * {@link org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration#historyServiceBean(ProcessEngine)}
+     * {@link org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration#taskServiceBean(ProcessEngine)}
+     * {@link org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration#managementServiceBeanBean(ProcessEngine)}
+     */
     @Autowired
     public WorkflowRequestImpl(RepositoryService repositoryService,
                                RuntimeService runtimeService,

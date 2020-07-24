@@ -16,6 +16,9 @@ import java.nio.charset.StandardCharsets;
  **/
 public class PdfUtil {
 
+    private PdfUtil() {
+    }
+
     /**
      * Content Type
      */

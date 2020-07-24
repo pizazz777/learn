@@ -10,6 +10,9 @@ import org.apache.commons.lang3.ObjectUtils;
  */
 public class ExceptionUtil {
 
+    private ExceptionUtil() {
+    }
+
     /**
      * 非空异常判断
      *

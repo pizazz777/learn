@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author Administrator
  * @date 2020-07-10 17:30
  * @description: quartz定时器配置类
- * 单个触发器只能单个任务，单个任务可以多个触发器触du发
+ * 单个触发器只能单个任务，单个任务可以多个触发器触发
  */
 @Configuration
 public class TimerConfig {
