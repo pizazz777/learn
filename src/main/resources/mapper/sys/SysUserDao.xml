@@ -61,7 +61,6 @@
         #{level},
         #{remark},
         #{description},
-        #{password},
         #{enable},
         #{manager},
         #{sex},
@@ -222,7 +221,7 @@
                 </if>
                 <if test="query.account != null">
                     AND
-                    account = #{query.account}
+                    account LIKE concat('%', #{query.account}, '%')
                 </if>
                 <if test="query.username != null">
                     AND

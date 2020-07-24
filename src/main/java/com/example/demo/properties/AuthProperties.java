@@ -35,6 +35,10 @@ public class AuthProperties {
      */
     private List<LoginTypeEnum> loginTypeEnumList = Lists.newArrayList(LoginTypeEnum.ACCOUNT);
     /**
+     * 系统中是否需要对手机号码进行验证
+     */
+    private Boolean checkMobile;
+    /**
      * 开启缓存
      */
     private Boolean cachingEnabled = true;

@@ -37,6 +37,8 @@ project:
     authorization-caching-enabled: true
     # 开启认证缓存
     authentication-caching-enabled: true
+    # 系统中是否需要对手机号码进行验证
+    check-mobile: true
   jwt:
     # JWT 接收方
     audience:
@@ -48,7 +50,7 @@ project:
     # 上传文件系统目录
     upload-file-dir: D:/resource/f
     # 上传文件访问地址前缀,使用nginx代理
-    upload-file-url: Http://127.0.0.1:9000/f
+    upload-file-url: Http://127.0.0.1:9090/f
   log:
     # 日志展示时是否获取用户信息
     show-user-info: true

@@ -3,13 +3,17 @@ package com.example.demo.controller.test;
 import com.example.demo.annotation.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.entity.sys.SysUserDO;
+import com.example.demo.office.excel.example.ExampleImportHandler;
+import com.example.demo.office.excel.model.ImportResult;
 import com.example.demo.schdule.TimerTest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.example.demo.constant.log.ActionLogEnum.GET;
 
@@ -24,10 +28,22 @@ import static com.example.demo.constant.log.ActionLogEnum.GET;
 public class TestController {
 
     private TimerTest timerTest;
+    private ExampleImportHandler exampleImportHandler;
 
     @Autowired
-    public TestController(TimerTest timerTest) {
+    public TestController(TimerTest timerTest, ExampleImportHandler exampleImportHandler) {
         this.timerTest = timerTest;
+        this.exampleImportHandler = exampleImportHandler;
+    }
+
+    private static final String IMPORT_EXCEL_DESC = "测试导入excel";
+
+    @ApiOperation(value = IMPORT_EXCEL_DESC)
+    @PostMapping(value = "/import_excel")
+    @Action(type = GET, desc = IMPORT_EXCEL_DESC)
+    public String importExcel(@RequestParam("file") MultipartFile file) throws ServiceException, IOException {
+        ImportResult<SysUserDO> handler = exampleImportHandler.handler(file);
+        return ResResult.success(handler).getStr(IMPORT_EXCEL_DESC);
     }
 
     private static final String CREATE_JOB_DESC = "测试定时任务";

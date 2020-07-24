@@ -1,8 +1,12 @@
 package com.example.demo.configuration;
 
+import com.example.demo.office.excel.format.DefaultExcelNumericFormat;
+import com.example.demo.office.excel.format.ExcelNumericFormat;
+import com.example.demo.office.excel.input.DefaultExcelReader;
+import com.example.demo.office.excel.input.ExcelReader;
+import com.example.demo.office.excel.output.DefaultExcelWriter;
+import com.example.demo.office.excel.output.ExcelWriter;
 import com.example.demo.util.SpringContextHandler;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,5 +23,24 @@ public class AutoConfig {
     public SpringContextHandler springContextHandler() {
         return new SpringContextHandler();
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExcelNumericFormat format() {
+        return new DefaultExcelNumericFormat();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExcelReader excelReader() {
+        return new DefaultExcelReader();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExcelWriter excelWriter() {
+        return new DefaultExcelWriter();
+    }
+
 
 }
