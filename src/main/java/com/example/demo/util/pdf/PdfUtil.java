@@ -29,6 +29,7 @@ public class PdfUtil {
      *
      * @param response HTTP响应对象
      * @param fileName Excel 文件名
+     * @param download true:下载框,false:内嵌显示
      */
     public static void setResponse(HttpServletResponse response, String fileName, boolean download) {
         // 设置响应头
