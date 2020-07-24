@@ -152,27 +152,30 @@ public abstract class DefaultImportHandler<D extends SysUserDO, O> implements Im
         CellStyle errStyle = createErrMsgCellStyle(workbook.getWorkbook());
         // 头部行数量
         int headRowSize = template.getHeadRowSize();
-        // 设置总行数
-        int rowCount = sheet.getLastRowNum();
-        result.setTotalCount(rowCount + 1 - headRowSize);
-        for (int rowIndex = headRowSize; rowIndex < rowCount + 1; rowIndex++) {
+        // 数据的行数,不记录中间或末尾有空行
+        int realCount = 0;
+        for (int rowIndex = headRowSize; rowIndex < sheet.getLastRowNum() + 1; rowIndex++) {
             Row row = sheet.getRow(rowIndex);
-            // 数据行
-            D object = newDataObject();
-            try {
-                for (Cell cell : row) {
-                    // 将单元格的值放入对象
-                    template.putCellValueToDO(workbook, cell, object);
+            if (Objects.nonNull(row)) {
+                // 数据行
+                D object = newDataObject();
+                try {
+                    for (Cell cell : row) {
+                        // 将单元格的值放入对象
+                        template.putCellValueToDO(workbook, cell, object);
+                    }
+                    if (saveMidObject(object, originalObject)) {
+                        realCount++;
+                        importList.add(object);
+                        // 读取成功后记录行号
+                        deleteRowNumList.add(rowIndex);
+                    }
+                } catch (ExcelException e) {
+                    createErrMsgCell(row, errStyle, e);
                 }
-                if (saveMidObject(object, originalObject)) {
-                    importList.add(object);
-                    // 读取成功后记录行号
-                    deleteRowNumList.add(rowIndex);
-                }
-            } catch (ExcelException e) {
-                createErrMsgCell(row, errStyle, e);
             }
         }
+        result.setTotalCount(realCount);
         result.setSuccessList(importList);
         // 删除保存成功的行号
         ExcelUtil.deleteSheetRow(sheet, deleteRowNumList);
