@@ -4,11 +4,8 @@ import com.example.demo.component.exception.WordException;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.util.container.ContainerUtil;
 import com.example.demo.util.file.FileUtil;
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
@@ -25,8 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.demo.util.word.WordUtil.TYPE.DOC;
-import static com.example.demo.util.word.WordUtil.TYPE.DOCX;
+import static com.example.demo.constant.file.FileTypeEnum.DOC;
+import static com.example.demo.constant.file.FileTypeEnum.DOCX;
 
 /**
  * @author administrator
@@ -38,49 +35,15 @@ public class WordUtil {
      * Content Type
      */
     private static final String CONTENT_TYPE = "application/msword";
-
+    /**
+     * 替换的标记符
+     */
     private static final String REPLACE_DOLLAR = "$";
     private static final String REPLACE_BEGIN_BRACKETS = "{";
     private static final String REPLACE_END_BRACKETS = "}";
     private static final String REPLACE_BEGIN_STR = REPLACE_DOLLAR + REPLACE_BEGIN_BRACKETS;
 
     private WordUtil() {
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public enum TYPE {
-        /**
-         * doc 文件后缀
-         */
-        DOC("doc"),
-        /**
-         * docx 文件后缀
-         */
-        DOCX("docx");
-
-        private String suffix;
-
-    }
-
-    /**
-     * 获取 excel 文件类型
-     */
-    public static WordUtil.TYPE getType(File file) {
-        return getType(file.getName());
-    }
-
-    /**
-     * 获取 word 文件类型
-     */
-    public static WordUtil.TYPE getType(String fileName) {
-        if (Objects.equals(FileUtil.getSuffix(fileName), DOC.getSuffix())) {
-            return DOC;
-        }
-        if (Objects.equals(FileUtil.getSuffix(fileName), DOCX.getSuffix())) {
-            return DOCX;
-        }
-        return null;
     }
 
     /**
@@ -90,10 +53,6 @@ public class WordUtil {
      * @param fileName Word 文件名
      */
     public static void setResponse(HttpServletResponse response, String fileName) {
-        if (StringUtils.isNotBlank(fileName)) {
-            // 中文解析
-            fileName = new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1);
-        }
         // 设置响应头
         // 兼容不同浏览器的中文乱码问题
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
@@ -108,20 +67,12 @@ public class WordUtil {
      * @param response HTTP响应对象
      * @param fileName Excel 文件名
      */
-    public static void setResponseWithUrlEncoding(HttpServletResponse response, String fileName) {
-        if (StringUtils.isNotBlank(fileName)) {
-            // 中文解析
-            try {
-                fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.name());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+    public static void setResponseWithUrlEncoding(HttpServletResponse response, String fileName) throws WordException {
+        try {
+            setResponse(response, URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new WordException(e.getMessage());
         }
-        //设置响应头
-        //兼容不同浏览器的中文乱码问题
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-        response.setContentType(CONTENT_TYPE);
     }
 
 
@@ -176,7 +127,6 @@ public class WordUtil {
             } finally {
                 outputStream.close();
             }
-
         }
     }
 

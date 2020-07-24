@@ -23,32 +23,6 @@ import java.util.stream.Collectors;
 public class ClassUtil {
 
     /**
-     * 取得某个接口下所有实现这个接口的类
-     */
-    public static List<Class<?>> getAllClassByInterface(Class<?> clz) throws IOException, ClassNotFoundException {
-        List<Class<?>> returnClassList = Lists.newArrayList();
-        if (clz.isInterface()) {
-            // 获取当前的包名
-            String packageName = clz.getPackage().getName();
-            // 获取当前包下以及子包下所以的类
-            List<Class<?>> allClass = getClasses(packageName);
-            if (ContainerUtil.isNotEmpty(allClass)) {
-                for (Class classes : allClass) {
-                    // 判断是否是同一个接口
-                    if (clz.isAssignableFrom(classes)) {
-                        // 本身不加入进去
-                        if (!clz.equals(classes)) {
-                            returnClassList.add(classes);
-                        }
-                    }
-                }
-            }
-        }
-        return returnClassList;
-    }
-
-
-    /**
      * 从包package中获取所有的Class
      *
      * @param packageName 包名
@@ -106,6 +80,32 @@ public class ClassUtil {
             }
         }
         return classes;
+    }
+
+
+    /**
+     * 取得某个接口下所有实现这个接口的类
+     */
+    public static List<Class<?>> getAllClassByInterface(Class<?> clz) throws IOException, ClassNotFoundException {
+        List<Class<?>> returnClassList = Lists.newArrayList();
+        if (clz.isInterface()) {
+            // 获取当前的包名
+            String packageName = clz.getPackage().getName();
+            // 获取当前包下以及子包下所以的类
+            List<Class<?>> allClass = getClasses(packageName);
+            if (ContainerUtil.isNotEmpty(allClass)) {
+                for (Class classes : allClass) {
+                    // 判断是否是同一个接口
+                    if (clz.isAssignableFrom(classes)) {
+                        // 本身不加入进去
+                        if (!clz.equals(classes)) {
+                            returnClassList.add(classes);
+                        }
+                    }
+                }
+            }
+        }
+        return returnClassList;
     }
 
     /**

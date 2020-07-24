@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/21
+ * @author administrator
+ * @date 2020/05/15
  * @description: 类描述: 容器工具
  **/
 public class ContainerUtil {

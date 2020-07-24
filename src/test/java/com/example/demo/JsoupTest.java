@@ -37,6 +37,8 @@ public class JsoupTest {
 //         name = "剑仙在此";
 //         name = "渡劫之王";
 //         name = "我有一座超级海岛";
+//         name = "超级星空领主";
+         name = "与极品老婆的荒岛生活";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);

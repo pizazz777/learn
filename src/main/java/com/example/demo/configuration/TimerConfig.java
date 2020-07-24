@@ -1,12 +1,12 @@
 package com.example.demo.configuration;
 
 import com.example.demo.util.time.DateUtil;
-import lombok.NonNull;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -56,13 +56,26 @@ public class TimerConfig {
      * 创建任务
      *
      * @param clz         job类
+     * @param cron        定时任务表达式
+     * @param triggerName 触发器名称
+     * @param jobName     任务名称
+     * @throws SchedulerException e
+     */
+    public void createJob(Class<? extends QuartzJobBean> clz, @NotBlank String cron, String triggerName, String jobName) throws SchedulerException{
+        createJob(clz, null, cron, triggerName, jobName);
+    }
+
+    /**
+     * 创建任务
+     *
+     * @param clz         job类
      * @param jobDataMap  定时器附带数据,没有传null
      * @param cron        定时任务表达式
      * @param triggerName 触发器名称
      * @param jobName     任务名称
      * @throws SchedulerException e
      */
-    public void createJob(Class<? extends QuartzJobBean> clz, JobDataMap jobDataMap, @NonNull String cron, String triggerName, String jobName) throws SchedulerException {
+    public void createJob(Class<? extends QuartzJobBean> clz, JobDataMap jobDataMap, @NotBlank String cron, String triggerName, String jobName) throws SchedulerException {
         // 任务类
         JobDetail jobDetail = JobBuilder.newJob(clz)
                 .setJobData(Objects.nonNull(jobDataMap) ? jobDataMap : new JobDataMap())

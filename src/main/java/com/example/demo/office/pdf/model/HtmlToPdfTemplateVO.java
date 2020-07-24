@@ -1,4 +1,4 @@
-package com.example.demo.util.pdf;
+package com.example.demo.office.pdf.model;
 
 import lombok.Getter;
 import lombok.Setter;

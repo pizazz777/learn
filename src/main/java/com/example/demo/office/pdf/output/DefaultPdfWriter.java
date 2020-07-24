@@ -1,10 +1,12 @@
-package com.example.demo.util.pdf;
+package com.example.demo.office.pdf.output;
 
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
+import com.example.demo.office.pdf.model.HtmlToPdfTemplateVO;
 import com.example.demo.properties.OfficeProperties;
+import com.example.demo.office.pdf.TemplateHandler;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;

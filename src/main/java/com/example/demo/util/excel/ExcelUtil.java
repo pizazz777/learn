@@ -1,26 +1,18 @@
 package com.example.demo.util.excel;
 
+import com.example.demo.component.exception.ExcelException;
 import com.example.demo.util.container.ContainerUtil;
-import com.example.demo.util.file.FileUtil;
-import com.google.common.base.Charsets;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.demo.util.excel.ExcelUtil.TYPE.XLS;
-import static com.example.demo.util.excel.ExcelUtil.TYPE.XLSX;
 
 /**
  * @author administrator
@@ -33,62 +25,19 @@ public class ExcelUtil {
      * Content Type
      */
     private static final String CONTENT_TYPE = "application/msexcel";
-    /**
-     * Encoding
-     */
-    private static final String UTF_8 = "UTF-8";
 
     private ExcelUtil() {
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public enum TYPE {
-        /**
-         * xls 文件后缀
-         */
-        XLS("xls"),
-        /**
-         * xlsx 文件后缀
-         */
-        XLSX("xlsx");
-        private String suffix;
-
-    }
-
-    /**
-     * 获取 excel 文件类型
-     */
-    public static ExcelUtil.TYPE getType(File file) {
-        return getType(file.getName());
-    }
-
-    /**
-     * 获取 excel 文件类型
-     */
-    public static ExcelUtil.TYPE getType(String fileName) {
-        if (Objects.equals(FileUtil.getSuffix(fileName), XLS.getSuffix())) {
-            return XLS;
-        }
-        if (Objects.equals(FileUtil.getSuffix(fileName), XLSX.getSuffix())) {
-            return XLSX;
-        }
-        return null;
     }
 
     /**
      * 设置 Excel 文件流响应属性
      *
-     * @param response        HTTP响应对象
-     * @param fileName        Excel 文件名
-     * @param fileNameCharset 文件名编码格式
+     * @param response HTTP响应对象
+     * @param fileName Excel 文件名
      */
-    public static void setResponse(HttpServletResponse response, String fileName, Charset fileNameCharset) {
-        // 中文解析
-        fileName = StringUtils.isNotBlank(fileName) ? new String(fileName.getBytes(Charsets.UTF_8), fileNameCharset) : fileName;
+    public static void setResponse(HttpServletResponse response, String fileName) {
         // 设置响应头
-        // 兼容不同浏览器的中文乱码问题
-        response.setCharacterEncoding(UTF_8);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
         response.setContentType(CONTENT_TYPE);
     }
@@ -99,18 +48,13 @@ public class ExcelUtil {
      * @param response HTTP响应对象
      * @param fileName Excel 文件名
      */
-    public static void setResponseWithUrlEncoding(HttpServletResponse response, String fileName) {
+    public static void setResponseWithUrlEncoding(HttpServletResponse response, String fileName) throws ExcelException {
         // 中文解析
         try {
-            fileName = StringUtils.isNotBlank(fileName) ? URLEncoder.encode(fileName, UTF_8) : fileName;
+            setResponse(response, URLEncoder.encode(fileName, StandardCharsets.UTF_8.name()));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            throw new ExcelException(e.getMessage());
         }
-        // 设置响应头
-        // 兼容不同浏览器的中文乱码问题
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-        response.setContentType(CONTENT_TYPE);
     }
 
 
@@ -226,16 +170,33 @@ public class ExcelUtil {
      * @param copyValueFlag 是否复制值
      */
     public void copyRow(Workbook workbook, Sheet sheet, int templateIndex, boolean copyValueFlag) {
-        Row row = sheet.getRow(templateIndex);
-        // 移动行
-        sheet.shiftRows(templateIndex + 1, sheet.getLastRowNum(), 1, true, false);
-        Row newRow = sheet.createRow(templateIndex + 1);
-        CellStyle style = row.getRowStyle();
-        if (Objects.nonNull(style)) {
-            newRow.setRowStyle(style);
+        copyRow(workbook, sheet, templateIndex, 1, copyValueFlag);
+    }
+
+    /**
+     * 向模板行下面复制N行
+     *
+     * @param workbook      Excel文档
+     * @param sheet         页
+     * @param templateIndex 模板行号
+     * @param copyCount     复制行的数量
+     * @param copyValueFlag 是否复制值
+     */
+    public void copyRow(Workbook workbook, Sheet sheet, int templateIndex, int copyCount, boolean copyValueFlag) {
+        if (copyCount > 0) {
+            // 移动行
+            sheet.shiftRows(templateIndex + 1, sheet.getLastRowNum(), copyCount, true, false);
+            Row row = sheet.getRow(templateIndex);
+            CellStyle style = row.getRowStyle();
+            for (int count = 1; count <= copyCount; count++) {
+                Row newRow = sheet.createRow(templateIndex + count);
+                if (Objects.nonNull(style)) {
+                    newRow.setRowStyle(style);
+                }
+                newRow.setHeight(row.getHeight());
+                copyRow(workbook, sheet, row, newRow, copyValueFlag);
+            }
         }
-        newRow.setHeight(row.getHeight());
-        copyRow(workbook, sheet, row, newRow, copyValueFlag);
     }
 
     /**
@@ -290,16 +251,27 @@ public class ExcelUtil {
     private static void copyCellValue(Cell srcCell, Cell destCell, boolean copyValueFlag) {
         if (copyValueFlag) {
             CellType cellType = srcCell.getCellType();
-            if (CellType.STRING == cellType) {
-                destCell.setCellValue(srcCell.getStringCellValue());
-            } else if (CellType.NUMERIC == cellType) {
-                destCell.setCellValue(srcCell.getNumericCellValue());
-            } else if (CellType.FORMULA == cellType) {
-                destCell.setCellValue(srcCell.getCellFormula());
-            } else if (CellType.BOOLEAN == cellType) {
-                destCell.setCellValue(srcCell.getBooleanCellValue());
-            } else if (CellType.ERROR == cellType) {
-                destCell.setCellValue(srcCell.getErrorCellValue());
+            switch (cellType) {
+                case STRING:
+                    destCell.setCellValue(srcCell.getStringCellValue());
+                    break;
+                case NUMERIC:
+                    destCell.setCellValue(srcCell.getNumericCellValue());
+                    break;
+                case FORMULA:
+                    destCell.setCellValue(srcCell.getCellFormula());
+                    break;
+                case BOOLEAN:
+                    destCell.setCellValue(srcCell.getBooleanCellValue());
+                    break;
+                case ERROR:
+                    destCell.setCellValue(srcCell.getErrorCellValue());
+                    break;
+                case BLANK:
+                    // nothing to do
+                    break;
+                default:
+                    break;
             }
         }
     }

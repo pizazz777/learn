@@ -1,5 +1,6 @@
-package com.example.demo.util.pdf;
+package com.example.demo.office.pdf;
 
+import com.example.demo.office.pdf.model.TemplateVO;
 import com.example.demo.properties.OfficeProperties;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
