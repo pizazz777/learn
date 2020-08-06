@@ -26,6 +26,7 @@ public class JsoupTest {
     private static final String CSS_QUERY_A = "div[class = bottem1] > a[href]";
     private static final String CSS_QUERY_BOOK_NAME = "div.bookname > h1";
     private static final String NEXT = "下一章";
+    private static final String PATH = "D:\\Text\\url.txt";
 
     public static void main(String[] args) throws IOException {
         String name = "";
@@ -34,11 +35,9 @@ public class JsoupTest {
 //         name = "太丘之上";
 //         name = "仙魔同修";
 //         name = "牧龙师";
-//         name = "剑仙在此";
-//         name = "渡劫之王";
-//         name = "我有一座超级海岛";
-//         name = "超级星空领主";
-         name = "与极品老婆的荒岛生活";
+//         name = "大周仙吏";
+//         name = "人间冰器";
+         name = "大丰打更人";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
@@ -67,9 +66,7 @@ public class JsoupTest {
                     if (a.text().equals(NEXT)) {
                         suffixUrl = a.attr(HREF);
                         if (flag) {
-                            int nextUrlNum = findChar(suffixUrl);
-                            int urlNum = findChar(read);
-                            int i = urlNum - nextUrlNum + 1;
+                            int i = findChar(read) - findChar(suffixUrl) + 1;
                             preUrl = subUrl(read, i);
                             flag = false;
                         }
@@ -102,7 +99,7 @@ public class JsoupTest {
         if (StringUtils.isNotBlank(newUrl)) {
             return newUrl;
         }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(PATH), StandardCharsets.UTF_8))) {
             String url;
             while (StringUtils.isNotBlank(url = reader.readLine())) {
                 if (url.startsWith(name)) {
@@ -116,7 +113,7 @@ public class JsoupTest {
     private static void write(String url, String name) throws IOException {
         StringBuilder text = new StringBuilder();
         boolean hasUrlFlag = true;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Text\\url.txt"), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(PATH), StandardCharsets.UTF_8))) {
             if (StringUtils.isNotBlank(url)) {
                 String line;
                 while (StringUtils.isNotBlank(line = reader.readLine())) {

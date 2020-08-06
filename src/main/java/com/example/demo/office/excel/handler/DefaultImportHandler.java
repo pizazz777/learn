@@ -186,7 +186,7 @@ public abstract class DefaultImportHandler<D extends SysUserDO, O> implements Im
         return result;
     }
 
-    protected abstract <V extends AbstractUserExcelTemplateModel> V getExcelTemplate(ExcelReader excelReader, ExcelNumericFormat excelNumericFormat);
+    protected abstract AbstractUserExcelTemplateModel getExcelTemplate(ExcelReader excelReader, ExcelNumericFormat excelNumericFormat);
 
     protected abstract D newDataObject();
 

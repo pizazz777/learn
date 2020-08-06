@@ -12,7 +12,7 @@
 
         * Activiti工作流
         * Elasticsearch全文搜索
-        * Quartz
+        * Quartz定时器
         * Swagger2
         * 权限验证功能
         * 日志收集
@@ -21,3 +21,6 @@
     * 待完成功能
 
         * 消息队列
+        * 视频转换
+        * 单点登录
+        * 

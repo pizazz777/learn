@@ -6,6 +6,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
 
 /**
@@ -23,10 +24,11 @@ public class JobTest extends QuartzJobBean {
      * @see #execute
      */
     @Override
-    protected void executeInternal(JobExecutionContext context) {
+    protected void executeInternal(@Nonnull JobExecutionContext context) {
+        // 定时任务具体执行的任务  相当于线程的run方法
         // 如果在设置定时任务的时候,设置了数据,可以从这儿取出来
-//        JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
-//        Object object = jobDataMap.get("");
+        // JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
+        // Object object = jobDataMap.get("");
         System.out.println("执行quartz定时任务!  ==== " + DateUtil.localDateTimeToString(DateConst.DEFAULT_DATE_TIME, LocalDateTime.now()));
     }
 

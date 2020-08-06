@@ -23,14 +23,24 @@ public class TimerTest {
         this.timerConfig = timerConfig;
     }
 
+    /**
+     * 创建任务
+     *
+     * @throws ServiceException e
+     */
     public void createJob() throws ServiceException {
         try {
-            timerConfig.createJob(JobTest.class, null, "0/5 * * * * ?", TEST_TRIGGER, TEST_JOB);
+            timerConfig.createJob(JobTest.class, "0/5 * * * * ?", TEST_TRIGGER, TEST_JOB);
         } catch (SchedulerException e) {
             throw new ServiceException(e.getMessage());
         }
     }
 
+    /**
+     * 暂停任务
+     *
+     * @throws ServiceException e
+     */
     public void pauseJob() throws ServiceException {
         try {
             timerConfig.pauseJob(TEST_JOB, JobTest.class.getName());
@@ -39,6 +49,11 @@ public class TimerTest {
         }
     }
 
+    /**
+     * 恢复任务
+     *
+     * @throws ServiceException e
+     */
     public void resumeJob() throws ServiceException {
         try {
             timerConfig.resumeJob(TEST_JOB, JobTest.class.getName());
@@ -47,6 +62,11 @@ public class TimerTest {
         }
     }
 
+    /**
+     * 移除触发器
+     *
+     * @throws ServiceException e
+     */
     public void removeTrigger() throws ServiceException {
         try {
             timerConfig.removeTrigger(TEST_TRIGGER, JobTest.class.getName());

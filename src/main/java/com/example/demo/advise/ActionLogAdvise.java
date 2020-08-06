@@ -43,7 +43,7 @@ public class ActionLogAdvise {
     public void actionAspect(Action action) {
     }
 
-    @Around(value = "actionAspect(action)")
+    @Around(value = "actionAspect(action)&&@annotation(action)")
     public Object around(ProceedingJoinPoint point, Action action) throws Throwable {
         // 登录操作直接放行
         if (Objects.equals(action.type(), ActionLogEnum.LOGIN)) {

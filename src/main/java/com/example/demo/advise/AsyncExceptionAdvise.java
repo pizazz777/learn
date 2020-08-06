@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**
- * @author  Administrator
+ * @author Administrator
  * @version 1.0
- * @date    2020/05/15
+ * @date 2020/05/15
  * @description: 异步异常无发返回值的捕获
  */
 @Component
@@ -31,7 +32,7 @@ public class AsyncExceptionAdvise implements AsyncConfigurer, AsyncUncaughtExcep
     }
 
     @Override
-    public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
+    public void handleUncaughtException(@Nonnull Throwable throwable, @Nonnull Method method, @Nonnull Object... objects) {
         try {
             exceptionLogRequest.saveAsyncExceptionLog(throwable, method, objects);
         } catch (ServiceException e) {

@@ -98,20 +98,6 @@ public abstract class AbstractUserExcelTemplateModel<M extends AbstractUserExcel
     }
 
     /**
-     * 获取头部行索引集合
-     *
-     * @return r
-     */
-    public abstract int[] getHeadRowIndexList();
-
-    /**
-     * 获取头部行大小
-     *
-     * @return r
-     */
-    public abstract int getHeadRowSize();
-
-    /**
      * 设置用户信息
      *
      * @param object      对象

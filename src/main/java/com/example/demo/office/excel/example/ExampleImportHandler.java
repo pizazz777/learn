@@ -39,9 +39,8 @@ public class ExampleImportHandler extends AbstractUserImportHandler {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected <V extends AbstractUserExcelTemplateModel> V getExcelTemplate(ExcelReader excelReader, ExcelNumericFormat excelNumericFormat) {
-        return (V) new ExampleTemplateModel(excelNumericFormat);
+    protected AbstractUserExcelTemplateModel getExcelTemplate(ExcelReader excelReader, ExcelNumericFormat excelNumericFormat) {
+        return new ExampleTemplateModel(excelNumericFormat);
     }
 
     @Override
@@ -59,6 +58,9 @@ public class ExampleImportHandler extends AbstractUserImportHandler {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return sysUserDao.save(dataObject) > 0;
+        if (sysUserDao.save(dataObject) > 0) {
+            return true;
+        }
+        throw new ExcelException("保存对象失败");
     }
 }

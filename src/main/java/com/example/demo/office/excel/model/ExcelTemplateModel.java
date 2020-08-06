@@ -20,4 +20,18 @@ public interface ExcelTemplateModel<T> {
      */
     void putCellValueToDO(ExcelWorkbook workbook, Cell cell, T object) throws ExcelException;
 
+    /**
+     * 获取头部行索引集合
+     *
+     * @return r
+     */
+    int[] getHeadRowIndexList();
+
+    /**
+     * 获取头部行大小
+     *
+     * @return r
+     */
+    int getHeadRowSize();
+
 }
