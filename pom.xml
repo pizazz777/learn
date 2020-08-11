@@ -32,6 +32,7 @@
         <itext-asian.version>5.2.0</itext-asian.version>
         <jodconverter.version>1.0.5</jodconverter.version>
         <thumbnailator.version>0.4.11</thumbnailator.version>
+        <httpclient.version>4.5.12</httpclient.version>
         <shiro.version>1.4.2</shiro.version>
         <shiro-redis.version>3.2.3</shiro-redis.version>
         <mybatis.version>3.5.0</mybatis.version>
@@ -375,6 +376,13 @@
             <version>${thumbnailator.version}</version>
         </dependency>
 
+        <!-- http client -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
         <!-- 二维码 -->
         <dependency>
             <groupId>com.google.zxing</groupId>
@@ -395,6 +403,11 @@
         </dependency>
         <dependency>
             <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>${javacv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco</groupId>
             <artifactId>javacpp</artifactId>
             <version>${javacpp.version}</version>
         </dependency>
@@ -402,25 +415,7 @@
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>ffmpeg</artifactId>
             <version>${javacpp-presets.ffmpeg.version}</version>
-            <classifier>${javacv.classfier.os}</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>ffmpeg</artifactId>
-            <version>${javacpp-presets.ffmpeg.version}</version>
-            <classifier>${javacv.classfier.os}</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>ffmpeg</artifactId>
-            <version>${javacpp-presets.ffmpeg.version}</version>
-            <classifier>${javacv.classfier.os}</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.bytedeco.javacpp-presets</groupId>
-            <artifactId>ffmpeg</artifactId>
-            <version>${javacpp-presets.ffmpeg.version}</version>
-            <classifier>${javacv.classfier.os}</classifier>
+            <classifier>${javacv.classifier.os}</classifier>
         </dependency>
 
     </dependencies>
@@ -501,25 +496,25 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <javacv.classfier.os>windows-x86_64</javacv.classfier.os>
+                <javacv.classifier.os>windows-x86_64</javacv.classifier.os>
             </properties>
         </profile>
         <profile>
             <id>linux</id>
             <properties>
-                <javacv.classfier.os>linux-x86_64</javacv.classfier.os>
+                <javacv.classifier.os>linux-x86_64</javacv.classifier.os>
             </properties>
         </profile>
         <profile>
             <id>mac</id>
             <properties>
-                <javacv.classfier.os>macosx-x86_64</javacv.classfier.os>
+                <javacv.classifier.os>macosx-x86_64</javacv.classifier.os>
             </properties>
         </profile>
         <profile>
             <id>android</id>
             <properties>
-                <javacv.classfier.os>android-x86</javacv.classfier.os>
+                <javacv.classifier.os>android-x86</javacv.classifier.os>
             </properties>
         </profile>
 

@@ -5,7 +5,7 @@ import com.example.demo.component.response.ResResult;
 import com.example.demo.configuration.SystemConfig;
 import com.example.demo.dao.system.SysConfigDao;
 import com.example.demo.entity.system.SysConfigDO;
-import com.example.demo.manager.system.SysConfigRequest;
+import com.example.demo.manager.cache.CacheRequest;
 import com.example.demo.service.system.SysConfigService;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +29,16 @@ import java.util.Set;
 @Service
 public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner {
 
-    private SysConfigRequest systemConfigRequest;
+    private CacheRequest cacheRequest;
     private SysConfigDao sysConfigDao;
     private RedisTemplate<String, Object> redisTemplate;
     private Set<String> configNameSet = SystemConfig.get();
 
     @Autowired
-    public SysConfigServiceImpl(SysConfigRequest systemConfigRequest,
+    public SysConfigServiceImpl(CacheRequest cacheRequest,
                                 SysConfigDao sysConfigDao,
                                 RedisTemplate<String, Object> redisTemplate) {
-        this.systemConfigRequest = systemConfigRequest;
+        this.cacheRequest = cacheRequest;
         this.sysConfigDao = sysConfigDao;
         this.redisTemplate = redisTemplate;
     }
@@ -52,7 +52,7 @@ public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner
     @Override
     public ResResult get() throws ServiceException {
         Map<String, Object> configMap = Maps.newHashMap();
-        SystemConfig.get().forEach(key -> configMap.put(key, systemConfigRequest.getValueByKey(key)));
+        SystemConfig.get().forEach(key -> configMap.put(key, cacheRequest.getValueByKey(key)));
         return ResResult.success(configMap);
     }
 
@@ -65,7 +65,7 @@ public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner
      */
     @Override
     public ResResult getByKey(String key) throws ServiceException {
-        return ResResult.success(systemConfigRequest.getValueByKey(key));
+        return ResResult.success(cacheRequest.getValueByKey(key));
     }
 
     /**
@@ -89,7 +89,7 @@ public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner
             // 并发不高采用先更新数据库,再删除缓存足矣
             // 如果并发高可以采取订阅数据库的操作日志binlog,然后启用一段非业务代码通过消息队列操作
             if (sysConfigDao.update(sysConfig) > 0) {
-                systemConfigRequest.deleteByKey(key);
+                cacheRequest.deleteByKey(key);
             }
         });
         return ResResult.success();
@@ -117,7 +117,7 @@ public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner
                         .build();
                 sysConfigDao.save(config);
             }
-            redisTemplate.opsForValue().set(systemConfigRequest.getCacheKeyByKey(key), config.getConfigValue(), systemConfigRequest.generateCacheTimeOut());
+            redisTemplate.opsForValue().set(cacheRequest.getCacheKeyByKey(key), config.getConfigValue(), cacheRequest.generateCacheTimeOut());
         }
     }
 

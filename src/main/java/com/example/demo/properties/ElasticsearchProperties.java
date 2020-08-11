@@ -12,8 +12,8 @@ import java.util.List;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "project.es")
-public class EsProperties {
+@ConfigurationProperties(prefix = "project.elasticsearch")
+public class ElasticsearchProperties {
 
     /**
      * Elasticsearch需要扫描的注解包,用来在项目启动的时候根据类的注解生成index,analyzer等

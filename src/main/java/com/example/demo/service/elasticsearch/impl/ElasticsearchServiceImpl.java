@@ -1,7 +1,7 @@
 package com.example.demo.service.elasticsearch.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.component.ElasticsearchComponent;
+import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
 import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
@@ -22,11 +22,11 @@ import java.util.List;
 @Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
 
-    private ElasticsearchComponent elasticsearchComponent;
+    private ElasticsearchRequest elasticsearchRequest;
 
     @Autowired
-    public ElasticsearchServiceImpl(ElasticsearchComponent elasticsearchComponent) {
-        this.elasticsearchComponent = elasticsearchComponent;
+    public ElasticsearchServiceImpl(ElasticsearchRequest elasticsearchRequest) {
+        this.elasticsearchRequest = elasticsearchRequest;
     }
 
     /**
@@ -38,7 +38,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult existsByIndex(String index) throws ServiceException {
         try {
-            return elasticsearchComponent.existsByIndex(index) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.existsByIndex(index) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -53,7 +53,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult createIndex(String index) throws ServiceException {
         try {
-            return elasticsearchComponent.createIndex(index) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.createIndex(index) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -68,7 +68,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult deleteIndex(String index) throws ServiceException {
         try {
-            return elasticsearchComponent.deleteIndex(index) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.deleteIndex(index) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -84,7 +84,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult existsByDoc(String index, String docId) throws ServiceException {
         try {
-            return elasticsearchComponent.existsByDoc(index, docId) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.existsByDoc(index, docId) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -101,7 +101,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult addDoc(String docId, Object object) throws ServiceException {
         try {
-            return elasticsearchComponent.addDoc(docId, object) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.addDoc(docId, object) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -117,8 +117,8 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult getDoc(String index, String docId) throws ServiceException {
         try {
-//            GetResponse response = elasticsearchComponent.getDoc(index, docId);
-            CustomerDO customer = elasticsearchComponent.getDoc(index, docId, CustomerDO.class);
+//            GetResponse response = elasticsearchRequest.getDoc(index, docId);
+            CustomerDO customer = elasticsearchRequest.getDoc(index, docId, CustomerDO.class);
 
             // 返回key value形式
             // Map<String, Object> source = response.getSource();
@@ -189,7 +189,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     public ResResult updateDoc(String index, String docId, String jsonString) throws ServiceException {
         try {
             CustomerDO customer = JSONObject.parseObject(jsonString, CustomerDO.class);
-            return elasticsearchComponent.updateDoc(index, docId, customer) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.updateDoc(index, docId, customer) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -205,7 +205,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult deleteDoc(String index, String docId) throws ServiceException {
         try {
-            return elasticsearchComponent.deleteDoc(index, docId) ? ResResult.success() : ResResult.fail();
+            return elasticsearchRequest.deleteDoc(index, docId) ? ResResult.success() : ResResult.fail();
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());
         }
@@ -223,8 +223,8 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     @Override
     public ResResult search(String index, String field, String value, Integer from, Integer size) throws ServiceException {
         try {
-//            SearchResponse searchWithHighlight = elasticsearchComponent.searchWithHighlight(index, field, value, from, size);
-            List<ElasticsearchHitResult<CustomerDO>> list = elasticsearchComponent.searchWithHighlight(index, field, value, from, size, CustomerDO.class);
+//            SearchResponse searchWithHighlight = elasticsearchRequest.searchWithHighlight(index, field, value, from, size);
+            List<ElasticsearchHitResult<CustomerDO>> list = elasticsearchRequest.searchWithHighlight(index, field, value, from, size, CustomerDO.class);
             return ContainerUtil.isNotEmpty(list) ? ResResult.success(list) : ResResult.fail(ResCode.NOT_FOUND);
         } catch (IOException e) {
             throw new ServiceException(e.getMessage());

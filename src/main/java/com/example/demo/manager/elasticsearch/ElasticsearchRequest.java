@@ -1,4 +1,4 @@
-package com.example.demo.component;
+package com.example.demo.manager.elasticsearch;
 
 import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import org.elasticsearch.action.get.GetResponse;
@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020-05-29 14:18
  * @description: elasticsearch 操作
  */
-public interface ElasticsearchComponent {
+public interface ElasticsearchRequest {
 
     /**
      * 查询索引是否存在

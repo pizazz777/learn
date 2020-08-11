@@ -1,10 +1,11 @@
-package com.example.demo.component;
+package com.example.demo.manager.elasticsearch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.constant.es.AnalyzerTypeEnum;
+import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +55,7 @@ import static com.example.demo.constant.es.IndexConst.DEFAULT_INDEX_NAME;
  * @date 2020-05-29 14:19
  */
 @Component
-public class ElasticsearchComponentImpl implements ElasticsearchComponent {
+public class ElasticsearchRequestImpl implements ElasticsearchRequest {
 
     /**
      * {@link org.springframework.boot.autoconfigure.elasticsearch.rest.RestClientConfigurations.RestHighLevelClientConfiguration#elasticsearchRestHighLevelClient}
@@ -62,7 +63,7 @@ public class ElasticsearchComponentImpl implements ElasticsearchComponent {
     private RestHighLevelClient client;
 
     @Autowired
-    public ElasticsearchComponentImpl(RestHighLevelClient client) {
+    public ElasticsearchRequestImpl(RestHighLevelClient client) {
         this.client = client;
     }
 

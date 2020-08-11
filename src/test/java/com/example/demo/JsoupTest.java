@@ -33,11 +33,10 @@ public class JsoupTest {
 //         name = "修仙从沙漠开始";
 //         name = "沈氏家族崛起";
 //         name = "太丘之上";
-//         name = "仙魔同修";
 //         name = "牧龙师";
 //         name = "大周仙吏";
-//         name = "人间冰器";
-         name = "大丰打更人";
+//         name = "大丰打更人";
+//         name = "种田系修仙";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);

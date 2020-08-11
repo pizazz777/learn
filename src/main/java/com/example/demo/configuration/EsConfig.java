@@ -2,8 +2,8 @@ package com.example.demo.configuration;
 
 import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.annotation.elasticsearch.Mapping;
-import com.example.demo.component.ElasticsearchComponent;
-import com.example.demo.properties.EsProperties;
+import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
+import com.example.demo.properties.ElasticsearchProperties;
 import com.example.demo.util.clazz.ClassUtil;
 import com.example.demo.util.container.ContainerUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +27,13 @@ import java.util.Objects;
 @Slf4j
 public class EsConfig implements ApplicationRunner {
 
-    private EsProperties esProperties;
-    private ElasticsearchComponent elasticsearchComponent;
+    private ElasticsearchProperties elasticsearchProperties;
+    private ElasticsearchRequest elasticsearchRequest;
 
     @Autowired
-    public EsConfig(EsProperties esProperties, ElasticsearchComponent elasticsearchComponent) {
-        this.esProperties = esProperties;
-        this.elasticsearchComponent = elasticsearchComponent;
+    public EsConfig(ElasticsearchProperties elasticsearchProperties, ElasticsearchRequest elasticsearchRequest) {
+        this.elasticsearchProperties = elasticsearchProperties;
+        this.elasticsearchRequest = elasticsearchRequest;
     }
 
     /**
@@ -52,7 +52,7 @@ public class EsConfig implements ApplicationRunner {
     }
 
     private void init() throws IOException, ClassNotFoundException {
-        List<String> scanPackageList = esProperties.getScanPackageList();
+        List<String> scanPackageList = elasticsearchProperties.getScanPackageList();
         if (ContainerUtil.isEmpty(scanPackageList)) {
             return;
         }
@@ -75,7 +75,7 @@ public class EsConfig implements ApplicationRunner {
                         setMapping(fields, builder, false);
                     }
                     builder.endObject().endObject();
-                    Boolean success = elasticsearchComponent.createIndex(index, builder);
+                    Boolean success = elasticsearchRequest.createIndex(index, builder);
                     if (!success) {
                         log.error("创建索引失败..");
                     }

@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "project.system")
-public class SystemProperties {
+@ConfigurationProperties(prefix = "project.cache")
+public class CacheProperties {
 
     /**
      * key前缀
      */
-    private String prefixCacheName = "sys:conf";
+    private String prefixCacheName = "sys:cache";
     /**
      * 超时时间(单位:秒)
      */

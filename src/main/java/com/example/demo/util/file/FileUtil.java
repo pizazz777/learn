@@ -76,8 +76,7 @@ public class FileUtil {
      * @return 扩展名
      */
     public static String getSuffix(File file) {
-        String fileName = file.getName();
-        return getSuffix(fileName);
+        return getSuffix(file.getName());
     }
 
     /**
@@ -91,7 +90,7 @@ public class FileUtil {
         if (dotIndex > -1) {
             return fileName.substring(dotIndex + 1).toLowerCase();
         }
-        return "";
+        return fileName;
     }
 
     /**
@@ -101,8 +100,7 @@ public class FileUtil {
      * @return 文件名(不含扩展名)
      */
     public static String getFileName(File file) {
-        String fileName = file.getName();
-        return getFileName(fileName);
+        return getFileName(file.getName());
     }
 
     /**

@@ -1,9 +1,9 @@
-package com.example.demo.manager.system.impl;
+package com.example.demo.manager.cache.impl;
 
 import com.example.demo.dao.system.SysConfigDao;
 import com.example.demo.entity.system.SysConfigDO;
-import com.example.demo.manager.system.SysConfigRequest;
-import com.example.demo.properties.SystemProperties;
+import com.example.demo.manager.cache.CacheRequest;
+import com.example.demo.properties.CacheProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -17,17 +17,17 @@ import java.util.Random;
  * @date 2020-05-18 11:17
  */
 @Component
-public class SysConfigRequestImpl implements SysConfigRequest {
+public class CacheRequestImpl implements CacheRequest {
 
-    private SystemProperties systemProperties;
+    private CacheProperties cacheProperties;
     private RedisTemplate<String, Object> redisTemplate;
     private SysConfigDao sysConfigDao;
 
     @Autowired
-    public SysConfigRequestImpl(SystemProperties systemProperties,
-                                RedisTemplate<String, Object> redisTemplate,
-                                SysConfigDao sysConfigDao) {
-        this.systemProperties = systemProperties;
+    public CacheRequestImpl(CacheProperties cacheProperties,
+                            RedisTemplate<String, Object> redisTemplate,
+                            SysConfigDao sysConfigDao) {
+        this.cacheProperties = cacheProperties;
         this.redisTemplate = redisTemplate;
         this.sysConfigDao = sysConfigDao;
     }
@@ -40,7 +40,19 @@ public class SysConfigRequestImpl implements SysConfigRequest {
      */
     @Override
     public String getCacheKeyByKey(String key) {
-        return systemProperties.getPrefixCacheName() + ":" + key;
+        return cacheProperties.getPrefixCacheName() + ":" + key;
+    }
+
+
+    /**
+     * 存放值
+     *
+     * @param key   key
+     * @param value value
+     */
+    @Override
+    public void putValue(String key, Object value) {
+        redisTemplate.opsForValue().set(getCacheKeyByKey(key), value, generateCacheTimeOut());
     }
 
 
@@ -85,7 +97,7 @@ public class SysConfigRequestImpl implements SysConfigRequest {
      */
     @Override
     public Duration generateCacheTimeOut() {
-        return Duration.ofSeconds(new Random().nextInt(systemProperties.getTimeoutOfSeconds()) + (60 * 60 * 12));
+        return Duration.ofSeconds(new Random().nextInt(cacheProperties.getTimeoutOfSeconds()) + (60 * 60 * 12));
     }
 
 }

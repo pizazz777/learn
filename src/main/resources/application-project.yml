@@ -56,10 +56,10 @@ project:
     show-user-info: true
     # 是否记录到数据库
     write-to-database: true
-  system:
+  cache:
     # 缓存key前缀
-    prefix-cache-name: learn:conf
-  es:
+    prefix-cache-name: learn:sys:cache
+  elasticsearch:
     # Elasticsearch index自动生成策略, true:存在先删除再重新设置, false:存在跳过
     es-index-schema-update: false
     # Elasticsearch需要扫描的注解包,用来在项目启动的时候根据类的注解生成index,analyzer等
@@ -72,3 +72,8 @@ project:
       path: C:/Program Files (x86)/OpenOffice 4/
       # 启动端口 默认8100
       port: 8100
+  video:
+    # ffmpeg安装路径
+    ffmpeg-path: D:/java/ffmpeg/bin/ffmpeg.exe
+    # MEncoder安装路径
+    m-encoder-path: D:/java/MPlayer-1.4

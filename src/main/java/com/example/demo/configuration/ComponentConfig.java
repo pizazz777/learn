@@ -127,7 +127,7 @@ public class ComponentConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 如果没有被其他服务器反向代理,则自身映射资源文件
-        if (!projectProperties.getReverseProxyByOtherServer()) {
+        if (projectProperties.getReverseProxyByOtherServer()) {
             File uploadDir = new File(fileProperties.getUploadFileDir());
             String uploadDirPath = uploadDir.getAbsolutePath();
             if (!uploadDir.exists()) {
