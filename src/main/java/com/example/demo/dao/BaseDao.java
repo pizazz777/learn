@@ -6,9 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/01/30
+ * @author administrator
+ * @date 2020/04/30
  * @description: 类描述: dao基本类
  **/
 public interface BaseDao<T extends Serializable> {

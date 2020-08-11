@@ -1,13 +1,15 @@
 package com.example.demo.entity.sys;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/08/30
+ * @author administrator
+ * @date 2020/05/30
  * @description: 类描述: 登录成功后返回给前端的对象
  **/
 @Data

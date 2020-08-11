@@ -41,9 +41,6 @@ public class DateUtil {
      * @return 时间对象
      */
     public static LocalDateTime getDateTimeByString(String dateTime) {
-        if (StringUtils.isBlank(dateTime)) {
-            return null;
-        }
         dateTime = formatTime(dateTime);
         // yyyy-M-d'T'H:m:s
         if (dateTime.matches("^\\d{4}-\\d{1,2}-\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {

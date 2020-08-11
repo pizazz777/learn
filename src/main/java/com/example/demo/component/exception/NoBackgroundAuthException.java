@@ -3,8 +3,9 @@ package com.example.demo.component.exception;
 import org.apache.shiro.authz.AuthorizationException;
 
 /**
- * @author Administrator
+ * @author administrator
  * @date 2020-04-29 17:18
+ * @description: 无后台登录权限异常类
  */
 public class NoBackgroundAuthException extends AuthorizationException {
 

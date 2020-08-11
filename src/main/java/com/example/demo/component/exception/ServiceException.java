@@ -1,9 +1,8 @@
 package com.example.demo.component.exception;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/01/30
+ * @author administrator
+ * @date 2020/04/30
  * @description: 类描述: 逻辑服务异常类
  **/
 public class ServiceException extends Exception {

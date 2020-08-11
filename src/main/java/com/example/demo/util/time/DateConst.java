@@ -7,9 +7,8 @@ import java.time.format.SignStyle;
 import static java.time.temporal.ChronoField.*;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/13
+ * @author administrator
+ * @date 2020/05/13
  * @description: 类描述: 时间\日期常量
  **/
 public class DateConst {

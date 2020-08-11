@@ -1,10 +1,9 @@
 package com.example.demo.component.response;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/14
- * @description: 类描述: 响应常量
+ * @author administrator
+ * @date 2020/04/30
+ * @description:
  **/
 public class ResConst {
 

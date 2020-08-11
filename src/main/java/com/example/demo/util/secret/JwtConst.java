@@ -1,8 +1,8 @@
 package com.example.demo.util.secret;
 
 /**
- * @author sqm
- * @date 2019/02/12
+ * @author administrator
+ * @date 2020/05/12
  * @description 类说明：Json Web Token 常量
  */
 public class JwtConst {

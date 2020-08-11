@@ -14,10 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author hxx
- * @version 1.0
+ * @author administrator
  * @date 2020/07/17
- * @description: 类描述:
+ * @description: open office配置类
  **/
 @Configuration
 @EnableConfigurationProperties(OfficeProperties.class)

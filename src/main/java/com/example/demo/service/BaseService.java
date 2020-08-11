@@ -6,9 +6,8 @@ import com.example.demo.component.response.ResResult;
 import java.io.Serializable;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/01/30
+ * @author administrator
+ * @date 2020/04/30
  * @description: 类描述: service基本类
  **/
 public interface BaseService<T extends Serializable> {

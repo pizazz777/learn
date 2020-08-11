@@ -5,9 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * @author: green
- * @version: 1.0
- * @Date: 2019/7/27
+ * @author: administrator
+ * @date 2020/7/27
  * @description:
  */
 @Getter

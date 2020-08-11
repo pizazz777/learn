@@ -19,8 +19,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * @author sqm
- * @version 2019/02/14
+ * @author administrator
+ * @version 2020/05/14
  * @description: 类描述: 登录验证过滤器,返回前端相关 json 信息,不作为 bean 注册,直接在{@link ShiroFilterFactoryBean#setFilters(Map)} 中作为一个对象 new 一个
  **/
 public class SysAuthFilter extends FormAuthenticationFilter {

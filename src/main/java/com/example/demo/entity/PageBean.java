@@ -5,9 +5,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Objects;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/01/30
+ * @author administrator
+ * @date 2020/04/30
  * @description: 类描述: 分页类,若需要分页的对象(model 包内的 XxxDO 对象)可继承此类
  **/
 public class PageBean {

@@ -9,9 +9,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/04/17
+ * @author administrator
+ * @date 2020/04/17
  * @description: 类描述: 删除接口的响应信息
  **/
 @Getter

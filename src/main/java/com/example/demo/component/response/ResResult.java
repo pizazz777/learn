@@ -14,10 +14,9 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/01/30
- * @description: 类描述: 响应结果类
+ * @author administrator
+ * @date 2020/04/30
+ * @description:
  **/
 @Slf4j
 @Data
@@ -108,7 +107,7 @@ public class ResResult<D> implements Serializable {
      */
     @JSONField(serialize = false, deserialize = false)
     public String getStr() {
-        return getStr("");
+        return getStr(StringUtils.EMPTY);
     }
 
     /**

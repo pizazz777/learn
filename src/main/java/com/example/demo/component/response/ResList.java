@@ -10,10 +10,9 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/02/20
- * @description: 类描述: 响应 Data 为列表时的数据{@link ResResult#setData(Object)} )}
+ * @author administrator
+ * @date 2020/04/30
+ * @description: 响应 Data 为列表时的数据{@link ResResult#setData(Object)} )}
  **/
 @Getter
 @Setter

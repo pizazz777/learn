@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @author jlf
- * @version 1.0
- * @date 2019/09/18
+ * @author administrator
+ * @date 2020/05/18
  * @description: 类描述: 流程信息类（已完成节点ID集合，进行中节点ID集合等）
  **/
 @Data

@@ -1,9 +1,8 @@
 package com.example.demo.component.exception;
 
 /**
- * @author sqm
- * @version 1.0
- * @date 2019/06/04
+ * @author administrator
+ * @date 2020/06/04
  * @description: 类描述: {@link com.example.demo.component.response.ResCode#ILLEGAL_PARAM} 非法参数
  **/
 public class IllegalParamException extends ServiceException {

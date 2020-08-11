@@ -8,8 +8,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * @author sqm
- * @version 2019/02/21
+ * @author administrator
+ * @version 2020/05/21
  * @description: 类描述: 登录验证过滤器 加入 rememberMe
  **/
 public class SysRememberMeFilter extends SysAuthFilter {
