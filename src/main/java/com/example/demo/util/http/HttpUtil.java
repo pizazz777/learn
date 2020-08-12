@@ -1,5 +1,6 @@
 package com.example.demo.util.http;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.demo.util.container.ContainerUtil;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
@@ -17,14 +18,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Administrator
@@ -112,8 +114,6 @@ public class HttpUtil {
             httpGet.addHeader(HTTP.USER_AGENT, USER_AGENT);
             log.debug("\n请求地址为:\n" + url);
             response = httpClient.execute(httpGet);
-            response.close();
-            httpClient.close();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -144,19 +144,15 @@ public class HttpUtil {
      * @return Http响应
      */
     public static CloseableHttpResponse sendPost(String url, Map<String, String> paramMap, RequestConfig requestConfig) {
-        if (ContainerUtil.isNotEmpty(paramMap)) {
-            List<NameValuePair> params = Lists.newArrayList();
-            paramMap.forEach((key, value) -> {
-                try {
-                    params.add(new BasicNameValuePair(key, URLEncoder.encode(value, StandardCharsets.UTF_8.name())));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            });
-            return sendPost(url, params, requestConfig);
-        } else {
-            return sendPost(url, requestConfig);
-        }
+        List<NameValuePair> params = Lists.newArrayList();
+        paramMap.forEach((key, value) -> {
+            try {
+                params.add(new BasicNameValuePair(key, URLEncoder.encode(value, StandardCharsets.UTF_8.name())));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        });
+        return sendPost(url, params, requestConfig);
     }
 
 
@@ -284,6 +280,23 @@ public class HttpUtil {
         return response;
     }
 
+    /**
+     * 请求结果转为实体
+     *
+     * @param response 响应对象
+     * @param clazz    要转换的类型
+     * @return 实体类
+     * @throws IOException e
+     */
+    public static <T> T transformEntity(CloseableHttpResponse response, Class<T> clazz) throws IOException {
+        if (Objects.isNull(response)) {
+            return null;
+        }
+        log.debug("状态码:  " + response.getStatusLine().getStatusCode());
+        HttpEntity entity = response.getEntity();
+        return JSONObject.parseObject(EntityUtils.toString(entity), clazz);
+    }
+
 
     /**
      * 关闭流
@@ -293,6 +306,7 @@ public class HttpUtil {
      */
     private static void close(CloseableHttpClient httpClient, CloseableHttpResponse response) {
         try {
+            // 后用先关
             if (null != response) {
                 response.close();
             }
