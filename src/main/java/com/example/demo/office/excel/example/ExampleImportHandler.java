@@ -52,12 +52,7 @@ public class ExampleImportHandler extends AbstractUserImportHandler {
     protected boolean saveMidObject(SysUserDO dataObject, Object midObject) throws ExcelException {
         dataObject.setCreateTime(LocalDateTime.now());
         dataObject.setUpdateTime(LocalDateTime.now());
-        dataObject.setEnable(1);
-        try {
-            dataObject.setCreateUserId(authComponent.getPrimaryPrincipal(Long.class));
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
+        dataObject.setStatus(1);
         if (sysUserDao.save(dataObject) > 0) {
             return true;
         }

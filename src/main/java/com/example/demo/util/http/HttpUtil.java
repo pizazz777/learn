@@ -1,6 +1,9 @@
 package com.example.demo.util.http;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.component.exception.ServiceException;
+import com.example.demo.component.response.ResCode;
 import com.example.demo.util.container.ContainerUtil;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
@@ -289,12 +292,19 @@ public class HttpUtil {
      * @throws IOException e
      */
     public static <T> T transformEntity(CloseableHttpResponse response, Class<T> clazz) throws IOException {
-        if (Objects.isNull(response)) {
-            return null;
+        if (Objects.nonNull(response)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            log.debug("状态码:  " + statusCode);
+            String result = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            JSONObject jsonObject = JSON.parseObject(result);
+            if (Objects.nonNull(jsonObject)) {
+                Integer code = jsonObject.getInteger("code");
+                if (Objects.equals(code, ResCode.OK.getValue())) {
+                    return JSONObject.parseObject(jsonObject.getString("data"), clazz);
+                }
+            }
         }
-        log.debug("状态码:  " + response.getStatusLine().getStatusCode());
-        HttpEntity entity = response.getEntity();
-        return JSONObject.parseObject(EntityUtils.toString(entity), clazz);
+        return null;
     }
 
 

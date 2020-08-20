@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author hxx
- * @version 1.0
  * @date 2020/04/28
  * @description: 类描述: 系统用户 Dao
  **/
@@ -46,5 +45,6 @@ public interface SysUserDao extends BaseDao<SysUserDO> {
      * @return 用户
      */
     SysUserDO getByUnique(@Param("id") Long id, @Param("account") String account, @Param("email") String email, @Param("mobile") String mobile);
+
 
 }

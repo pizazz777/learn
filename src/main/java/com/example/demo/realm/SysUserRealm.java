@@ -121,7 +121,7 @@ public class SysUserRealm extends AuthorizingRealm {
             loginUser = loginByKeyWithSecret(username);
             if (Objects.nonNull(loginUser)) {
                 // 启用状态
-                if (Objects.equals(loginUser.getEnable(), SysUserDO.ENABLE_NORMAL)) {
+                if (Objects.equals(loginUser.getStatus(), SysUserDO.STATUS_NORMAL)) {
                     // 密码匹配
                     if (Objects.equals(loginUser.getPassword(), authComponent.getPasswordInDb(password))) {
                         flag = true;

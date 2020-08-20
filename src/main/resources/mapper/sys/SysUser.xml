@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysUserDao">
+    <resultMap type="com.example.demo.entity.sys.SysUserDO" id="commonMap">
+        <result column="account" property="account"/>
+        <result column="create_time" property="createTime"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="description" property="description"/>
+        <result column="email" property="email"/>
+        <result column="head_img_url" property="headImgUrl"/>
+        <result column="id" property="id"/>
+        <result column="level" property="level"/>
+        <result column="mobile" property="mobile"/>
+        <result column="number" property="number"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="manager" property="manager"/>
+        <result column="status" property="status"/>
+        <result column="title" property="title"/>
+        <result column="type" property="type"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="username" property="username"/>
+        <result column="valid_end_time" property="validEndTime"/>
+        <result column="valid_start_time" property="validStartTime"/>
+        <result column="working_status" property="workingStatus"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_user
+    </sql>
+
+    <sql id="columns">
+        account,
+        create_time,
+        dept_id,
+        dept_name,
+        description,
+        email,
+        head_img_url,
+        level,
+        mobile,
+        number,
+        sex,
+        manager,
+        status,
+        title,
+        type,
+        update_time,
+        username,
+        valid_end_time,
+        valid_start_time,
+        working_status
+    </sql>
+
+    <sql id="columnsWithIdAndPassword">
+        password,
+        <include refid="columnsWithId"/>
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{account},
+        #{createTime},
+        #{deptId},
+        #{deptName},
+        #{description},
+        #{email},
+        #{headImgUrl},
+        #{level},
+        #{mobile},
+        #{number},
+        #{password},
+        #{sex},
+        #{manager},
+        #{status},
+        #{title},
+        #{type},
+        #{updateTime},
+        #{username},
+        #{validEndTime},
+        #{validStartTime},
+        #{workingStatus}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.sys.SysUserDO">
+        UPDATE
+        <include refid="tableName"/>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="account != null and account != ''">
+                account = #{account},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="deptName != null and deptName != ''">
+                dept_name = #{deptName},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="headImgUrl != null and headImgUrl != ''">
+                head_img_url = #{headImgUrl},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="mobile != null and mobile != ''">
+                mobile = #{mobile},
+            </if>
+            <if test="number != null and number != ''">
+                number = #{number},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="manager != null">
+                manager = #{manager},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="validEndTime != null">
+                valid_end_time = #{validEndTime},
+            </if>
+            <if test="validStartTime != null">
+                valid_start_time = #{validStartTime},
+            </if>
+            <if test="workingStatus != null">
+                working_status = #{workingStatus}
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="login" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithIdAndPassword"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        username = #{username}
+    </select>
+
+    <select id="getByUniqueWithSecret" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithIdAndPassword"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="uniqueCondition"/>
+    </select>
+
+    <select id="getByUnique" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="uniqueCondition"/>
+    </select>
+
+    <sql id="uniqueCondition">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null and id > 0">
+                AND
+                sys_user.id = #{id}
+            </if>
+            <if test="account != null and account != ''">
+                AND
+                sys_user.account = #{account}
+            </if>
+            <if test="email != null and email != ''">
+                AND
+                sys_user.email = #{email}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND
+                sys_user.mobile = #{mobile}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="isExistById" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+        )
+    </select>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.account != null">
+                    AND
+                    account = #{query.account}
+                </if>
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.deptId != null and query.deptId > 0 ">
+                    AND
+                    dept_id = #{query.deptId}
+                </if>
+                <if test="query.deptName != null">
+                    AND
+                    dept_name = #{query.deptName}
+                </if>
+                <if test="query.description != null">
+                    AND
+                    description = #{query.description}
+                </if>
+                <if test="query.email != null">
+                    AND
+                    email = #{query.email}
+                </if>
+                <if test="query.headImgUrl != null">
+                    AND
+                    head_img_url = #{query.headImgUrl}
+                </if>
+                <if test="query.id != null and query.id > 0 ">
+                    AND
+                    id = #{query.id}
+                </if>
+                <if test="query.level != null and query.level > 0 ">
+                    AND
+                    level = #{query.level}
+                </if>
+                <if test="query.mobile != null">
+                    AND
+                    mobile = #{query.mobile}
+                </if>
+                <if test="query.number != null">
+                    AND
+                    number = #{query.number}
+                </if>
+                <if test="query.password != null">
+                    AND
+                    password = #{query.password}
+                </if>
+                <if test="query.sex != null and query.sex > 0 ">
+                    AND
+                    sex = #{query.sex}
+                </if>
+                <if test="query.manager != null and query.manager > 0 ">
+                    AND
+                    manager = #{query.manager}
+                </if>
+                <if test="query.status != null and query.status > 0 ">
+                    AND
+                    status = #{query.status}
+                </if>
+                <if test="query.title != null">
+                    AND
+                    title = #{query.title}
+                </if>
+                <if test="query.type != null and query.type > 0 ">
+                    AND
+                    type = #{query.type}
+                </if>
+                <if test="query.updateTime != null">
+                    AND
+                    update_time = #{query.updateTime}
+                </if>
+                <if test="query.username != null">
+                    AND
+                    username = #{query.username}
+                </if>
+                <if test="query.validEndTime != null">
+                    AND
+                    valid_end_time = #{query.validEndTime}
+                </if>
+                <if test="query.validStartTime != null">
+                    AND
+                    valid_start_time = #{query.validStartTime}
+                </if>
+                <if test="query.workingStatus != null and query.workingStatus > 0 ">
+                    AND
+                    working_status = #{query.workingStatus}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

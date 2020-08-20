@@ -25,7 +25,7 @@ import com.example.demo.service.sys.SysRoleService;
  **/
 @Api(tags = "sys模块-角色表")
 @RestController
-@RequestMapping("/sys_role")
+@RequestMapping("/sys/sys_role")
 public class SysRoleController {
 
     private SysRoleService sysRoleService;

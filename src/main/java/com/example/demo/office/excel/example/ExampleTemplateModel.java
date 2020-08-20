@@ -17,9 +17,8 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class ExampleTemplateModel extends AbstractUserExcelTemplateModel<ExampleTemplateModel, SysUserDO> {
 
-    private Integer phoneIndex;
+    private Integer titleIndex;
     private Integer levelIndex;
-    private Integer remarkIndex;
     private Integer descriptionIndex;
     private Integer managerIndex;
     private Integer sexIndex;
@@ -47,14 +46,11 @@ public class ExampleTemplateModel extends AbstractUserExcelTemplateModel<Example
     @Override
     protected void setOtherTemplateModel(ExampleTemplateModel templateModel, int columnIndex, String cellValue) {
         switch (cellValue) {
-            case "电话":
-                templateModel.setPhoneIndex(columnIndex);
+            case "职务名称":
+                templateModel.setTitleIndex(columnIndex);
                 break;
             case "级别":
                 templateModel.setLevelIndex(columnIndex);
-                break;
-            case "备注":
-                templateModel.setRemarkIndex(columnIndex);
                 break;
             case "描述":
                 templateModel.setDescriptionIndex(columnIndex);
@@ -100,12 +96,10 @@ public class ExampleTemplateModel extends AbstractUserExcelTemplateModel<Example
      */
     @Override
     protected void setOtherDataObject(SysUserDO sysUser, int columnIndex, String cellValue) throws ExcelException {
-        if (Objects.equals(columnIndex, phoneIndex)) {
-            sysUser.setPhone(cellValue);
+        if (Objects.equals(columnIndex, titleIndex)) {
+            sysUser.setMobile(cellValue);
         } else if (Objects.equals(columnIndex, levelIndex)) {
             sysUser.setLevel(Integer.valueOf(cellValue));
-        } else if (Objects.equals(columnIndex, remarkIndex)) {
-            sysUser.setRemark(cellValue);
         } else if (Objects.equals(columnIndex, descriptionIndex)) {
             sysUser.setDescription(cellValue);
         } else if (Objects.equals(columnIndex, managerIndex)) {

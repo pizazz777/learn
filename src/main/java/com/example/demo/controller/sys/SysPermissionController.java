@@ -25,7 +25,7 @@ import com.example.demo.service.sys.SysPermissionService;
  **/
 @Api(tags = "sys模块-权限表")
 @RestController
-@RequestMapping("/sys_permission")
+@RequestMapping("/sys/sys_permission")
 public class SysPermissionController {
 
     private SysPermissionService sysPermissionService;

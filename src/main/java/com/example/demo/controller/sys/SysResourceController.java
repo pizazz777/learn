@@ -25,7 +25,7 @@ import com.example.demo.service.sys.SysResourceService;
  **/
 @Api(tags = "sys模块-资源表")
 @RestController
-@RequestMapping("/sys_resource")
+@RequestMapping("/sys/sys_resource")
 public class SysResourceController {
 
     private SysResourceService sysResourceService;
