@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysUserDeptMidDao">
+    <resultMap type="com.example.demo.entity.sys.SysUserDeptMidDO" id="commonMap">
+        <result column="create_time" property="createTime"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="user_id" property="userId"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_user_dept_mid
+    </sql>
+
+    <sql id="columns">
+        create_time,
+        dept_id,
+        user_id
+    </sql>
+
+
+    <sql id="entities">
+        #{createTime},
+        #{deptId},
+        #{userId}
+    </sql>
+
+
+    <insert id="save" >
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <delete id="deleteByUserIdAndDeptId">
+        DELETE FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="userId != null and userId > 0">
+                AND
+                user_id = #{userId}
+            </if>
+            <if test="deptId != null and deptId > 0">
+                AND
+                dept_id = #{deptId}
+            </if>
+        </where>
+    </delete>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="listByUserIdAndDeptId" resultMap="commonMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="userId != null and userId > 0">
+                AND
+                user_id = #{userId}
+            </if>
+            <if test="deptId != null and deptId > 0">
+                AND
+                dept_id = #{deptId}
+            </if>
+        </where>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.deptId != null and query.deptId > 0 ">
+                    AND
+                    dept_id = #{query.deptId}
+                </if>
+                <if test="query.userId != null and query.userId > 0 ">
+                    AND
+                    user_id = #{query.userId}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>

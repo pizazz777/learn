@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.sys.SysDeptDao">
+    <resultMap type="com.example.demo.entity.sys.SysDeptDO" id="commonMap">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="p_id" property="pId"/>
+        <result column="p_name" property="pName"/>
+        <result column="seq" property="seq"/>
+        <result column="description" property="description"/>
+        <result column="manager" property="manager"/>
+        <result column="contacts" property="contacts"/>
+        <result column="contacts_mobile" property="contactsMobile"/>
+        <result column="category" property="category"/>
+        <result column="type" property="type"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="tableName">
+        sys_dept
+    </sql>
+
+    <sql id="columns">
+        name,
+        p_id,
+        p_name,
+        seq,
+        description,
+        manager,
+        contacts,
+        contacts_mobile,
+        category,
+        type,
+        status,
+        create_time,
+        update_time
+    </sql>
+
+    <sql id="columnsWithId">
+        id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="entities">
+        #{name},
+        #{pId},
+        #{pName},
+        #{seq},
+        #{description},
+        #{manager},
+        #{contacts},
+        #{contactsMobile},
+        #{category},
+        #{type},
+        #{status},
+        #{createTime},
+        #{updateTime}
+    </sql>
+
+    <sql id="entitiesWithId">
+        #{id},
+        <include refid="entities"/>
+    </sql>
+
+    <insert id="save" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="columns"/>
+        )
+        VALUES
+        (
+        <include refid="entities"/>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.demo.entity.sys.SysDeptDO">
+        UPDATE
+        <include refid="tableName"/>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="pId != null">
+                p_id = #{pId},
+            </if>
+            <if test="pName != null and pName != ''">
+                p_name = #{pName},
+            </if>
+            <if test="seq != null">
+                seq = #{seq},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="manager != null and manager != ''">
+                manager = #{manager},
+            </if>
+            <if test="contacts != null and contacts != ''">
+                contacts = #{contacts},
+            </if>
+            <if test="contactsMobile != null and contactsMobile != ''">
+                contacts_mobile = #{contactsMobile},
+            </if>
+            <if test="category != null">
+                category = #{category},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </trim>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </delete>
+
+    <select id="getById" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+    </select>
+
+    <select id="isExistById" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        id = #{id}
+        )
+    </select>
+
+    <select id="list" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="isExistsByPidAndName" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="pid != null">
+                AND
+                p_id = #{pid}
+            </if>
+            <if test="name != null">
+                AND
+                name = #{name}
+            </if>
+        </where>
+        )
+    </select>
+
+    <select id="listAllId" resultType="java.lang.Long">
+        SELECT
+        id
+        FROM
+        <include refid="tableName"/>
+        WHERE
+        status = #{status}
+    </select>
+
+    <select id="listByPit" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="pid != null">
+                AND
+                p_id = #{pid}
+            </if>
+            <if test="status != null">
+                AND
+                status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <sql id="queryCondition">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="query != null">
+                <if test="query.id != null and query.id > 0 ">
+                    AND
+                    id = #{query.id}
+                </if>
+                <if test="query.name != null and query.name != '' ">
+                    AND
+                    name LIKE CONCAT('%', #{query.name}, '%')
+                </if>
+                <if test="query.pId != null and query.pId > 0 ">
+                    AND
+                    p_id = #{query.pId}
+                </if>
+                <if test="query.pName != null and query.pName != '' ">
+                    AND
+                    p_name LIKE CONCAT('%', #{query.pName}, '%')
+                </if>
+                <if test="query.seq != null and query.seq > 0 ">
+                    AND
+                    seq = #{query.seq}
+                </if>
+                <if test="query.description != null and query.description != '' ">
+                    AND
+                    description LIKE CONCAT('%', #{query.description}, '%')
+                </if>
+                <if test="query.manager != null and query.manager != '' ">
+                    AND
+                    manager LIKE CONCAT('%', #{query.manager}, '%')
+                </if>
+                <if test="query.contacts != null and query.contacts != '' ">
+                    AND
+                    contacts LIKE CONCAT('%', #{query.contacts}, '%')
+                </if>
+                <if test="query.contactsMobile != null and query.contactsMobile != '' ">
+                    AND
+                    contacts_mobile LIKE CONCAT('%', #{query.contactsMobile}, '%')
+                </if>
+                <if test="query.category != null and query.category > 0 ">
+                    AND
+                    category = #{query.category}
+                </if>
+                <if test="query.type != null and query.type > 0 ">
+                    AND
+                    type = #{query.type}
+                </if>
+                <if test="query.status != null and query.status > 0 ">
+                    AND
+                    status = #{query.status}
+                </if>
+                <if test="query.createTime != null ">
+                    AND
+                    create_time = #{query.createTime}
+                </if>
+                <if test="query.updateTime != null ">
+                    AND
+                    update_time = #{query.updateTime}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+</mapper>
