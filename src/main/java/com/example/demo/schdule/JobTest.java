@@ -3,7 +3,6 @@ package com.example.demo.schdule;
 import com.example.demo.util.time.DateConst;
 import com.example.demo.util.time.DateUtil;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import javax.annotation.Nonnull;

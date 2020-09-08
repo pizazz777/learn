@@ -26,7 +26,7 @@
     </sql>
 
 
-    <insert id="save" >
+    <insert id="save">
         INSERT INTO
         <include refid="tableName"/>
         (
@@ -38,31 +38,66 @@
         )
     </insert>
 
-    <select id="list" resultMap="commonMap">
+    <delete id="deleteByRoleIdAndPermissionId">
+        DELETE FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="permissionId != null and permissionId > 0">
+                AND
+                permission_id = #{permissionId}
+            </if>
+            <if test="roleId != null and roleId > 0">
+                AND
+                role_id = #{roleId}
+            </if>
+        </where>
+    </delete>
+
+    <select id="listByRoleIdAndPermissionId" resultMap="commonMap">
         SELECT
         <include refid="columns"/>
         FROM
         <include refid="tableName"/>
-        <include refid="queryCondition"/>
+        <where>
+            <if test="permissionId != null and permissionId > 0">
+                AND
+                permission_id = #{permissionId}
+            </if>
+            <if test="roleId != null and roleId > 0">
+                AND
+                role_id = #{roleId}
+            </if>
+        </where>
     </select>
 
-    <sql id="queryCondition">
-        <trim prefix="where" prefixOverrides="and">
-            <if test="query != null">
-                <if test="query.createTime != null">
-                    AND
-                    create_time = #{query.createTime}
-                </if>
-                <if test="query.permissionId != null and query.permissionId > 0 ">
-                    AND
-                    permission_id = #{query.permissionId}
-                </if>
-                <if test="query.roleId != null and query.roleId > 0 ">
-                    AND
-                    role_id = #{query.roleId}
-                </if>
+    <select id="listPermissionIdByUserIdAndStatus" resultType="java.lang.Long">
+        SELECT DISTINCT
+        t3.permission_id
+        FROM
+        sys_role t1
+        LEFT JOIN
+        sys_user_role_mid t2 ON t1.id = t2.role_id
+        LEFT JOIN
+        sys_role_permission_mid t3 ON t2.role_id = t3.role_id
+        <where>
+            AND
+            t2.user_id = #{userId}
+            <if test="status != null and status > 0">
+                AND
+                t1.status = #{status}
             </if>
-        </trim>
-    </sql>
+        </where>
+    </select>
+
+    <select id="isExistByPermissionId" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        permission_id = #{permissionId}
+        LIMIT 1
+        )
+    </select>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.demo.entity.sys;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import com.example.demo.entity.PageBean;
 
@@ -21,18 +22,14 @@ import java.time.LocalDateTime;
 public class SysUserRoleMidDO extends PageBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-    * 创建时间
-    */
-    private LocalDateTime createTime;
-    /**
-    * 角色主键
-    */
-    private Long roleId;
-    /**
-    * 用户主键
-    */
+    @ApiModelProperty("用户主键")
     private Long userId;
+
+    @ApiModelProperty("角色主键")
+    private Long roleId;
+
+    @ApiModelProperty("创建时间")
+    private LocalDateTime createTime;
 
     /* ------------------ 非数据库数据分割线 ------------------ */
 

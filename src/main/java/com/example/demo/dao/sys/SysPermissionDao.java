@@ -28,4 +28,32 @@ public interface SysPermissionDao extends BaseDao<SysPermissionDO> {
      */
     List<String> listPermissionStringByUserId(@Param("userId") Serializable userId);
 
+
+    /**
+     * 根据父id和状态获取
+     *
+     * @param pid    父级id
+     * @param status 状态
+     * @return list
+     */
+    List<SysPermissionDO> listByPidAndStatus(@Param("pid") Long pid, @Param("status") Integer status);
+
+
+    /**
+     * 根据pid更新pTitle
+     *
+     * @param pTitle 父标题
+     * @param pid    父id
+     * @return r
+     */
+    int updatePTitleByPid(@Param("pTitle") String pTitle, @Param("pid") Long pid);
+
+
+    /**
+     * 根据pid判断是否存在
+     *
+     * @param pid 父id
+     * @return boolean
+     */
+    Boolean isExistsByPid(@Param("pid") Serializable pid);
 }

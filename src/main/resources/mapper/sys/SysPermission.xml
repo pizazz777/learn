@@ -105,13 +105,24 @@
             <if test="type != null">
                 type = #{type},
             </if>
-            update_time = #{updateTime},
             <if test="url != null and url != ''">
-                url = #{url}
+                url = #{url},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
             </if>
         </trim>
         WHERE
         id = #{id}
+    </update>
+
+    <update id="updatePTitleByPid">
+        UPDATE
+        <include refid="tableName"/>
+        SET
+        p_title = #{pid}
+        WHERE
+        pid = #{pid}
     </update>
 
     <delete id="deleteById">
@@ -163,6 +174,33 @@
         t2.role_id = t3.role_id
         WHERE
         t3.user_id = #{userId}
+    </select>
+
+    <select id="listByPidAndStatus" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithId"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            AND
+            pid = #{pid}
+            <if test="status != null and status > 0">
+                AND
+                status = #{status}
+            </if>
+        </where>
+        ORDER BY
+        seq ASC
+    </select>
+
+    <select id="isExistsByPid" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE pit = #{pid}
+        LIMIT 1
+        )
     </select>
 
     <sql id="queryCondition">

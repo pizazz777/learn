@@ -38,12 +38,39 @@
         )
     </insert>
 
+    <delete id="deleteByUserIdAndRoleId">
+        DELETE FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="userId != null and userId > 0">
+                AND
+                user_id = #{userId}
+            </if>
+            <if test="roleId != null and roleId > 0">
+                AND
+                role_id = #{roleId}
+            </if>
+        </where>
+    </delete>
+
     <select id="list" resultMap="commonMap">
         SELECT
         <include refid="columns"/>
         FROM
         <include refid="tableName"/>
         <include refid="queryCondition"/>
+    </select>
+
+    <select id="isExistsByRoleId" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1
+        FROM
+            <include refid="tableName"/>
+        WHERE
+            role_id = #{roleId}
+        LIMIT 1
+        )
     </select>
 
     <sql id="queryCondition">

@@ -3,13 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.dao.sys.SysRoleDao">
     <resultMap type="com.example.demo.entity.sys.SysRoleDO" id="commonMap">
-        <result column="create_time" property="createTime"/>
         <result column="id" property="id"/>
         <result column="name" property="name"/>
-        <result column="remark" property="remark"/>
-        <result column="status" property="status"/>
         <result column="title" property="title"/>
         <result column="type" property="type"/>
+        <result column="permission_range" property="permissionRange"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
@@ -18,13 +19,30 @@
     </sql>
 
     <sql id="columns">
-        create_time,
         name,
-        remark,
-        status,
         title,
         type,
+        permission_range,
+        status,
+        remark,
+        create_time,
         update_time
+    </sql>
+
+    <sql id="columnsWithIdAndAlias">
+        t4.id,
+        <include refid="columns"/>
+    </sql>
+
+    <sql id="columnsWithAlias">
+        t4.name,
+        t4.title,
+        t4.type,
+        t4.permission_range,
+        t4.status,
+        t4.remark,
+        t4.create_time,
+        t4.update_time
     </sql>
 
     <sql id="columnsWithId">
@@ -33,12 +51,13 @@
     </sql>
 
     <sql id="entities">
-        #{createTime},
         #{name},
-        #{remark},
-        #{status},
         #{title},
         #{type},
+        #{permissionRange},
+        #{status},
+        #{remark},
+        #{createTime},
         #{updateTime}
     </sql>
 
@@ -66,19 +85,24 @@
             <if test="name != null and name != ''">
                 name = #{name},
             </if>
-            <if test="remark != null and remark != ''">
-                remark = #{remark},
-            </if>
-            <if test="status != null">
-                status = #{status},
-            </if>
             <if test="title != null and title != ''">
                 title = #{title},
             </if>
             <if test="type != null">
                 type = #{type},
             </if>
-            update_time = #{updateTime}
+            <if test="permissionRange != null">
+                permission_range = #{permissionRange},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
         </trim>
         WHERE
         id = #{id}
@@ -100,15 +124,6 @@
         id = #{id}
     </select>
 
-    <select id="isExistById" resultType="java.lang.Boolean">
-        SELECT EXISTS
-        (
-        SELECT 1 FROM
-        <include refid="tableName"/>
-        WHERE
-        id = #{id}
-        )
-    </select>
 
     <select id="list" resultMap="commonMap">
         SELECT
@@ -120,49 +135,76 @@
 
     <select id="listRoleNameByUserId" resultType="java.lang.String">
         SELECT DISTINCT
-        t1.name
+            t1.name
         FROM
-        <include refid="tableName"/> t1
-        LEFT JOIN
-        sys_user_role_mid t2
-        ON
-        t1.id = t2.role_id
+            sys_role t1
+            LEFT JOIN sys_user_role_mid t2 ON t1.id = t2.role_id
         WHERE
-        t2.user_id = #{userId}
-        ORDER BY
-        CONVERT(t1.name USING GBK) ASC
+            t2.user_id = #{userId}
+    </select>
+
+    <select id="isExistsByName" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE
+        name = #{name}
+        LIMIT 1
+        )
+    </select>
+
+    <select id="listByUserIdAndPermission" resultMap="commonMap">
+        SELECT
+        <include refid="columnsWithIdAndAlias"/>
+        FROM
+        sys_resource t1
+        LEFT JOIN sys_permission_resource_mid t2 ON t1.id = t2.resource_id
+        LEFT JOIN sys_role_permission_mid t3 ON t2.permission_id = t3.permission_id
+        LEFT JOIN sys_role t4 ON t3.role_id = t4.id
+        LEFT JOIN sys_user_role_mid t5 ON t4.id = t5.role_id
+        WHERE
+        t5.user_id = #{userId}
+        AND
+        t1.permission = #{permission}
+        AND
+        t4.status = #{status}
     </select>
 
     <sql id="queryCondition">
         <trim prefix="where" prefixOverrides="and">
             <if test="query != null">
-                <if test="query.createTime != null">
-                    AND
-                    create_time = #{query.createTime}
-                </if>
-                <if test="query.id != null and query.id > 0 ">
+                <if test="query.id != null">
                     AND
                     id = #{query.id}
                 </if>
                 <if test="query.name != null">
                     AND
-                    name = #{query.name}
-                </if>
-                <if test="query.remark != null">
-                    AND
-                    remark = #{query.remark}
-                </if>
-                <if test="query.status != null and query.status > 0 ">
-                    AND
-                    status = #{query.status}
+                    name LIKE CONCAT('%', #{query.name}, '%')
                 </if>
                 <if test="query.title != null">
                     AND
-                    title = #{query.title}
+                    title LIKE CONCAT('%', #{query.title}, '%')
                 </if>
-                <if test="query.type != null and query.type > 0 ">
+                <if test="query.type != null">
                     AND
                     type = #{query.type}
+                </if>
+                <if test="query.permissionRange != null">
+                    AND
+                    permission_range = #{query.permissionRange}
+                </if>
+                <if test="query.status != null">
+                    AND
+                    status = #{query.status}
+                </if>
+                <if test="query.remark != null">
+                    AND
+                    remark LIKE CONCAT('%', #{query.remark}, '%')
+                </if>
+                <if test="query.createTime != null">
+                    AND
+                    create_time = #{query.createTime}
                 </if>
                 <if test="query.updateTime != null">
                     AND

@@ -3,6 +3,8 @@ package com.example.demo.manager.sys;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.sys.SysUserDO;
 
+import java.util.List;
+
 /**
  * @author Administrator
  * @date 2020-04-29 15:48
@@ -44,5 +46,21 @@ public interface SysUserRequest {
      * @throws ServiceException e
      */
     SysUserDO getLoginedUserInfo() throws ServiceException;
+
+
+    /**
+     * 获取当前用户的指定权限的最大权限范围
+     * 若角色有ALL,则返回全部部门ID
+     * 若角色只有SUB,则返回下级部门ID
+     * 若角色只有ASSIGN,则返回指定部门ID
+     * 若角色同时SUB和ASSIGN,则返回两者并集ID
+     * 若角色只有SELF,则返回自己所在部门ID
+     *
+     * @param userId     用户id
+     * @param permission 资源权限符
+     * @return r
+     * @throws ServiceException e
+     */
+    List<Long> getSelfDeptIdListByPermission(Long userId, String permission) throws ServiceException;
 
 }

@@ -61,6 +61,15 @@ public class SysUserController {
         return result.getStr(LOGOUT_DESC);
     }
 
+    private static final String LOGINED_DESC = "登录状态";
+
+    @ApiOperation(value = LOGINED_DESC)
+    @PostMapping(value = "/logined")
+    public String logined(HttpServletRequest request) throws ServiceException {
+        ResResult result = sysUserService.logined(request);
+        return result.getStr(LOGINED_DESC);
+    }
+
     private static final String LIST_DESC = "获取用户表列表";
 
     @ApiOperation(value = LIST_DESC)

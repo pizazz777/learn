@@ -23,11 +23,6 @@ public class SysUserDO extends PageBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 状态 1.正常,2.禁用
-     */
-    public static final int STATUS_NORMAL = 1;
-    public static final int STATUS_BAN = 2;
-    /**
      * 是否超级管理员 1.是,2.否
      */
     public static final int MANAGER_YES = 1;
@@ -118,9 +113,7 @@ public class SysUserDO extends PageBean implements Serializable {
 
     /* ------------------ 非数据库数据分割线 ------------------ */
 
-    /**
-     * 关联的角色
-     */
+    @ApiModelProperty("关联的角色")
     private List<SysRoleDO> roleList;
 
 }

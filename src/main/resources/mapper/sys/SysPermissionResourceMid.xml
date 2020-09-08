@@ -38,12 +38,54 @@
         )
     </insert>
 
+    <delete id="deleteByPermissionIdAndResourceId">
+        DELETE FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="permissionId != null and permissionId > 0">
+                AND
+                permission_id = #{permissionId}
+            </if>
+            <if test="resourceId != null and resourceId > 0">
+                AND
+                resource_id = #{resourceId}
+            </if>
+        </where>
+    </delete>
+
     <select id="list" resultMap="commonMap">
         SELECT
         <include refid="columns"/>
         FROM
         <include refid="tableName"/>
         <include refid="queryCondition"/>
+    </select>
+
+    <select id="listByPermissionIdAndResourceId" resultMap="commonMap">
+        SELECT
+        <include refid="columns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            <if test="permissionId != null and permissionId > 0">
+                AND
+                permission_id = #{permissionId}
+            </if>
+            <if test="resourceId != null and resourceId > 0">
+                AND
+                resource_id = #{resourceId}
+            </if>
+        </where>
+    </select>
+
+    <select id="isExistByResourceId" resultType="java.lang.Boolean">
+        SELECT EXISTS
+        (
+        SELECT 1 FROM
+        <include refid="tableName"/>
+        WHERE resource_id = #{resourceId}
+        LIMIT 1
+        )
     </select>
 
     <sql id="queryCondition">

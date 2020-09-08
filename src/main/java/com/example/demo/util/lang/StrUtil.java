@@ -100,7 +100,7 @@ public class StrUtil {
      * @param underLineString 下换线字符串
      * @return r
      */
-    public static String convertUnderLineToFirstLowCamelCase(@NonNull String underLineString) {
+    public static String convertUnderLineToFirstLowerCamelCase(@NonNull String underLineString) {
         String result = convertUnderLineToCamelCase(underLineString);
         return result.substring(0, 1).toLowerCase() + result.substring(1);
     }

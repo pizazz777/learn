@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static com.example.demo.constant.cache.CacheConst.AUTHENTICATION_CACHE_NAME;
 import static com.example.demo.constant.cache.CacheConst.AUTHORIZATION_CACHE_NAME;
+import static com.example.demo.constant.sys.CommonConst.*;
 import static com.example.demo.constant.sys.PermissionConst.SYS_LOGIN;
 
 /**
@@ -42,11 +43,6 @@ import static com.example.demo.constant.sys.PermissionConst.SYS_LOGIN;
 @Slf4j
 public class SysUserRealm extends AuthorizingRealm {
 
-    /**
-     * 管理员用户
-     */
-    public static final long ADMIN_ID = 0L;
-    public static final String ADMIN_NAME = "管理员";
 
     private AuthProperties authProperties;
     private AuthComponent authComponent;
@@ -92,7 +88,7 @@ public class SysUserRealm extends AuthorizingRealm {
             List<String> roleNameList = sysRoleDao.listRoleNameByUserId(id);
             authorizationInfo.addRoles(roleNameList.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()));
             // 添加权限资源符
-            List<String> permissionNameList = sysResourceDao.listPermissionStringByUserId(id);
+            List<String> permissionNameList = sysResourceDao.listResourcePermissionStringByUserId(id);
             authorizationInfo.addStringPermissions(permissionNameList.stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()));
         }
         return authorizationInfo;
@@ -121,7 +117,7 @@ public class SysUserRealm extends AuthorizingRealm {
             loginUser = loginByKeyWithSecret(username);
             if (Objects.nonNull(loginUser)) {
                 // 启用状态
-                if (Objects.equals(loginUser.getStatus(), SysUserDO.STATUS_NORMAL)) {
+                if (Objects.equals(loginUser.getStatus(), STATUS_NORMAL)) {
                     // 密码匹配
                     if (Objects.equals(loginUser.getPassword(), authComponent.getPasswordInDb(password))) {
                         flag = true;

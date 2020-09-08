@@ -6,19 +6,26 @@ import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.dao.sys.SysRoleDao;
 import com.example.demo.dao.sys.SysUserDao;
+import com.example.demo.dao.sys.SysUserRoleMidDao;
 import com.example.demo.entity.sys.LoginInfo;
 import com.example.demo.entity.sys.SysUserDO;
+import com.example.demo.entity.sys.SysUserRoleMidDO;
 import com.example.demo.manager.sys.SysUserRequest;
 import com.example.demo.realm.SysUserRealm;
 import com.example.demo.service.sys.SysUserService;
 import com.example.demo.util.container.ContainerUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +35,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.demo.constant.sys.CacheConst.*;
+
 /**
  * @author hxx
  * @version 1.0
  * @date 2020/04/28
  * @description: 类描述: 系统用户 Service
  **/
+@CacheConfig(cacheNames = SYS_USER_LIST)
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
@@ -41,16 +51,22 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserRequest sysUserRequest;
     private AuthComponent authComponent;
     private SysUserRealm sysUserRealm;
+    private SysUserRoleMidDao sysUserRoleMidDao;
+    private SysRoleDao sysRoleDao;
 
     @Autowired
     public SysUserServiceImpl(SysUserDao sysUserDao,
                               SysUserRequest sysUserRequest,
                               AuthComponent authComponent,
-                              SysUserRealm sysUserRealm) {
+                              SysUserRealm sysUserRealm,
+                              SysUserRoleMidDao sysUserRoleMidDao,
+                              SysRoleDao sysRoleDao) {
         this.sysUserDao = sysUserDao;
         this.sysUserRequest = sysUserRequest;
         this.authComponent = authComponent;
         this.sysUserRealm = sysUserRealm;
+        this.sysUserRoleMidDao = sysUserRoleMidDao;
+        this.sysRoleDao = sysRoleDao;
     }
 
     /**
@@ -86,6 +102,17 @@ public class SysUserServiceImpl implements SysUserService {
         return ResResult.success();
     }
 
+    /**
+     * 登录状态
+     *
+     * @param request 请求对象
+     * @return r
+     */
+    @Override
+    public ResResult logined(HttpServletRequest request) {
+        return ResResult.success();
+    }
+
     @Override
     public ResResult list(SysUserDO query) throws ServiceException {
         PageHelper.startPage(query);
@@ -107,8 +134,8 @@ public class SysUserServiceImpl implements SysUserService {
         return ResResult.fail(ResCode.NOT_FOUND);
     }
 
+    @CacheEvict(allEntries = true)
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResResult save(SysUserDO object) throws ServiceException {
         LocalDateTime now = LocalDateTime.now();
         object.setCreateTime(now);
@@ -120,8 +147,9 @@ public class SysUserServiceImpl implements SysUserService {
         return ResResult.fail();
     }
 
+
+    @CacheEvict(allEntries = true)
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResResult update(SysUserDO object) throws ServiceException {
         object.setUpdateTime(LocalDateTime.now());
         int update = sysUserDao.update(object);
@@ -148,4 +176,112 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return ResResult.success(delResInfo);
     }
+
+    /**
+     * 设置用户角色
+     *
+     * @param userId     用户id
+     * @param roleIdList 角色id列表
+     * @return r
+     * @throws ServiceException e
+     */
+    @CacheEvict(cacheNames = {SYS_PERMISSION_TREE, SYS_USER_LIST, SELF_DATA_PERMISSION}, allEntries = true)
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResResult setUserRoleList(Long userId, List<Long> roleIdList) throws ServiceException {
+        // 删除旧的
+        sysUserRoleMidDao.deleteByUserIdAndRoleId(userId, null);
+        // 保存新的
+        saveUserRoleMid(Lists.newArrayList(userId), roleIdList);
+        // 清除缓存
+        sysUserRealm.clearAllCachedAuthorizationInfo();
+        return ResResult.success();
+    }
+
+
+    /**
+     * 设置角色用户
+     *
+     * @param roleId     角色id
+     * @param userIdList 用户id列表
+     * @return r
+     * @throws ServiceException e
+     */
+    @CacheEvict(cacheNames = {SYS_PERMISSION_TREE, SYS_USER_LIST, SELF_DATA_PERMISSION}, allEntries = true)
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ResResult setRoleUserList(Long roleId, List<Long> userIdList) throws ServiceException {
+        // 删除旧的
+        sysUserRoleMidDao.deleteByUserIdAndRoleId(null, roleId);
+        // 保存新的
+        saveUserRoleMid(userIdList, Lists.newArrayList(roleId));
+        // 清除缓存
+        sysUserRealm.clearAllCachedAuthorizationInfo();
+        return ResResult.success();
+    }
+
+    /**
+     * 根据角色id获取用户
+     *
+     * @param query  查询对象
+     * @param roleId 角色id
+     * @return r
+     * @throws ServiceException e
+     */
+    @Cacheable
+    @Override
+    public ResResult listWithRoleByRoleId(SysUserDO query, Long roleId) throws ServiceException {
+        return null;
+    }
+
+    /**
+     * 根据角色获取用户
+     *
+     * @param roleId 角色id
+     * @return r
+     * @throws ServiceException e
+     */
+    @Override
+    public ResResult listByRole(Long roleId) throws ServiceException {
+        return null;
+    }
+
+    /**
+     * 根据权限字符串获取人员列表
+     *
+     * @param permission 权限字符串
+     * @param corpId     单位ID
+     * @param name       人员名称
+     * @return r
+     * @throws ServiceException e
+     */
+    @Override
+    public ResResult listByPermission(String permission, Long corpId, String name) throws ServiceException {
+        return null;
+    }
+
+
+    /**
+     * 保存用户和角色中间对象
+     *
+     * @param userIdList 用户id列表
+     * @param roleIdList 角色id列表
+     */
+    private void saveUserRoleMid(List<Long> userIdList, List<Long> roleIdList) {
+        if (ContainerUtil.isNotEmpty(userIdList) && ContainerUtil.isNotEmpty(roleIdList)) {
+            LocalDateTime now = LocalDateTime.now();
+            userIdList.forEach(userId ->
+                    roleIdList.forEach(roleId -> {
+                        SysUserRoleMidDO build = SysUserRoleMidDO.builder()
+                                .userId(userId)
+                                .roleId(roleId)
+                                .createTime(now)
+                                .build();
+                        sysUserRoleMidDao.save(build);
+                    })
+            );
+        }
+    }
+
+
 }

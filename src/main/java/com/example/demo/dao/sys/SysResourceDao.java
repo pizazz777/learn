@@ -35,6 +35,35 @@ public interface SysResourceDao extends BaseDao<SysResourceDO> {
      * @param userId 用户主键
      * @return list
      */
-    List<String> listPermissionStringByUserId(@Param("userId") Serializable userId);
+    List<String> listResourcePermissionStringByUserId(@Param("userId") Serializable userId);
+
+
+    /**
+     * 根据权限id和状态获取对应的资源
+     *
+     * @param permissionId 权限id
+     * @param status       状态
+     * @return list
+     */
+    List<SysResourceDO> listByPermissionAndStatus(@Param("permissionId") Long permissionId, @Param("status") Integer status);
+
+
+    /**
+     * 根据父id和状态获取
+     *
+     * @param pid    父id
+     * @param status 状态
+     * @return list
+     */
+    List<SysResourceDO> listByPidAndStatus(@Param("pid") Long pid, @Param("status") Integer status);
+
+
+    /**
+     * 获取用户允许的资源
+     *
+     * @param userId 用户id
+     * @return list
+     */
+    List<Long> listByUserId(@Param("userId") Long userId);
 
 }
