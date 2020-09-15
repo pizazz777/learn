@@ -60,19 +60,23 @@ public enum FileTypeEnum implements FileType {
      * video
      */
     MPEG,
-    MPG,
     DAT,
-    MOV,
-    WMV,
-    _3GP,
     MKV,
     RM,
     RMVB,
     VOB,
-    MP4,
     SWF,
-    FLV,
+    ASX,
+    ASF,
+    MPG,
+    WMV,
+    _3GP,
+    MP4,
+    MOV,
     AVI,
+    FLV,
+
+
 
     /**
      * audio
@@ -143,16 +147,6 @@ public enum FileTypeEnum implements FileType {
         String result = this.name();
         result = result.replace("_", "");
         return result.toLowerCase();
-    }
-
-    /**
-     * 获取文件格式
-     *
-     * @see FileType#getByName(String)
-     */
-    @Deprecated
-    public static FileTypeEnum getByName(String fileName) throws UploadException {
-        return FileType.getByName(fileName);
     }
 
 }

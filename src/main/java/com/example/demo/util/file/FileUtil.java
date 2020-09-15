@@ -3,6 +3,7 @@ package com.example.demo.util.file;
 import com.example.demo.util.container.ContainerUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,13 +34,7 @@ public class FileUtil {
      */
     public static long downloadByNio(String url, String saveDir, String fileName) throws IOException {
         url = formatUrlString(url);
-        try (InputStream inputStream = new URL(url).openStream()) {
-            Path target = Paths.get(saveDir, fileName);
-            if (Objects.nonNull(target)) {
-                return Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
-        throw new IOException("文件不存在");
+        return saveFileByNio(new URL(url).openStream(), saveDir, fileName);
     }
 
     /**
@@ -126,7 +121,7 @@ public class FileUtil {
         if (ContainerUtil.isNotEmpty(files)) {
             for (File file : files) {
                 if (file.exists()) {
-                    file.delete();
+                    boolean delete = file.delete();
                 }
             }
         }
@@ -145,6 +140,25 @@ public class FileUtil {
             }
         }
         return urlString;
+    }
+
+
+    /**
+     * 读取InputStream流中的内容
+     *
+     * @param inputStream 流
+     * @return r
+     * @throws IOException e
+     */
+    public static byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int length;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        while ((length = inputStream.read(buffer)) != -1) {
+            stream.write(buffer, 0, length);
+        }
+        stream.close();
+        return stream.toByteArray();
     }
 
 

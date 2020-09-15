@@ -101,4 +101,11 @@ public class AuthComponentImpl implements AuthComponent {
     public String getPasswordInDb(String password) {
         return Md5Util.getMd5(password);
     }
+
+
+    public static void main(String[] args) {
+        System.out.println(Md5Util.getMd5("123456"));
+    }
+
+
 }

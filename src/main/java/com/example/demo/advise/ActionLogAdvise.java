@@ -9,10 +9,12 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -37,14 +39,27 @@ public class ActionLogAdvise {
 
     /**
      * 定义切点
-     * 使用@Action注解 作为切点表达式。
+     * 使用@Action注解,作为切点表达式,切带指定注解的方法
      */
-    @Pointcut("@annotation(action)")
-    public void actionAspect(Action action) {
+    @Pointcut("@annotation(com.example.demo.annotation.Action)")
+    public void actionAspect() {
     }
 
-    @Around(value = "actionAspect(action)&&@annotation(action)")
-    public Object around(ProceedingJoinPoint point, Action action) throws Throwable {
+    /**
+     * 环绕通知  处理日志
+     *
+     * @param point point
+     * @return r
+     * @throws Throwable e
+     */
+    @Around(value = "actionAspect()")
+    public Object around(ProceedingJoinPoint point) throws Throwable {
+        // 从切面织入点处通过反射机制获取织入点处的方法
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        // 获取切入点所在的方法
+        Method method = signature.getMethod();
+        // 获取方法上指定的注解
+        Action action = method.getDeclaredAnnotation(Action.class);
         // 登录操作直接放行
         if (Objects.equals(action.type(), ActionLogEnum.LOGIN)) {
             return point.proceed();

@@ -1,8 +1,10 @@
 package com.example.demo.controller.sys;
 
+import com.example.demo.annotation.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.constant.log.ActionLogEnum;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.service.sys.SysUserService;
 import io.swagger.annotations.Api;
@@ -65,6 +67,7 @@ public class SysUserController {
 
     @ApiOperation(value = LOGINED_DESC)
     @PostMapping(value = "/logined")
+    @Action(desc = LOGINED_DESC, type = ActionLogEnum.LOGIN)
     public String logined(HttpServletRequest request) throws ServiceException {
         ResResult result = sysUserService.logined(request);
         return result.getStr(LOGINED_DESC);

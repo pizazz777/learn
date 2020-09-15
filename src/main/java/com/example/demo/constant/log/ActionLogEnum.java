@@ -35,6 +35,14 @@ public enum ActionLogEnum {
     /**
      * 列表
      */
-    LIST
+    LIST,
+    /**
+     * 上传
+     */
+    UPLOAD,
+    /**
+     * 下载
+     */
+    DOWNLOAD,
 
 }

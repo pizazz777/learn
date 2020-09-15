@@ -1,13 +1,15 @@
 package com.example.demo.manager.video.impl;
 
 import com.example.demo.component.exception.VideoException;
-import com.example.demo.constant.file.VideoEnum;
+import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
 import com.example.demo.manager.video.VideoRequest;
 import com.example.demo.properties.VideoProperties;
 import com.example.demo.util.file.FileUtil;
+import com.example.demo.util.thread.ThreadUtil;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
@@ -16,16 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * @author Administrator
@@ -33,19 +33,11 @@ import java.util.concurrent.TimeUnit;
  * @description: 视频转换操作类
  */
 @Component
+@Slf4j
 public class VideoRequestImpl implements VideoRequest {
 
     private UploadFileRequest uploadFileRequest;
     private VideoProperties videoProperties;
-    private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
-            2,
-            2,
-            1000,
-            TimeUnit.MILLISECONDS,
-            new ArrayBlockingQueue<>(5),
-            Executors.defaultThreadFactory(),
-            new ThreadPoolExecutor.DiscardPolicy()
-    );
 
     @Autowired
     public VideoRequestImpl(UploadFileRequest uploadFileRequest, VideoProperties videoProperties) {
@@ -62,15 +54,10 @@ public class VideoRequestImpl implements VideoRequest {
      * @throws VideoException e
      */
     @Override
-    public UploadFileDO convert(MultipartFile file, VideoEnum type) throws VideoException {
+    public UploadFileDO convert(MultipartFile file, FileTypeEnum type) throws VideoException {
         try (InputStream inputStream = file.getInputStream()) {
-            UploadFileDO emptyFile = uploadFileRequest.generateEmptyFile(type.getSuffix());
-            Optional.ofNullable(emptyFile).orElseThrow(() -> new VideoException("不支持该文件类型"));
-            emptyFile.setSize(file.getSize());
-            this.convert(inputStream, emptyFile.getPath());
-            uploadFileRequest.update(emptyFile);
-            return emptyFile;
-        } catch (Exception e) {
+            return convert(inputStream, type);
+        } catch (IOException e) {
             throw new VideoException(e.getMessage());
         }
     }
@@ -84,47 +71,53 @@ public class VideoRequestImpl implements VideoRequest {
      * @throws VideoException e
      */
     @Override
-    public UploadFileDO convert(String videoPath, VideoEnum type) throws VideoException {
+    public UploadFileDO convert(String videoPath, FileTypeEnum type) throws VideoException {
         checkType(videoPath);
         return convertByFfmpeg(videoPath, type);
     }
 
-    private UploadFileDO convertByFfmpeg(String videoPath, VideoEnum type) throws VideoException {
-        List<String> command = Lists.newArrayList();
-        command.add(videoProperties.getFfmpegPath());
-        command.add("-i");
-        command.add(videoPath);
-        UploadFileDO emptyFile;
-        try {
-            emptyFile = uploadFileRequest.generateEmptyFile(type.getSuffix());
-            command.add(emptyFile.getPath());
-            ProcessBuilder builder = new ProcessBuilder();
-            Process process = builder.command(command).redirectErrorStream(true).start();
-            pool.execute(new OutputVideoStreamThread(process.getErrorStream()));
-            pool.execute(new OutputVideoStreamThread(process.getInputStream()));
-            process.waitFor();
-            return emptyFile;
-        } catch (Exception e) {
+
+    /**
+     * 视频转换  使用zip批量转
+     *
+     * @param file zip包
+     * @param type 转换之后的类型
+     * @return 转换之后的文件对象
+     * @throws VideoException e
+     */
+    @Override
+    public List<UploadFileDO> convert(File file, FileTypeEnum type) throws VideoException {
+        List<UploadFileDO> list = Lists.newArrayList();
+        // 使用GBK防止中文文件名乱码
+        try (ZipFile zipFile = new ZipFile(file, Charset.forName("GBK"))) {
+            Enumeration<? extends ZipEntry> zipEntryEnum = zipFile.entries();
+            ZipEntry zipEntry;
+            while (zipEntryEnum.hasMoreElements()) {
+                zipEntry = zipEntryEnum.nextElement();
+                if (!zipEntry.isDirectory()) {
+                    InputStream inputStream = zipFile.getInputStream(zipEntry);
+                    list.add(convert(inputStream, type));
+                }
+            }
+        } catch (IOException e) {
             throw new VideoException(e.getMessage());
         }
-    }
-
-    private void checkType(String videoPath) throws VideoException {
-        boolean flag = Arrays.stream(VideoEnum.values()).map(VideoEnum::getSuffix).anyMatch(type -> Objects.equals(type, FileUtil.getSuffix(videoPath)));
-        if (!flag) {
-            throw new VideoException("不支持的视频转换类型");
-        }
+        return list;
     }
 
     /**
      * 使用javacv转换视频格式
      *
      * @param inputStream 输入流
-     * @param outputPath  输出路径
-     * @throws Exception e
+     * @param type        转换后的类型
+     * @return 服务器的文件对象
+     * @throws VideoException e
      */
-    private void convert(InputStream inputStream, String outputPath) throws Exception {
+    private UploadFileDO convert(InputStream inputStream, FileTypeEnum type) throws VideoException {
         try (FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(inputStream)) {
+            UploadFileDO emptyFile = uploadFileRequest.generateEmptyFile(type.getSuffix());
+            Optional.ofNullable(emptyFile).orElseThrow(() -> new VideoException("不支持该文件类型"));
+            String outputPath = emptyFile.getPath();
             FFmpegFrameRecorder recorder;
             frameGrabber.start();
             recorder = new FFmpegFrameRecorder(outputPath, frameGrabber.getImageWidth(), frameGrabber.getImageHeight(), frameGrabber.getAudioChannels());
@@ -143,6 +136,50 @@ public class VideoRequestImpl implements VideoRequest {
             recorder.stop();
             recorder.release();
             frameGrabber.stop();
+
+            emptyFile.setSize(emptyFile.getSize());
+            uploadFileRequest.update(emptyFile);
+            return emptyFile;
+        } catch (Exception e) {
+            throw new VideoException(e.getMessage());
+        }
+    }
+
+    private UploadFileDO convertByFfmpeg(String videoPath, FileTypeEnum type) throws VideoException {
+        List<String> command = Lists.newArrayList();
+        command.add(videoProperties.getFfmpegPath());
+        command.add("-i");
+        command.add(videoPath);
+        UploadFileDO emptyFile;
+        try {
+            emptyFile = uploadFileRequest.generateEmptyFile(type.getSuffix());
+            command.add(emptyFile.getPath());
+            ProcessBuilder builder = new ProcessBuilder();
+            Process process = builder.command(command).redirectErrorStream(true).start();
+            ExecutorService pool = ThreadUtil.defaultThreadPool();
+            pool.execute(() -> print(process.getInputStream()));
+            pool.execute(() -> print(process.getErrorStream()));
+            ThreadUtil.exit(pool);
+            process.waitFor();
+            return emptyFile;
+        } catch (Exception e) {
+            throw new VideoException(e.getMessage());
+        }
+    }
+
+    private void checkType(String videoPath) throws VideoException {
+        boolean flag = Arrays.stream(FileTypeEnum.values()).map(FileTypeEnum::getSuffix).anyMatch(type -> Objects.equals(type, FileUtil.getSuffix(videoPath)));
+        if (!flag) {
+            throw new VideoException("不支持的视频转换类型");
+        }
+    }
+
+    private void print(InputStream inputStream) {
+        try {
+            byte[] bytes = FileUtil.readInputStream(inputStream);
+            log.debug(new String(bytes));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

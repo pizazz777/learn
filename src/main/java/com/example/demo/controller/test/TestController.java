@@ -3,7 +3,10 @@ package com.example.demo.controller.test;
 import com.example.demo.annotation.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.constant.file.FileType;
 import com.example.demo.entity.sys.SysUserDO;
+import com.example.demo.entity.upload.UploadFileDO;
+import com.example.demo.manager.video.VideoRequest;
 import com.example.demo.office.excel.example.ExampleImportHandler;
 import com.example.demo.office.excel.model.ImportResult;
 import com.example.demo.schdule.TimerTest;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static com.example.demo.constant.log.ActionLogEnum.GET;
+import static com.example.demo.constant.log.ActionLogEnum.SAVE;
 
 /**
  * @author Administrator
@@ -29,11 +33,32 @@ public class TestController {
 
     private TimerTest timerTest;
     private ExampleImportHandler exampleImportHandler;
+    private VideoRequest videoRequest;
 
     @Autowired
-    public TestController(TimerTest timerTest, ExampleImportHandler exampleImportHandler) {
+    public TestController(TimerTest timerTest, ExampleImportHandler exampleImportHandler, VideoRequest videoRequest) {
         this.timerTest = timerTest;
         this.exampleImportHandler = exampleImportHandler;
+        this.videoRequest = videoRequest;
+    }
+
+    private static final String CONVERT_VIDEO = "视频转换";
+
+    @ApiOperation(value = CONVERT_VIDEO)
+    @Action(type = SAVE, desc = CONVERT_VIDEO)
+    @PostMapping(value = "/convert")
+    public String convert(@RequestParam("file") MultipartFile file, @RequestParam("suffix") String suffix) throws ServiceException {
+        UploadFileDO convert = videoRequest.convert(file, FileType.getBySuffix(suffix));
+        return ResResult.success(convert).getStr(CONVERT_VIDEO);
+    }
+
+
+    @ApiOperation(value = CONVERT_VIDEO)
+    @Action(type = SAVE, desc = CONVERT_VIDEO)
+    @PostMapping(value = "/convert2")
+    public String convert2(@RequestParam("path") String path, @RequestParam("suffix") String suffix) throws ServiceException {
+        UploadFileDO convert = videoRequest.convert(path, FileType.getBySuffix(suffix));
+        return ResResult.success(convert).getStr(CONVERT_VIDEO);
     }
 
     private static final String IMPORT_EXCEL_DESC = "测试导入excel";

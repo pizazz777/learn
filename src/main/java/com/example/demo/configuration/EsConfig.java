@@ -44,7 +44,9 @@ public class EsConfig implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         try {
-            init();
+            if (!elasticsearchProperties.getSkip()) {
+                init();
+            }
         } catch (IOException | ClassNotFoundException e) {
             log.error("项目初始化Elasticsearch Mapping失败!");
             e.printStackTrace();

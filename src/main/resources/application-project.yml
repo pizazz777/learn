@@ -65,6 +65,7 @@ project:
     # Elasticsearch需要扫描的注解包,用来在项目启动的时候根据类的注解生成index,analyzer等
     scan-package-list:
       - com.example.demo.entity
+    skip: true
   office:
     # open office配置
     open-office:

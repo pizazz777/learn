@@ -23,4 +23,8 @@ public class ElasticsearchProperties {
      * Elasticsearch index自动生成策略, true:存在先删除再重新设置, false:存在跳过
      */
     private Boolean esIndexSchemaUpdate = false;
+    /**
+     * 是否跳过生成
+     */
+    private Boolean skip = false;
 }

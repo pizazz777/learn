@@ -236,4 +236,16 @@ public class DateUtil {
         }
         return null;
     }
+
+    /**
+     * 获取两个时间之间的一段时间
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return r
+     */
+    public static Duration duration(LocalDateTime startTime, LocalDateTime endTime) {
+        return Duration.between(startTime, endTime);
+    }
+
 }
