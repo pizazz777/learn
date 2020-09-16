@@ -153,12 +153,12 @@ public class FileUtil {
     public static byte[] readInputStream(InputStream inputStream) throws IOException {
         byte[] buffer = new byte[1024];
         int length;
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        while ((length = inputStream.read(buffer)) != -1) {
-            stream.write(buffer, 0, length);
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            while ((length = inputStream.read(buffer)) != -1) {
+                stream.write(buffer, 0, length);
+            }
+            return stream.toByteArray();
         }
-        stream.close();
-        return stream.toByteArray();
     }
 
 

@@ -244,35 +244,41 @@ public class ExcelUtil {
         if (Objects.nonNull(sourceCell.getCellComment())) {
             targetCell.setCellComment(sourceCell.getCellComment());
         }
-        // 复制值
-        copyCellValue(sourceCell, targetCell, copyValueFlag);
+        if (copyValueFlag) {
+            // 复制值
+            copyCellValue(sourceCell, targetCell);
+        }
     }
 
-    private static void copyCellValue(Cell srcCell, Cell destCell, boolean copyValueFlag) {
-        if (copyValueFlag) {
-            CellType cellType = srcCell.getCellType();
-            switch (cellType) {
-                case STRING:
-                    destCell.setCellValue(srcCell.getStringCellValue());
-                    break;
-                case NUMERIC:
-                    destCell.setCellValue(srcCell.getNumericCellValue());
-                    break;
-                case FORMULA:
-                    destCell.setCellValue(srcCell.getCellFormula());
-                    break;
-                case BOOLEAN:
-                    destCell.setCellValue(srcCell.getBooleanCellValue());
-                    break;
-                case ERROR:
-                    destCell.setCellValue(srcCell.getErrorCellValue());
-                    break;
-                case BLANK:
-                    // nothing to do
-                    break;
-                default:
-                    break;
-            }
+    /**
+     * 复制值
+     *
+     * @param srcCell       源单元格
+     * @param destCell      目标单元格
+     */
+    private static void copyCellValue(Cell srcCell, Cell destCell) {
+        CellType cellType = srcCell.getCellType();
+        switch (cellType) {
+            case STRING:
+                destCell.setCellValue(srcCell.getStringCellValue());
+                break;
+            case NUMERIC:
+                destCell.setCellValue(srcCell.getNumericCellValue());
+                break;
+            case FORMULA:
+                destCell.setCellValue(srcCell.getCellFormula());
+                break;
+            case BOOLEAN:
+                destCell.setCellValue(srcCell.getBooleanCellValue());
+                break;
+            case ERROR:
+                destCell.setCellValue(srcCell.getErrorCellValue());
+                break;
+            case BLANK:
+                // nothing to do
+                break;
+            default:
+                break;
         }
     }
 

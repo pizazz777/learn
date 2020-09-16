@@ -47,6 +47,7 @@
         <javacv.version>1.4.4</javacv.version>
         <javacpp.version>1.4.4</javacpp.version>
         <javacpp-presets.ffmpeg.version>4.1-${javacpp.version}</javacpp-presets.ffmpeg.version>
+        <javacpp-presets.opencv.version>4.0.1-${javacpp.version}</javacpp-presets.opencv.version>
     </properties>
 
     <dependencies>
@@ -396,6 +397,7 @@
         </dependency>
 
         <!-- javacv 操作视频 -->
+        <!-- javacv.jar是对9个视觉库进行了二次封装 -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv</artifactId>
@@ -405,16 +407,38 @@
             <groupId>org.bytedeco</groupId>
             <artifactId>javacv-platform</artifactId>
             <version>${javacv.version}</version>
+            <classifier>${javacv.classifier.os}</classifier>
         </dependency>
+        <!-- javacpp是基于jni的一个功能性封装包,方便实现jni -->
         <dependency>
             <groupId>org.bytedeco</groupId>
             <artifactId>javacpp</artifactId>
             <version>${javacpp.version}</version>
         </dependency>
+        <!-- ffmpeg.jar是使用javacpp封装的对应本地库java接口的实现 -->
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>ffmpeg</artifactId>
             <version>${javacpp-presets.ffmpeg.version}</version>
+        </dependency>
+        <!-- ffmpeg-系统平台.jar中存放的是c/c++本地so/dll库 -->
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>ffmpeg-platform</artifactId>
+            <version>${javacpp-presets.ffmpeg.version}</version>
+            <classifier>${javacv.classifier.os}</classifier>
+        </dependency>
+
+        <!-- javacv 操作电脑摄像头 -->
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>opencv</artifactId>
+            <version>${javacpp-presets.opencv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bytedeco.javacpp-presets</groupId>
+            <artifactId>opencv-platform</artifactId>
+            <version>${javacpp-presets.opencv.version}</version>
             <classifier>${javacv.classifier.os}</classifier>
         </dependency>
 

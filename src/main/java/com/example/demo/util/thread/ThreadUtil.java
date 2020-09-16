@@ -19,7 +19,7 @@ public class ThreadUtil {
     private static final long DEFAULT_KEEP_ALIVE_TIME = 1000L;
 
     /**
-     * 拒绝策略  当线程池满并且队列也满了之后,会触发拒绝策略
+     * 拒绝策略  当线程池满并且队列也满了之后触发
      * {@link ThreadPoolExecutor.DiscardPolicy#DiscardPolicy()}: 直接抛弃任务
      * {@link ThreadPoolExecutor.AbortPolicy#AbortPolicy()}: 拒绝并抛出异常(默认)
      * {@link ThreadPoolExecutor.DiscardOldestPolicy#DiscardOldestPolicy()}: 移除等待队头任务,当前任务入队
