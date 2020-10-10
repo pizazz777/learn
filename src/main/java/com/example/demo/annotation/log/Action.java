@@ -1,4 +1,4 @@
-package com.example.demo.annotation;
+package com.example.demo.annotation.log;
 
 import com.example.demo.constant.log.ActionLogEnum;
 

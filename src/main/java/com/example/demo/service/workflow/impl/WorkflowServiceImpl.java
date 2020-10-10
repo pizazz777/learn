@@ -211,7 +211,7 @@ public class WorkflowServiceImpl implements WorkflowService {
         Task task = workflowRequest.getCurrentTaskSingleResult(processInstanceId);
         List<Long> candidateUserList = Lists.newArrayList(3L, 4L);
         Map<String, Object> paramsMap = getVariables(null, candidateUserList, null, type, 1L);
-        workflowRequest.complete("2", task.getId(), processInstanceId, comment, paramsMap);
+        workflowRequest.complete(String.valueOf(principal), task.getId(), processInstanceId, comment, paramsMap);
         return ResResult.success();
     }
 
@@ -236,13 +236,9 @@ public class WorkflowServiceImpl implements WorkflowService {
             if (taskList.size() > 1) {
                 if (StringUtils.isNotBlank(taskDefinitionKey)) {
                     // 筛选指定任务
-                    taskList = taskList.stream().filter(e -> Objects.equals(taskDefinitionKey, e.getTaskDefinitionKey())).collect(Collectors.toList());
-                }
-                for (Task task : taskList) {
-                    List<String> candidateUserIdList = workflowRequest.listCurrentTaskCandidateUser(task.getId());
-                    if (candidateUserIdList.contains(principal)) {
+                    Task task = taskList.stream().filter(e -> Objects.equals(taskDefinitionKey, e.getTaskDefinitionKey())).findFirst().orElse(null);
+                    if (Objects.nonNull(task)) {
                         taskId = task.getId();
-                        break;
                     }
                 }
             } else {

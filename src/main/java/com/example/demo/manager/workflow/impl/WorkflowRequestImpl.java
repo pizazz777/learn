@@ -3,8 +3,6 @@ package com.example.demo.manager.workflow.impl;
 import com.example.demo.component.AuthComponent;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.activiti.*;
-import com.example.demo.jump.DeleteTaskCmd;
-import com.example.demo.jump.SetFlowNodeAndGoCmd;
 import com.example.demo.manager.workflow.WorkflowRequest;
 import com.example.demo.util.container.ContainerUtil;
 import com.example.demo.util.time.DateUtil;
@@ -144,9 +142,10 @@ public class WorkflowRequestImpl implements WorkflowRequest {
      */
     @Override
     public Deployment deployment(String name, BpmnModel bpmnModel) throws ServiceException {
+        name = name.endsWith(".bpmn") || name.endsWith(".BPMN") ? name : name + ".bpmn";
         return repositoryService.createDeployment()
                 .name(name)
-                .addBpmnModel(name + ".bpmn", bpmnModel)
+                .addBpmnModel(name, bpmnModel)
                 .deploy();
     }
 
@@ -324,14 +323,14 @@ public class WorkflowRequestImpl implements WorkflowRequest {
                 .list();
         if (ContainerUtil.isNotEmpty(processInstanceList)) {
             // 递归调用
-            processInstanceList.forEach(processInstance -> processInstanceList.addAll(this.listChildByProcessInstanceId(processInstance.getProcessInstanceId())));
+            processInstanceList.forEach(processInstance -> processInstanceList.addAll(listChildByProcessInstanceId(processInstance.getProcessInstanceId())));
         }
         return processInstanceList;
     }
 
 
     /**
-     * 获取当前任务,并行网关/包含网关可能会有多个任务,一般只有一个
+     * 获取当前任务,并行网关/包含网关可能会有多个任务
      *
      * @param processInstanceId 流程实例id
      * @return task
@@ -463,6 +462,7 @@ public class WorkflowRequestImpl implements WorkflowRequest {
      */
     @Override
     public void complete(CompleteDTO completeDTO) throws ServiceException {
+        checkUser(completeDTO.getTaskId(), completeDTO.getAssignee());
         //参数校验
         parameterChecking(completeDTO);
         //传递变量
@@ -495,6 +495,7 @@ public class WorkflowRequestImpl implements WorkflowRequest {
      */
     @Override
     public void complete(String principal, String taskId, String processInstanceId, String comment, Integer branch, Integer check, List<String> candidateUserList) throws ServiceException {
+        checkUser(taskId, principal);
         if (StringUtils.isBlank(taskId)) {
             Task task = this.getCurrentTaskSingleResult(processInstanceId);
             taskId = task.getId();
@@ -524,10 +525,19 @@ public class WorkflowRequestImpl implements WorkflowRequest {
      */
     @Override
     public void complete(String principal, String taskId, String processInstanceId, String comment, Map<String, Object> paramsMap) throws ServiceException {
+        checkUser(taskId, principal);
         taskService.claim(taskId, principal);
         int check = ContainerUtil.isNotEmpty(paramsMap) && Objects.nonNull(paramsMap.get(CHECK_KEY)) ? Integer.valueOf(String.valueOf(paramsMap.get(CHECK_KEY))) : CHECK_PASS;
         this.addComment(taskId, processInstanceId, check, comment);
         taskService.complete(taskId, paramsMap);
+    }
+
+
+    private void checkUser(String taskId, String principal) throws ServiceException {
+        List<String> candidateUserList = listCurrentTaskCandidateUser(taskId);
+        if (!candidateUserList.contains(principal)) {
+            throw new ServiceException("不是本人能处理的任务");
+        }
     }
 
 
@@ -806,21 +816,21 @@ public class WorkflowRequestImpl implements WorkflowRequest {
      *
      * @param processInstanceId 流程实例
      * @param flowElementId     跳转的节点id
-     * @param deleteReason      跳转原因
+     * @param reason            跳转原因
      * @throws ServiceException e
      */
     @Override
-    public void jump(String processInstanceId, String flowElementId, String deleteReason) throws ServiceException {
-        //获取流程定义
+    public void jump(String processInstanceId, String flowElementId, String reason) throws ServiceException {
+        // 获取流程定义
         Process process = this.getBpmnModelByProcessInstanceId(processInstanceId).getMainProcess();
-        //获取目标节点定义
+        // 获取目标节点定义
         FlowNode targetNode = (FlowNode) process.getFlowElement(flowElementId);
         List<Task> currentTaskList = this.listCurrentTask(processInstanceId);
         // 所有的任务都是相连接的，顺便一个都可以
         String executionEntityId = null;
         for (Task task : currentTaskList) {
             //删除当前运行任务
-            executionEntityId = managementService.executeCommand(new DeleteTaskCmd(task.getId(), deleteReason));
+            executionEntityId = managementService.executeCommand(new DeleteTaskCmd(task.getId(), reason));
         }
         if (StringUtils.isNotBlank(executionEntityId)) {
             //流程执行到来源节点

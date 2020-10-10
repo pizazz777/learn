@@ -7,6 +7,7 @@ import com.example.demo.manager.file.UploadFileRequest;
 import com.example.demo.manager.video.VideoRequest;
 import com.example.demo.properties.VideoProperties;
 import com.example.demo.util.file.FileUtil;
+import com.example.demo.util.io.IOUtil;
 import com.example.demo.util.thread.ThreadUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -176,7 +177,7 @@ public class VideoRequestImpl implements VideoRequest {
 
     private void print(InputStream inputStream) {
         try {
-            byte[] bytes = FileUtil.readInputStream(inputStream);
+            byte[] bytes = IOUtil.toByteArray(inputStream);
             log.debug(new String(bytes));
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.example.demo.jump;
+package com.example.demo.manager.workflow.impl;
 
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;

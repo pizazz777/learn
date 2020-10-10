@@ -1,6 +1,7 @@
 package com.example.demo.util.thread;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -103,6 +104,7 @@ public class ThreadUtil {
         @Override
         public Thread newThread(@Nonnull Runnable runnable) {
             Thread thread = new Thread(runnable);
+            count.addAndGet(1);
             thread.setName(MyThreadFactory.class.getName() + count);
             return thread;
         }
@@ -115,7 +117,7 @@ public class ThreadUtil {
     static class MyRejectedExecutionHandler implements RejectedExecutionHandler {
 
         /**
-         * 当执行此方法时,线程池满和队列都满了,这里就是处置再新来的任务
+         * 当执行此方法时,线程池和队列都满了,这里就是处置再新来的任务
          *
          * @param r        the runnable task requested to be executed
          * @param executor the executor attempting to execute this task
@@ -153,11 +155,58 @@ public class ThreadUtil {
      * @param executorService 当前线程池
      */
     public static void exit(ExecutorService executorService) {
+
+        /*
+         * shutdownNow()
+         *  1.该方法返回尚未执行的task的List
+         *  2.线程池的状态变为STOP状态
+         *  3.阻止所有正在等待启动的任务,并且停止当前正在执行的任务
+         *
+         * shutdown()
+         *  1.调用之后不允许继续往线程池内继续添加线程
+         *  2.线程池的状态变为SHUTDOWN状态
+         *  3.所有在调用shutdown()方法之前提交到 ExecutorService的任务都会执行
+         *  4.所有线程结束执行当前任务,ExecutorService才会真正关闭
+         *
+         * 总结:
+         *  shutdown()调用后,不可以再submit新的task,已经submit的将继续执行
+         *  shutdownNow()调用后,试图停止当前正在执行的task,并返回尚未执行的task的list
+         */
         executorService.shutdown();
+
         while (true) {
+            // 判断线程池关闭后所有的任务是否都执行完了,注意这个方法只有在shutdown或shutdownNow方法调用后才有效
             if (executorService.isTerminated()) {
+                // 结束线程
                 return;
             }
+        }
+    }
+
+
+    /**
+     * 关闭线程池 等待一段时间并强行关闭当前正在执行中的任务,并忽略未执行的任务 (用来处理执行时间较长的任务)
+     *
+     * @param executorService 当前线程池
+     * @param waitTime        等待时间
+     * @param timeUnit        时间单位
+     */
+    public static void exit(ExecutorService executorService, long waitTime, TimeUnit timeUnit) {
+        executorService.shutdown();
+        try {
+            // 等待指定时间后如果所有任务都执行完了返回true(等待指定时间后还有任务在执行中或者有任务提交了未执行)
+            if (!executorService.awaitTermination(waitTime, timeUnit)) {
+                // 强制结束正在执行的线程任务,返回尚未执行的task的list
+                executorService.shutdownNow();
+//                List<Runnable> runnableList = executorService.shutdownNow();
+//                for (Runnable runnable : runnableList) {
+//                    // 让它继续执行
+//                    runnable.run();
+//                }
+            }
+        } catch (InterruptedException e) {
+            executorService.shutdownNow();
+            e.printStackTrace();
         }
     }
 

@@ -31,7 +31,7 @@ public class IpUtil {
      * @return 区域json 信息
      */
     public static JSONObject getIpArea(String ip) {
-        String path = "http://ip.taobao.com/outGetIpInfo?accessKey=" + "alibaba-inc" + "&ip=" + ip;
+        String path = "http://ip.taobao.com/outGetIpInfo?accessKey=alibaba-inc&ip=" + ip;
         String inputLine;
         StringBuilder info = new StringBuilder();
         try {
@@ -39,7 +39,8 @@ public class IpUtil {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10 * 1000);
             conn.setRequestMethod("GET");
-            try (InputStreamReader reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8); BufferedReader buffer = new BufferedReader(reader)) {
+            try (InputStreamReader reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
+                 BufferedReader buffer = new BufferedReader(reader)) {
                 while ((inputLine = buffer.readLine()) != null) {
                     info.append(inputLine);
                 }

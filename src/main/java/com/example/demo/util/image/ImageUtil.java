@@ -81,8 +81,8 @@ public class ImageUtil {
      */
     public static void watermark(String srcPath, String distPath, String watermarkPath, int width,
                                  int height, float alpha, float quality, Positions position) throws IOException {
-        Thumbnails.of(srcPath).
-                size(width, height)
+        Thumbnails.of(srcPath)
+                .size(width, height)
                 .watermark(position, ImageIO.read(new File(watermarkPath)), alpha)
                 .outputQuality(quality)
                 .toFile(distPath);

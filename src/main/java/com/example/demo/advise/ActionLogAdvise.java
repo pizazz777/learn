@@ -1,7 +1,7 @@
 package com.example.demo.advise;
 
 import com.alibaba.fastjson.JSON;
-import com.example.demo.annotation.Action;
+import com.example.demo.annotation.log.Action;
 import com.example.demo.constant.log.ActionLogEnum;
 import com.example.demo.manager.log.ActionLogRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class ActionLogAdvise {
      * 定义切点
      * 使用@Action注解,作为切点表达式,切带指定注解的方法
      */
-    @Pointcut("@annotation(com.example.demo.annotation.Action)")
+    @Pointcut("@annotation(com.example.demo.annotation.log.Action)")
     public void actionAspect() {
     }
 

@@ -23,6 +23,7 @@ public class ThreadTest {
         ExecutorCompletionService<String> completionService = new ExecutorCompletionService<>(pool);
 
         for (int index = 0; index < 20; index++) {
+            // 提交任务给线程执行
             completionService.submit(new ThreadTask("任务" + (index + 1) + "号"));
         }
 

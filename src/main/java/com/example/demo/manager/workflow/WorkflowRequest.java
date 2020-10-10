@@ -476,10 +476,10 @@ public interface WorkflowRequest {
      *
      * @param processInstanceId 流程实例
      * @param flowElementId     跳转的节点id
-     * @param deleteReason      跳转原因
+     * @param reason            跳转原因
      * @throws ServiceException e
      */
-    void jump(String processInstanceId, String flowElementId, String deleteReason) throws ServiceException;
+    void jump(String processInstanceId, String flowElementId, String reason) throws ServiceException;
 
 
     /**

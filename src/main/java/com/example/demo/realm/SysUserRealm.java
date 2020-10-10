@@ -37,7 +37,7 @@ import static com.example.demo.constant.sys.PermissionConst.SYS_LOGIN;
 /**
  * @author Administrator
  * @date 2020-04-29 11:46
- * @description: 权限认证及授权
+ * @description: 用户权限认证及授权
  */
 @Component
 @Slf4j

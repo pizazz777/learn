@@ -1,6 +1,6 @@
 package com.example.demo.controller.elasticsearch;
 
-import com.example.demo.annotation.Action;
+import com.example.demo.annotation.log.Action;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;

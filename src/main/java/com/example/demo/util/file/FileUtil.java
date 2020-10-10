@@ -143,23 +143,4 @@ public class FileUtil {
     }
 
 
-    /**
-     * 读取InputStream流中的内容
-     *
-     * @param inputStream 流
-     * @return r
-     * @throws IOException e
-     */
-    public static byte[] readInputStream(InputStream inputStream) throws IOException {
-        byte[] buffer = new byte[1024];
-        int length;
-        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            while ((length = inputStream.read(buffer)) != -1) {
-                stream.write(buffer, 0, length);
-            }
-            return stream.toByteArray();
-        }
-    }
-
-
 }
