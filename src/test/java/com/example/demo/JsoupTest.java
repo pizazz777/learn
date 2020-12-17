@@ -26,7 +26,7 @@ public class JsoupTest {
     private static final String CSS_QUERY_A = "div[class = bottem1] > a[href]";
     private static final String CSS_QUERY_BOOK_NAME = "div.bookname > h1";
     private static final String NEXT = "下一章";
-    private static final String PATH = "D:\\Text\\url.txt";
+    private static final String PATH = "D:/Text/url.txt";
 
     public static void main(String[] args) throws IOException {
         String name = "";
@@ -35,12 +35,13 @@ public class JsoupTest {
 //         name = "太丘之上";
 //         name = "牧龙师";
 //         name = "大周仙吏";
-         name = "大丰打更人";
+//         name = "大丰打更人";
 //         name = "种田系修仙";
 //         name = "荒岛求生之逃出生天";
 //         name = "修神外传";
 //        name = "人魔之路";
 //        name = "沧元图";
+//        name = "万族之劫";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);

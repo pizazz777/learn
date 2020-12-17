@@ -106,4 +106,22 @@ public class IpUtil {
         }
         return ip;
     }
+
+
+    public static void main(String[] args) {
+        String num = "2.5";
+        Double value = Double.valueOf(num);
+        System.out.println(value);
+
+
+        
+    }
+
+
+
+
+
+
+
+
 }

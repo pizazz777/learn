@@ -1,7 +1,6 @@
 package com.example.demo.util.thread;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -174,6 +173,8 @@ public class ThreadUtil {
          */
         executorService.shutdown();
 
+
+        // 让主线程一直等待到线程池里面的线程都把任务执行完了才放行
         while (true) {
             // 判断线程池关闭后所有的任务是否都执行完了,注意这个方法只有在shutdown或shutdownNow方法调用后才有效
             if (executorService.isTerminated()) {

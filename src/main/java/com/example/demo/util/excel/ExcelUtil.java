@@ -2,12 +2,17 @@ package com.example.demo.util.excel;
 
 import com.example.demo.component.exception.ExcelException;
 import com.example.demo.util.container.ContainerUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidation;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -132,21 +137,21 @@ public class ExcelUtil {
      * @param lastCol  最后一列
      */
     public static void mergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
-        CellRangeAddress region = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
-        sheet.addMergedRegion(region);
+        if ((firstRow < lastRow) || (firstCol < lastCol)) {
+            sheet.addMergedRegion(new CellRangeAddress(firstRow, lastRow, firstCol, lastCol));
+        }
     }
 
     /**
      * 添加并复制行到指定位置
      *
-     * @param workbook      Excel文档
      * @param sheet         页
      * @param templateIndex 模板行
      * @param addRowCount   添加的行数
      * @param jump          跳过的行数(指定位置到模板行的差值)
      * @param copyValueFlag 是否复制值
      */
-    public static void addAndCopyRow(Workbook workbook, Sheet sheet, int templateIndex, int addRowCount, int jump, boolean copyValueFlag) {
+    public static void addAndCopyRow(Sheet sheet, int templateIndex, int addRowCount, int jump, boolean copyValueFlag) {
         for (int index = 0; index < addRowCount; index++) {
             Row row = sheet.getRow(templateIndex + index);
             // param1:起始行 param2:结束行 param3:移动数量 param4:是否复制行高 param5:是否将原始行的高度设置为默认值
@@ -157,60 +162,56 @@ public class ExcelUtil {
                 newRow.setRowStyle(style);
             }
             newRow.setHeight(row.getHeight());
-            copyRow(workbook, sheet, row, newRow, copyValueFlag);
+            copyRow(sheet, row, newRow, copyValueFlag);
         }
     }
 
     /**
      * 向模板行下面复制一行
      *
-     * @param workbook      Excel文档
      * @param sheet         页
      * @param templateIndex 模板行号
      * @param copyValueFlag 是否复制值
      */
-    public void copyRow(Workbook workbook, Sheet sheet, int templateIndex, boolean copyValueFlag) {
-        copyRow(workbook, sheet, templateIndex, 1, copyValueFlag);
+    public void copyRow(Sheet sheet, int templateIndex, boolean copyValueFlag) {
+        copyRow(sheet, templateIndex, 1, copyValueFlag);
     }
 
     /**
      * 向模板行下面复制N行
      *
-     * @param workbook      Excel文档
      * @param sheet         页
      * @param templateIndex 模板行号
      * @param copyCount     复制行的数量
      * @param copyValueFlag 是否复制值
      */
-    public void copyRow(Workbook workbook, Sheet sheet, int templateIndex, int copyCount, boolean copyValueFlag) {
-        if (copyCount > 0) {
-            // 移动行
-            sheet.shiftRows(templateIndex + 1, sheet.getLastRowNum(), copyCount, true, false);
-            Row row = sheet.getRow(templateIndex);
-            CellStyle style = row.getRowStyle();
-            for (int count = 1; count <= copyCount; count++) {
-                Row newRow = sheet.createRow(templateIndex + count);
-                if (Objects.nonNull(style)) {
-                    newRow.setRowStyle(style);
-                }
-                newRow.setHeight(row.getHeight());
-                copyRow(workbook, sheet, row, newRow, copyValueFlag);
+    public static void copyRow(Sheet sheet, int templateIndex, int copyCount, boolean copyValueFlag) {
+        // 移动行
+        sheet.shiftRows(templateIndex + 1, sheet.getLastRowNum(), copyCount, true, false);
+        Row row = sheet.getRow(templateIndex);
+        CellStyle style = row.getRowStyle();
+        for (int count = 1; count <= copyCount; count++) {
+            Row newRow = sheet.createRow(templateIndex + count);
+            if (Objects.nonNull(style)) {
+                newRow.setRowStyle(style);
             }
+            newRow.setHeight(row.getHeight());
+            copyRow(sheet, row, newRow, copyValueFlag);
         }
     }
 
     /**
      * 复制行
      *
-     * @param workbook      Excel文档
      * @param sheet         页
      * @param sourceRow     原始行
      * @param targetRow     目标行
      * @param copyValueFlag 是否复制值
      */
-    public static void copyRow(Workbook workbook, Sheet sheet, Row sourceRow, Row targetRow, boolean copyValueFlag) {
+    public static void copyRow(Sheet sheet, Row sourceRow, Row targetRow, boolean copyValueFlag) {
         targetRow.setHeight(sourceRow.getHeight());
         for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+            // 处理合并单元格
             CellRangeAddress cellRangeAddress = sheet.getMergedRegion(i);
             if (cellRangeAddress.getFirstRow() == sourceRow.getRowNum()) {
                 CellRangeAddress newCellRangeAddress = new CellRangeAddress(targetRow.getRowNum(),
@@ -221,25 +222,26 @@ public class ExcelUtil {
         }
         for (Cell cell : sourceRow) {
             Cell newCell = targetRow.createCell(cell.getColumnIndex());
-            copyCell(workbook, cell, newCell, copyValueFlag);
+            copyCell(cell, newCell, copyValueFlag);
         }
     }
 
     /**
      * 复制单元格
      *
-     * @param workbook      Excel文档
      * @param sourceCell    原始单元格
      * @param targetCell    目标单元格
      * @param copyValueFlag 是否复制值
      */
 
-    public static void copyCell(Workbook workbook, Cell sourceCell, Cell targetCell, boolean copyValueFlag) {
-        CellStyle newStyle = workbook.createCellStyle();
-        newStyle.cloneStyleFrom(sourceCell.getCellStyle());
+    public static void copyCell(Cell sourceCell, Cell targetCell, boolean copyValueFlag) {
         // 样式
-        targetCell.setCellStyle(newStyle);
-        targetCell.setCellFormula(sourceCell.getCellFormula());
+        CellStyle style = sourceCell.getCellStyle();
+        if (Objects.nonNull(style)) {
+            targetCell.setCellStyle(style);
+        }
+        // 公式
+        // targetCell.setCellFormula(sourceCell.getCellFormula());
         // 评论
         if (Objects.nonNull(sourceCell.getCellComment())) {
             targetCell.setCellComment(sourceCell.getCellComment());
@@ -253,8 +255,8 @@ public class ExcelUtil {
     /**
      * 复制值
      *
-     * @param srcCell       源单元格
-     * @param destCell      目标单元格
+     * @param srcCell  源单元格
+     * @param destCell 目标单元格
      */
     private static void copyCellValue(Cell srcCell, Cell destCell) {
         CellType cellType = srcCell.getCellType();

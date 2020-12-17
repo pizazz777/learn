@@ -2,10 +2,7 @@ package com.example.demo;
 
 import com.example.demo.util.thread.ThreadUtil;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 /**
  * @author administrator
@@ -37,7 +34,7 @@ public class ThreadTest {
             }
         }
         System.out.println("任务结束了吗");
-        ThreadUtil.exit(pool);
+        ThreadUtil.exit(pool, 3000L, TimeUnit.MILLISECONDS);
     }
 
 

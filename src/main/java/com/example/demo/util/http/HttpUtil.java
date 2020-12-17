@@ -2,13 +2,11 @@ package com.example.demo.util.http;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.util.container.ContainerUtil;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -234,8 +232,8 @@ public class HttpUtil {
             httpPost.setConfig(requestConfig);
             httpPost.setEntity(requestEntity);
             httpPost.addHeader(HTTP.USER_AGENT, USER_AGENT);
-            log.debug("\n请求地址为:\n" + url);
-            log.debug("\n请求参数为:\n" + json);
+            log.debug("\n请求地址为:" + url);
+            log.debug("\n请求参数为:" + json);
             response = httpClient.execute(httpPost);
         } catch (IOException e) {
             e.printStackTrace();
@@ -288,7 +286,7 @@ public class HttpUtil {
      *
      * @param response 响应对象
      * @param clazz    要转换的类型
-     * @return 实体类
+     * @return +实体类
      * @throws IOException e
      */
     public static <T> T transformEntity(CloseableHttpResponse response, Class<T> clazz) throws IOException {

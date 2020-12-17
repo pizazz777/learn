@@ -29,9 +29,6 @@ public class CameraTest {
     private static final String DEFAULT_IMAGE_TYPE = "jpg";
     private static final String DEFAULT_VIDEO_TYPE = "mp4";
 
-
-    private Boolean flag = true;
-
     // 测试javaCV操作摄像头
     @Test
     public void javaCVTest() throws Exception {
