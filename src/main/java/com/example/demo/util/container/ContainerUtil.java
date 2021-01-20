@@ -84,8 +84,8 @@ public class ContainerUtil {
     /**
      * 取出集合中连续的子集合
      *
-     * @param list
-     * @return
+     * @param list 集合
+     * @return list
      */
     public static List<List<Integer>> getOrderList(List<Integer> list) {
         if (ContainerUtil.isNotEmpty(list)) {

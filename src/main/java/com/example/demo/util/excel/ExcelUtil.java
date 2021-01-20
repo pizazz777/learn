@@ -41,8 +41,9 @@ public class ExcelUtil {
      * @param fileName Excel 文件名
      */
     public static void setResponse(HttpServletResponse response, String fileName) {
-        // 设置响应头
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        // 解决乱码
+        response.setCharacterEncoding("utf-8");
+        //
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
         response.setContentType(CONTENT_TYPE);
     }

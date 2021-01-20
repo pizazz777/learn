@@ -4,8 +4,8 @@ import com.example.demo.component.exception.ExcelException;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.office.excel.format.ExcelNumericFormat;
 import com.example.demo.office.excel.principal.AbstractUserExcelTemplateModel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
  * @author Administrator
  * @date 2020-07-22 17:24
  */
-@Data
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class ExampleTemplateModel extends AbstractUserExcelTemplateModel<ExampleTemplateModel, SysUserDO> {
 
