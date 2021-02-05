@@ -24,24 +24,22 @@ public class JsoupTest {
     private static final String HREF = "href";
     private static final String CONTENT = "content";
     private static final String CSS_QUERY_A = "div[class = bottem1] > a[href]";
+//        private static final String CSS_QUERY_A = "div[class = page_chapter] > ul > li > a[href]";
     private static final String CSS_QUERY_BOOK_NAME = "div.bookname > h1";
     private static final String NEXT = "下一章";
     private static final String PATH = "D:/Text/url.txt";
 
     public static void main(String[] args) throws IOException {
         String name = "";
-//         name = "修仙从沙漠开始";
-//         name = "沈氏家族崛起";
-//         name = "太丘之上";
-//         name = "牧龙师";
-//         name = "大周仙吏";
 //         name = "大丰打更人";
-//         name = "种田系修仙";
-//         name = "荒岛求生之逃出生天";
-//         name = "修神外传";
+//         name = "修仙从沙漠开始";
 //        name = "人魔之路";
 //        name = "沧元图";
-//        name = "万族之劫";
+//        name = "从魔修开始";
+//        name = "九星之主";
+//        name = "飞剑问道";
+//        name = "大梦主";
+//        name = "剑卒过河";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
@@ -88,7 +86,7 @@ public class JsoupTest {
                 write(url, name);
             }
         }
-        System.out.println("已是最新章节啦!");
+        System.out.println("最新的啦!");
     }
 
 
@@ -110,7 +108,7 @@ public class JsoupTest {
                     return url.split("-")[1];
                 }
             }
-            throw new IOException("没有匹配到地址!");
+            throw new IllegalArgumentException("没有匹配到地址!");
         }
     }
 

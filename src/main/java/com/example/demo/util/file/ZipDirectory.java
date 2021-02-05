@@ -24,6 +24,10 @@ public class ZipDirectory {
      */
     private String name;
     /**
+     * 目录路径
+     */
+    private String dirPath;
+    /**
      * 该目录的所有文件
      */
     private List<ZipFile> zipFileList;

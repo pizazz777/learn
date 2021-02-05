@@ -6,7 +6,6 @@ import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.constant.es.AnalyzerTypeEnum;
 import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -397,9 +396,7 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
     public <T> List<T> search(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException {
         SearchResponse search = this.search(index, field, value, from, size);
         SearchHits hits = search.getHits();
-        List<T> list = Lists.newArrayList();
-        hits.forEach(hit -> list.add(JSONObject.parseObject(hit.getSourceAsString(), clz)));
-        return list;
+        return Arrays.stream(hits.getHits()).map(hit -> JSONObject.parseObject(hit.getSourceAsString(), clz)).collect(Collectors.toList());
     }
 
 
@@ -407,8 +404,7 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
     public <T> List<ElasticsearchHitResult<T>> searchWithHighlight(String index, String field, String value, Integer from, Integer size, Class<T> clz) throws IOException {
         SearchResponse search = this.search(index, field, value, from, size);
         SearchHits hits = search.getHits();
-        List<ElasticsearchHitResult<T>> list = Lists.newArrayList();
-        hits.forEach(hit -> {
+        return Arrays.stream(hits.getHits()).map(hit -> {
             ElasticsearchHitResult<T> result = new ElasticsearchHitResult<>();
             result.setObject(JSONObject.parseObject(hit.getSourceAsString(), clz));
             // 设置高亮字段
@@ -416,9 +412,7 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
             Map<String, Object> highlightMap = Maps.newHashMap();
             highlightFields.forEach((k, v) -> highlightMap.put(k, Arrays.stream(v.getFragments()).map(Text::string).collect(Collectors.toList())));
             result.setHighlightMap(highlightMap);
-
-            list.add(result);
-        });
-        return list;
+            return result;
+        }).collect(Collectors.toList());
     }
 }

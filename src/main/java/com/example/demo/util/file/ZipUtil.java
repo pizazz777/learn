@@ -8,12 +8,12 @@ import com.google.common.collect.Lists;
 import org.apache.poi.util.IOUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -44,53 +44,43 @@ public class ZipUtil {
         // 校验文件
         checkFile(file);
 
-        // 目录容器
-        Map<String, ZipDirectory> directoryContainerMap = new ConcurrentHashMap<>(32);
+        ZipDirectory zipDirectory = new ZipDirectory();
         try (java.util.zip.ZipFile zipFile = new ZipFile(file, GBK)) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 String path = entry.getName();
-                // 是目录
+                // 目录
                 if (entry.isDirectory()) {
-                    setDirectory(path, directoryContainerMap);
+                    setDirectory(zipDirectory, path);
                 }
-                // 是文件
+                // 文件
                 else {
-                    setZipFile(path, zipFile.getInputStream(entry), directoryContainerMap);
+                    setZipFile(path, zipFile.getInputStream(entry), zipDirectory);
                 }
             }
-            return getTopDir(directoryContainerMap);
+            return zipDirectory;
         }
-    }
-
-    /**
-     * 获取顶级目录
-     *
-     * @param directoryContainerMap 目录容器
-     * @return r
-     * @throws FileNotFoundException e
-     */
-    private static ZipDirectory getTopDir(Map<String, ZipDirectory> directoryContainerMap) throws FileNotFoundException {
-        Set<String> ketList = directoryContainerMap.keySet();
-        String topPath = ketList.stream().min(String::compareTo).orElseThrow(FileNotFoundException::new);
-        return directoryContainerMap.get(topPath);
     }
 
 
     /**
      * 设置压缩文件
      *
-     * @param path                  压缩文件路径
-     * @param inputStream           文件的流
-     * @param directoryContainerMap 容器
+     * @param path         压缩文件的路径
+     * @param inputStream  文件的流
+     * @param zipDirectory zip层级目录
      * @throws IOException e
      */
-    private static void setZipFile(String path, InputStream inputStream, Map<String, ZipDirectory> directoryContainerMap) throws IOException {
-        ZipDirectory parentDirectory = getParentDirectory(path, false, directoryContainerMap);
+    private static void setZipFile(String path, InputStream inputStream, ZipDirectory zipDirectory) throws IOException {
+        String dirParentPath = getParentPath(path, false);
+        ZipDirectory parentDirectory = findZipDirectoryByDirPath(zipDirectory, dirParentPath);
+        if (Objects.isNull(parentDirectory)) {
+            parentDirectory = new ZipDirectory();
+        }
         byte[] bytes = IOUtils.toByteArray(inputStream);
         List<com.example.demo.util.file.ZipFile> zipFileList = parentDirectory.getZipFileList();
-        if (!ContainerUtil.isNotEmpty(zipFileList)) {
+        if (ContainerUtil.isEmpty(zipFileList)) {
             zipFileList = Lists.newArrayList();
         }
         com.example.demo.util.file.ZipFile zipFile = com.example.demo.util.file.ZipFile.builder()
@@ -104,72 +94,76 @@ public class ZipUtil {
     }
 
     /**
-     * 获取文件名
-     *
-     * @param path 文件全路径
-     * @return fileName
-     */
-    private static String getFileName(String path) {
-        return path.substring(path.lastIndexOf(SEPARATOR_ZIP) + 1);
-    }
-
-    /**
-     * 获取文件后缀名
-     *
-     * @param path 文件全路径
-     * @return 后缀名
-     */
-    private static String getFileSuffix(String path) {
-        path = getFileName(path);
-        return FileUtil.getSuffix(path);
-    }
-
-    /**
      * 设置目录
      *
-     * @param path                  路径
-     * @param directoryContainerMap 目录容器
+     * @param zipDirectory zip层级目录
+     * @param path         路径
      */
-    private static void setDirectory(String path, Map<String, ZipDirectory> directoryContainerMap) {
-        // 获取目录名称
-        ZipDirectory zipDirectory = ZipDirectory.builder()
-                .name(getDirNamePath(path))
-                .build();
-        if (ContainerUtil.isNotEmpty(directoryContainerMap)) {
-            // 获取父级目录
-            ZipDirectory parentDirectory = getParentDirectory(path, true, directoryContainerMap);
-            // 将该目录存到父级的目录中
-            setDirToParentDir(parentDirectory, zipDirectory);
+    private static void setDirectory(ZipDirectory zipDirectory, String path) {
+        // 获取父级路径
+        String dirParentPath = getParentPath(path, true);
+        // 从层级结构中找到指定的父级目录
+        ZipDirectory parentDirectory = findZipDirectoryByDirPath(zipDirectory, dirParentPath);
+        // 没找到,自己就是顶级目录
+        if (Objects.isNull(parentDirectory)) {
+            parentDirectory = new ZipDirectory();
+            // 设置目录名称+路径
+            parentDirectory.setName(getDirNamePath(path));
+            parentDirectory.setDirPath(path);
+            // 设置到子级目录
+            setChildDirectory(zipDirectory, parentDirectory);
+        } else {
+            ZipDirectory childDirectory = new ZipDirectory();
+            childDirectory.setName(getDirNamePath(path));
+            childDirectory.setDirPath(path);
+            // 设置到子级目录
+            setChildDirectory(parentDirectory, childDirectory);
         }
-        directoryContainerMap.put(path, zipDirectory);
     }
 
     /**
-     * 设置目录层级关系
+     * 设置子级目录
      *
-     * @param parentDirectory 父级目录
-     * @param zipDirectory    子目录
+     * @param parentDirectory 父目录
+     * @param childDirectory  子目录
      */
-    private static void setDirToParentDir(ZipDirectory parentDirectory, ZipDirectory zipDirectory) {
+    private static void setChildDirectory(ZipDirectory parentDirectory, ZipDirectory childDirectory) {
+        // 设置到子级目录
         List<ZipDirectory> childZipDirectory = parentDirectory.getChildZipDirectory();
         if (ContainerUtil.isEmpty(childZipDirectory)) {
             childZipDirectory = Lists.newArrayList();
         }
-        childZipDirectory.add(zipDirectory);
+        childZipDirectory.add(childDirectory);
         parentDirectory.setChildZipDirectory(childZipDirectory);
     }
 
+
     /**
-     * 获取父级目录
+     * 递归查找路径相同的文件夹
      *
-     * @param path                  目录
-     * @param isDirectory           是否为文件夹
-     * @param directoryContainerMap 容器
-     * @return zip目录信息
+     * @param zipDirectory zip目录
+     * @param dirPath      目录路径
+     * @return r
      */
-    private static ZipDirectory getParentDirectory(String path, boolean isDirectory, Map<String, ZipDirectory> directoryContainerMap) {
-        String dirParentPath = getParentPath(path, isDirectory);
-        return directoryContainerMap.get(dirParentPath);
+    private static ZipDirectory findZipDirectoryByDirPath(ZipDirectory zipDirectory, String dirPath) {
+        List<ZipDirectory> list = Lists.newArrayList();
+        getAllZipDirectory(zipDirectory, list);
+        return list.stream().filter(e -> Objects.equals(e.getDirPath(), dirPath)).findFirst().orElse(null);
+    }
+
+
+    /**
+     * 获取所有文件夹
+     *
+     * @param zipDirectory zip文件夹层级目录
+     * @param list         list
+     */
+    private static void getAllZipDirectory(ZipDirectory zipDirectory, List<ZipDirectory> list) {
+        list.add(zipDirectory);
+        List<ZipDirectory> childZipDirectoryList = zipDirectory.getChildZipDirectory();
+        if (ContainerUtil.isNotEmpty(childZipDirectoryList)) {
+            childZipDirectoryList.forEach(child -> getAllZipDirectory(child, list));
+        }
     }
 
 
@@ -183,10 +177,8 @@ public class ZipUtil {
     private static String getParentPath(String path, boolean isDirectory) {
         if (isDirectory) {
             path = path.substring(0, path.length() - 1);
-            path = path.substring(0, path.lastIndexOf(SEPARATOR_ZIP) + 1);
-        } else {
-            path = path.substring(0, path.lastIndexOf(SEPARATOR_ZIP) + 1);
         }
+        path = path.substring(0, path.lastIndexOf(SEPARATOR_ZIP) + 1);
         return path;
     }
 
@@ -214,6 +206,27 @@ public class ZipUtil {
         if (!Objects.equals(fileSuffix, FileTypeEnum.ZIP.getSuffix())) {
             throw new ServiceException("请上传zip后缀的压缩文件!");
         }
+    }
+
+    /**
+     * 获取文件名
+     *
+     * @param path 文件全路径
+     * @return fileName
+     */
+    private static String getFileName(String path) {
+        return path.substring(path.lastIndexOf(SEPARATOR_ZIP) + 1);
+    }
+
+    /**
+     * 获取文件后缀名
+     *
+     * @param path 文件全路径
+     * @return 后缀名
+     */
+    private static String getFileSuffix(String path) {
+        path = getFileName(path);
+        return FileUtil.getSuffix(path);
     }
 
 
