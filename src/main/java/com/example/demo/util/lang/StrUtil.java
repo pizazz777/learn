@@ -3,6 +3,7 @@ package com.example.demo.util.lang;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,5 +124,32 @@ public class StrUtil {
      */
     public static boolean isMobile(@NonNull String mobile) {
         return MOBILE.matcher(mobile).matches();
+    }
+
+
+    /**
+     * 通过身份证获取年龄
+     *
+     * @param idCard 身份证号码
+     * @return age
+     */
+    public static int getAge(String idCard) {
+        if (StringUtils.isBlank(idCard) || idCard.length() != 18) {
+            return 0;
+        }
+        Calendar cal = Calendar.getInstance();
+        int yearNow = cal.get(Calendar.YEAR);
+        int monthNow = cal.get(Calendar.MONTH) + 1;
+        int dayNow = cal.get(Calendar.DATE);
+
+        int year = Integer.valueOf(idCard.substring(6, 10));
+        int month = Integer.valueOf(idCard.substring(10, 12));
+        int day = Integer.valueOf(idCard.substring(12, 14));
+
+        if ((month < monthNow) || (month == monthNow && day <= dayNow)) {
+            return yearNow - year;
+        } else {
+            return yearNow - year - 1;
+        }
     }
 }
