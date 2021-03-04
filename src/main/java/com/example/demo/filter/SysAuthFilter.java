@@ -1,7 +1,14 @@
 package com.example.demo.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.entity.log.ExceptionLogDO;
+import com.example.demo.manager.log.ExceptionLogRequest;
+import com.example.demo.util.SpringContextHandler;
+import com.example.demo.util.ip.IpUtil;
+import com.example.demo.util.secret.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -12,8 +19,11 @@ import org.springframework.http.MediaType;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -24,6 +34,8 @@ import java.util.Set;
  * @description: 类描述: 登录验证过滤器,返回前端相关 json 信息,不作为 bean 注册,直接在{@link ShiroFilterFactoryBean#setFilters(Map)} 中作为一个对象 new 一个
  **/
 public class SysAuthFilter extends FormAuthenticationFilter {
+
+    private ExceptionLogRequest exceptionLogRequest;
 
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
@@ -55,7 +67,8 @@ public class SysAuthFilter extends FormAuthenticationFilter {
         if (isLoginRequest(request, response)) {
             return true;
         }
-        return isAllowed();
+        HttpServletRequest servletRequest = (HttpServletRequest) request;
+        return isAllowed(JwtUtil.getClaims(servletRequest));
     }
 
     /**
@@ -66,8 +79,12 @@ public class SysAuthFilter extends FormAuthenticationFilter {
      */
     private boolean isAllowed(Claims claims) {
         if (Objects.nonNull(claims)) {
+            Date expiration = claims.getExpiration();
+            if (expiration.before(new Date())) {
+                return false;
+            }
             Subject subject = SecurityUtils.getSubject();
-            if (Objects.nonNull(subject)) {
+            if (Objects.nonNull(subject) && subject.isAuthenticated()) {
                 PrincipalCollection principals = subject.getPrincipals();
                 if (null != principals) {
                     Set principalSet = principals.asSet();
@@ -78,7 +95,6 @@ public class SysAuthFilter extends FormAuthenticationFilter {
                             return true;
                         }
                     }
-                    return false;
                 }
             }
         }
@@ -111,9 +127,37 @@ public class SysAuthFilter extends FormAuthenticationFilter {
         ResResult result = ResResult.fail(ResCode.NOT_LOGIN);
         // 输出 json
         String resultStr = result.getStr("未登录或登录信息失效");
+        saveExceptionLog((HttpServletRequest) request, result.getMsg());
         response.getWriter().write(resultStr);
         // out.flush();
         return false;
+    }
+
+    /**
+     * 保存异常信息
+     *
+     * @param request 请求对象
+     * @param msg     异常信息
+     */
+    private void saveExceptionLog(HttpServletRequest request, String msg) {
+        ExceptionLogDO exceptionLogDO = ExceptionLogDO.builder()
+                .uri(request.getRequestURI())
+                .ip(IpUtil.getIp(request))
+                .message(msg)
+                .createTime(LocalDateTime.now())
+                .identify(String.valueOf(JwtUtil.getIdentify(request)))
+                .param(JSON.toJSONString(request.getParameterMap()))
+                .stackTrace(msg)
+                .className("null")
+                .build();
+        if (Objects.isNull(exceptionLogRequest)) {
+            exceptionLogRequest = SpringContextHandler.getBean(ExceptionLogRequest.class);
+        }
+        try {
+            exceptionLogRequest.save(exceptionLogDO);
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
     }
 
 }

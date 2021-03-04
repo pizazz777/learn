@@ -10,12 +10,14 @@ import com.example.demo.manager.video.VideoRequest;
 import com.example.demo.office.excel.example.ExampleImportHandler;
 import com.example.demo.office.excel.model.ImportResult;
 import com.example.demo.schdule.TimerTest;
+import com.example.demo.util.secret.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static com.example.demo.constant.log.ActionLogEnum.GET;
@@ -42,8 +44,8 @@ public class TestController {
         this.videoRequest = videoRequest;
     }
 
-    private static final String CONVERT_VIDEO = "视频转换";
 
+    private static final String CONVERT_VIDEO = "视频转换";
     @ApiOperation(value = CONVERT_VIDEO)
     @Action(type = SAVE, desc = CONVERT_VIDEO)
     @PostMapping(value = "/convert")
@@ -61,8 +63,8 @@ public class TestController {
         return ResResult.success(convert).getStr(CONVERT_VIDEO);
     }
 
-    private static final String IMPORT_EXCEL_DESC = "测试导入excel";
 
+    private static final String IMPORT_EXCEL_DESC = "测试导入excel";
     @ApiOperation(value = IMPORT_EXCEL_DESC)
     @PostMapping(value = "/import_excel")
     @Action(type = GET, desc = IMPORT_EXCEL_DESC)
@@ -71,8 +73,8 @@ public class TestController {
         return ResResult.success(handler).getStr(IMPORT_EXCEL_DESC);
     }
 
-    private static final String CREATE_JOB_DESC = "测试定时任务";
 
+    private static final String CREATE_JOB_DESC = "测试定时任务";
     @ApiOperation(value = CREATE_JOB_DESC)
     @GetMapping(value = "/create_job")
     @Action(type = GET, desc = CREATE_JOB_DESC)
@@ -81,8 +83,8 @@ public class TestController {
         return ResResult.success().getStr(CREATE_JOB_DESC);
     }
 
-    private static final String PAUSE_JOB_DESC = "暂停定时任务";
 
+    private static final String PAUSE_JOB_DESC = "暂停定时任务";
     @ApiOperation(value = PAUSE_JOB_DESC)
     @GetMapping(value = "/pause_job")
     @Action(type = GET, desc = PAUSE_JOB_DESC)
@@ -91,8 +93,8 @@ public class TestController {
         return ResResult.success().getStr(PAUSE_JOB_DESC);
     }
 
-    private static final String RESUME_JOB_DESC = "恢复定时任务";
 
+    private static final String RESUME_JOB_DESC = "恢复定时任务";
     @ApiOperation(value = RESUME_JOB_DESC)
     @GetMapping(value = "/resume_job")
     @Action(type = GET, desc = RESUME_JOB_DESC)
@@ -101,14 +103,23 @@ public class TestController {
         return ResResult.success().getStr(RESUME_JOB_DESC);
     }
 
-    private static final String REMOVE_TRIGGER_DESC = "删除触发器及任务";
 
+    private static final String REMOVE_TRIGGER_DESC = "删除触发器及任务";
     @ApiOperation(value = REMOVE_TRIGGER_DESC)
     @GetMapping(value = "/remove_trigger")
     @Action(type = GET, desc = REMOVE_TRIGGER_DESC)
     public String removeTrigger() throws ServiceException {
         timerTest.removeTrigger();
         return ResResult.success().getStr(REMOVE_TRIGGER_DESC);
+    }
+
+
+    private static final String GET_IDENTIFY = "获取用户信息";
+    @ApiOperation(value = GET_IDENTIFY)
+    @GetMapping(value = "/getIdentify")
+    @Action(type = GET, desc = GET_IDENTIFY)
+    public String getIdentify(HttpServletRequest request) {
+        return ResResult.success(JwtUtil.getIdentify(request)).getStr(GET_IDENTIFY);
     }
 
 }

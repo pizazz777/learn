@@ -26,13 +26,23 @@ public class JwtUtil {
     }
 
     /**
+     * 通过 request 获取 Claims
+     *
+     * @param request 请求对象
+     * @return r
+     */
+    public static Claims getClaims(HttpServletRequest request) {
+        return JwtUtil.parseJwt(JwtUtil.getToken(request), JwtConst.JWT_SECRET);
+    }
+
+    /**
      * 通过 request 获取 subject(如用户名,手机号,邮箱等)
      *
      * @param request 请求对象
      * @return r
      */
     public static String getIdentify(HttpServletRequest request) {
-        Claims claims = JwtUtil.parseJwt(JwtUtil.getToken(request), JwtConst.JWT_SECRET);
+        Claims claims = getClaims(request);
         return Objects.isNull(claims) ? null : claims.getSubject();
     }
 
