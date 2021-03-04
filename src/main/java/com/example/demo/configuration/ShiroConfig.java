@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.AuthenticationStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.mgt.RememberMeManager;
@@ -28,10 +30,13 @@ import org.crazycake.shiro.IRedisManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -166,12 +171,12 @@ public class ShiroConfig {
      * @param smsCodeRealm                 短信验证Realm
      * @param atLeastOneSuccessfulStrategy Shiro认证策略
      * @param sessionManager               session管理器
-     * @param rememberMeManager            记住我
+     * @param rememberMeManager            rememberMe
      * @return securityManager
      */
     @Bean
     public SecurityManager securityManager(CacheManager cacheManager, SysUserRealm sysUserRealm, SmsCodeRealm smsCodeRealm, SessionManager sessionManager,
-                                           Authenticator atLeastOneSuccessfulStrategy, RememberMeManager rememberMeManager) {
+                                           AuthenticationStrategy atLeastOneSuccessfulStrategy, RememberMeManager rememberMeManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 
         // 登录认证
@@ -179,8 +184,11 @@ public class ShiroConfig {
         // 权限认证
         // securityManager.setAuthorizer();
 
-        // 登录权限认证
-        securityManager.setAuthenticator(atLeastOneSuccessfulStrategy);
+        // SecurityManager必须先设置Authenticator再设置Realm,否则会报错
+        ModularRealmAuthenticator authenticator = new ModularRealmAuthenticator();
+        authenticator.setAuthenticationStrategy(atLeastOneSuccessfulStrategy);
+        securityManager.setAuthenticator(authenticator);
+
         List<Realm> realms = Lists.newArrayList(sysUserRealm, smsCodeRealm);
         securityManager.setRealms(realms);
 
@@ -193,14 +201,14 @@ public class ShiroConfig {
 
 
     /**
-     * {@link org.apache.shiro.authc.pam.FirstSuccessfulStrategy} 只要有一个Realm验证成功即可,只返回第一个Realm身份验证成功的认证信息,其它的忽略
-     * {@link org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy} 只要有一个Realm验证成功即可,返回所有Realm身份验证成功的认证信息
-     * {@link org.apache.shiro.authc.pam.AllSuccessfulStrategy} 所有Realm验证成功才算成功,返回所有Realm身份验证成功的信息
+     * {@link org.apache.shiro.authc.pam.FirstSuccessfulStrategy}       只要有一个Realm验证成功即可,只返回第一个Realm身份验证成功的认证信息,其它的忽略
+     * {@link org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy}  只要有一个Realm验证成功即可,返回所有Realm身份验证成功的认证信息
+     * {@link org.apache.shiro.authc.pam.AllSuccessfulStrategy}         所有Realm验证成功才算成功,返回所有Realm身份验证成功的信息
      *
      * @return atLeastOneSuccessfulStrategy
      */
     @Bean
-    public AtLeastOneSuccessfulStrategy atLeastOneSuccessfulStrategy() {
+    public AuthenticationStrategy atLeastOneSuccessfulStrategy() {
         return new AtLeastOneSuccessfulStrategy();
     }
 

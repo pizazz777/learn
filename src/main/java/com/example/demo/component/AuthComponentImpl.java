@@ -79,8 +79,7 @@ public class AuthComponentImpl implements AuthComponent {
         subject.login(token);
         // 获取登录用户信息中的自增id
         String id = String.valueOf(getPrimaryPrincipal(Long.class));
-        Map<String, Serializable> tokenMap = JSON.parseObject(JSON.toJSONString(token), new TypeReference<Map<String, Serializable>>() {
-        });
+        Map<String, Serializable> tokenMap = JSON.parseObject(JSON.toJSONString(token), new TypeReference<Map<String, Serializable>>() {});
         // 有效时间
         long jwtTimeToLive = jwtProperties.getJwtTimeToLive();
         // 接收方

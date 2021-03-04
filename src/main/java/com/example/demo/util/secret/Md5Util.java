@@ -53,10 +53,6 @@ public class Md5Util {
         return DigestUtils.md5Hex(s);
     }
 
-    public static void main(String[] args) {
-        String md5 = getMd5("123456");
-        System.out.println(md5);
-    }
 
     /**
      * MD5工具-转16位

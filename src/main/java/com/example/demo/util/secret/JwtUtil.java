@@ -7,9 +7,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -60,7 +60,7 @@ public class JwtUtil {
     public static Claims parseJwt(String jsonWebToken, String base64Security) {
         try {
             return Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(base64Security))
+                    .setSigningKey(Base64.getDecoder().decode(base64Security))
                     .parseClaimsJws(jsonWebToken)
                     .getBody();
         } catch (Exception ex) {
@@ -84,7 +84,7 @@ public class JwtUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         // 生成签名密钥 就是一个base64加密后的字符串
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(base64Security);
+        byte[] apiKeySecretBytes = Base64.getDecoder().decode(base64Security);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         Map<String, Object> claims = map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         // 添加构成JWT的参数

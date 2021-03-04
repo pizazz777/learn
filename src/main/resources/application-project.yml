@@ -41,11 +41,11 @@ project:
     check-mobile: true
   jwt:
     # JWT 接收方
-    audience:
+    audience: admin
     # JWT 签发方
-    issuer:
+    issuer: admin
     # JWT 签名过期时间(毫秒)
-    # jwt-time-to-live: 3600000L
+    jwt-time-to-live: 3600000
   file:
     # 上传文件系统目录
     upload-file-dir: D:/resource/f

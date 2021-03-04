@@ -1,0 +1,217 @@
+
+=====================================================================异常积累=====================================================================
+
+1. 数据库新增修改提交无效
+	在service层调用其它service层代码可能会出现事务的问题,因为事务造成不能提交然后死锁
+	
+2. 操作Elasticsearch新增或修改文档时报错, Resolved [java.lang.IllegalArgumentException: The number of object passed must be even but was [1]]
+	在调用doc()方法的时候需要设置XContentType
+	request.doc(JSON.toJSONString(object), XContentType.JSON);
+3. 查询报错ORA-00918: column ambiguously defined
+	可能是查询结果的两个字段用了同一个别名
+====================================================================================================================================================	
+	
+	
+	
+=====================================================================命令积累=====================================================================
+
+Linux 命令积累
+
+1. 查找文件位置
+whereis 文件名
+2. 查找命令位置
+which virtualenvwrapper.sh
+3. 切换用户到root
+sudo -i
+4. 卸载使用pip安装的软件
+pip uninstall 软件名
+5. 查询jar包服务
+ps -ef|grep /usr/local/gis.jar
+6. 启动jar包服务
+nohup java -jar /usr/local/gis.jar >/usr/local/gis-logs.txt 2>&1 &
+7. 查看文件内容
+cat 文件名
+8. 打开文件
+vi 文件名
+9. 查看当前用户
+who
+10. 从root用户切换到普通用户
+su -用户名
+11. 将文件所有者改为指定用户
+chown 用户名 文件路径/文件名
+12. 查看ss端口服务是否正常
+netstat -autn
+13. 查看文件夹大小
+du -sh
+
+shadowsocks相关命令
+1. 卸载shadowsocks
+pip uninstall shadowsocks
+
+Open Office相关命令
+1. 查看进程
+ps -ef|grep soffice / netstat -lnp |grep 8100 / netstat -anp|grep 8100
+2. 杀死进程
+sudo kill -9 进程号
+
+windows命令积累
+1. 查看端口
+netstat -ano|findstr "端口号"
+2. 通过端口查进程
+tasklist | findstr 进程号
+3. 杀死进程
+taskkill /f /pid 进程号
+
+
+Oracle命令
+1. Oracle锁表查询
+SELECT t2.username,t2.sid,t2.serial#,t3.object_name,t2.OSUSER,t2.MACHINE,t2.PROGRAM,t2.LOGON_TIME,t2.COMMAND,t2.LOCKWAIT,t2.SADDR,
+t2.PADDR,t2.TADDR,t2.SQL_ADDRESS,t1.LOCKED_MODE 
+FROM v$locked_object t1,v$session t2,dba_objects t3 
+WHERE t1.session_id = t2.sid 
+AND t1.object_id = t3.object_id 
+ORDER BY t2.logon_time
+
+2. Oracle锁表解锁
+alter system kill session 'sid,seial#';
+
+3. 查看Oracle数据文件的大小
+SELECT ROUND(SUM(BYTES)/1024/1024/1024,2)||'GB' FROM DBA_DATA_FILES
+
+====================================================================================================================================================
+
+
+
+=====================================================================代码积累=====================================================================
+
+lombok中 @Data = @Getter + @Setter + @ToString + @EqualsAndHashCode + @RequiredArgsConstructor
+
+1. 两个List根据某个字段属性值相同处理逻辑
+	progressResultList = progressResultList.stream()
+		.map(e -> progressCompleteList.stream()
+			.filter(k -> Objects.equals(e.getKeyName(), k.getItemName()))
+			.findFirst()
+			.map(k -> {
+				e.setProgressComplete(k);
+				return e;
+			}).orElse(e))
+		.collect(Collectors.toList());
+2. 一个对象列表根据其中某个字段进程去重
+
+3. 参数非空校验
+	java.util.Objects.requireNonNull(value, "key must not be null");
+	
+4. stream对列表进行多字段分组
+	list.stream()..collect(Collectors.groupingBy(Object::getField1, Collectors.groupingBy(Object::getField2)));
+
+====================================================================================================================================================
+
+
+
+=====================================================================网站积累=====================================================================
+Activiti学习网站
+https://my.oschina.net/JavaLaw?tab=newest&catalogId=5698016 
+Activiti->会签 加签 减签
+Java23中模式设计
+https://www.cnblogs.com/bopo/p/9223852.html#_label3_2
+Elastic Search学习网站
+https://www.cnblogs.com/dreamroute/p/8484457.html
+Elasticsearch学习中文文档网站
+https://www.elastic.co/guide/cn/elasticsearch/guide/current/_indexing_employee_documents.html
+swagger导出文档
+http://www.leftso.com/blog/402.html
+final shell下载地址
+http://www.hostbuf.com/t/988.html
+banner生成网站
+https://www.degraeve.com/img2txt.php
+maven repository 版本
+https://mvnrepository.com/search
+windows10系统停止操作自动休眠
+https://zhidao.baidu.com/question/2080103391483178908.html
+FFmpeg视频操作
+https://blog.csdn.net/hemingwang0902/article/details/4382429
+javaCV操作摄像头,视频推流/拉流
+https://blog.csdn.net/eguid_1/article/details/52680802
+
+====================================================================================================================================================
+
+
+
+=====================================================================插件积累=====================================================================
+.ignore					-------git提交时过滤掉不需要提交的文件
+CamelCase				-------驼峰字符格式和下划线的相互转化
+checkStyle-IDEA			-------能够自动化代码规范检查过程
+code Navigator			-------帮助快速阅读和理解代码结构
+Lombok					-------自动生成Getter Setter方法
+Maven Helper			-------可以快速解决maven依赖冲突，和查看结构
+MaBatis Log Plugin		-------当sql报错时候,能够提供完整的sql语句
+RestfulToolkit			-------展示你项目定义的所有对外的URL
+Free MyBatis plugin		-------可以让mapper的文件和xml的文件快速来回定位 跳转
+activate-power-mode  	-------增加酷炫的样式
+Material Theme UI		-------主题插件,可以让你的ide的图标变漂亮
+Nyan progress bar		-------将idea中的所有的进度条都变成萌新动画的小插件
+Rainbow Brackets		-------彩虹颜色的括号
+Translation				-------idea中的翻译插件
+Codota					-------代码智能补全
+iedis					-------redis客户端可视化插件,可以查看redis集群
+GsonFormat				-------json格式的内容转成Object
+JavaDoc					-------添加注解之后生成java文档
+RegexpTester			-------正则表达式测试工具
+BackgroundImage			-------背景图片
+String Manipulation		-------操作字符串(例如格式化,转为驼峰,中横线)
+Alibaba Java Coding Guidelines			-------阿里巴巴提供的java代码格式检查
+====================================================================================================================================================
+
+
+
+=====================================================================配置积累=====================================================================
+
+1. Tomcat日志中文乱码
+	修改 conf/logging.properties文件,将UTF-8改为GBK
+	或者在 安装目录/IntelliJ IDEA/bin/idea64.exe.vmoptions 文件下添加一行 -Dfile.encoding=UTF-8, 然后重启idea
+	
+2. IDEA配置连接MySQL报错08001
+	在URL后面加上serverTimezone=UTC或者serverTimezone=Asia/Shanghai
+
+3. Windows安装ik分词器
+	方式一: 压缩包安装(离线安装)
+		https://github.com/medcl/elasticsearch-analysis-ik/releases
+		找到对应的ES版本, 在ES安装目录->plugins->新建文件夹analysis-ik->解压文件放入其中
+	方式二: 命令安装(在线安装)
+		1. 在ES安装目录执行CMD命令
+		2. 执行命令, 注意版本号
+		elasticsearch-plugin.bat install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.6.0/elasticsearch-analysis-ik-7.6.0.zip
+
+4. maven打包命令
+	mvn package -Dmaven.test.skip=true
+	clean package -Dmaven.test.skip=true
+	
+5. idea移动包之后提示Cannot access
+	File -> Invalidate Caches / Restart... -> INVALIDATE AND RESTART
+	
+6. powerdesigner字段设置默认值
+	双击字段->选择Standard Checks界面->Default(值)
+
+7. windows cmd导出Oracle数据库表和数据
+	导出指定表的表结构和数据
+	exp 账号/密码@localhost:1521/orcl file=d:\test.dmp statistics=none TABLES=(表名,表名)
+	例: exp gzdt1v2bim/gzdt1v2bim@10.74.8.35:1521/dbn file=C:\shuju.dmp tables=(yj_verification_user_record)
+	
+	exp gzdt11bimA/gzdt11bimA@10.74.8.35/dbn file=C:\renyuan.dmp tables=(yj_verification_user_record)
+	
+	直接导出数据库内的所有表和数据，ower=用户名
+	exp xue/123456@localhost:1521/orcl file=G:\Oracle\backups_20180718.dmp owner=xue
+	导入表结构和数据
+	imp xue/123456@localhost:1521/orcl file=G:\Oracle\backups_20180718.dmp full=y ignore=y
+====================================================================================================================================================	
+
+
+
+
+
+
+
+
+
+
+

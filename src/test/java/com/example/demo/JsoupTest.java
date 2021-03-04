@@ -24,15 +24,15 @@ public class JsoupTest {
     private static final String HREF = "href";
     private static final String CONTENT = "content";
     private static final String CSS_QUERY_A = "div[class = bottem1] > a[href]";
-//        private static final String CSS_QUERY_A = "div[class = page_chapter] > ul > li > a[href]";
+//    private static final String CSS_QUERY_A = "div[class = page_chapter] > ul > li > a[href]";
     private static final String CSS_QUERY_BOOK_NAME = "div.bookname > h1";
     private static final String NEXT = "下一章";
     private static final String PATH = "D:/Text/url.txt";
 
     public static void main(String[] args) throws IOException {
         String name = "";
-         name = "大丰打更人";
-//         name = "修仙从沙漠开始";
+//         name = "大丰打更人";
+//        name = "修仙从沙漠开始";
 //        name = "人魔之路";
 //        name = "沧元图";
 //        name = "从魔修开始";
@@ -40,6 +40,12 @@ public class JsoupTest {
 //        name = "飞剑问道";
 //        name = "大梦主";
 //        name = "剑卒过河";
+//        name = "皓玉真仙";
+//        name = "妖女哪里逃";
+//        name = "灵风仙途";
+//        name = "天元仙记";
+//        name = "韩氏仙路";
+//        name = "洪主";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
@@ -68,10 +74,11 @@ public class JsoupTest {
                     if (a.text().equals(NEXT)) {
                         suffixUrl = a.attr(HREF);
                         if (flag) {
-                            int i = findChar(read) - findChar(suffixUrl) + 1;
+                            int i = findChar(read) - findChar(suffixUrl) + (suffixUrl.startsWith("/") ? 1 : 0);
                             preUrl = subUrl(read, i);
                             flag = false;
                         }
+                        suffixUrl = suffixUrl.startsWith("/") ? suffixUrl : "/" + suffixUrl;
                         break;
                     }
                 }
