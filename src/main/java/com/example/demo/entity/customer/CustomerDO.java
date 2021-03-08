@@ -5,6 +5,7 @@ import com.example.demo.annotation.elasticsearch.Mapping;
 import com.example.demo.constant.es.AnalyzerTypeEnum;
 import com.example.demo.constant.es.FieldTypeEnum;
 import com.example.demo.entity.PageBean;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -36,55 +37,43 @@ import java.time.LocalDateTime;
 public class CustomerDO extends PageBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
+    @ApiModelProperty("主键")
     private Long id;
-    /**
-     * 姓名
-     */
+
+    @ApiModelProperty("姓名")
     private String username;
-    /**
-     * 手机号码
-     */
+
+    @ApiModelProperty("手机号码")
     private String mobile;
-    /**
-     * 性别
-     */
+
+    @ApiModelProperty("性别")
     private Integer sex;
-    /**
-     * 备注
-     */
+
+    @ApiModelProperty("备注")
     @Mapping(type = FieldTypeEnum.Text, analyzer = AnalyzerTypeEnum.ik_max_word)
     private String remark;
-    /**
-     * 归属用户
-     */
+
+    @ApiModelProperty("归属用户")
     private Long belongToUserId;
-    /**
-     * 客户级别
-     */
+
+    @ApiModelProperty("客户级别")
     private Integer level;
-    /**
-     * 客户来源
-     */
+
+    @ApiModelProperty("客户来源")
     private Integer source;
-    /**
-     * 创建时间
-     */
+
+    @ApiModelProperty("创建时间")
     private LocalDateTime createTime;
-    /**
-     * 修改时间
-     */
+
+    @ApiModelProperty("修改时间")
     private LocalDateTime updateTime;
-    /**
-     * 创建人
-     */
+
+    @ApiModelProperty("创建人")
     private Long createUserId;
 
     /* ------------------ 非数据库数据分割线 ------------------ */
 
-
+    @ApiModelProperty("简介")
     private String intro;
 
 }

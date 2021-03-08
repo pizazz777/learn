@@ -76,6 +76,7 @@ public class ShiroConfig {
 //        filterChainDefinitionMap.put("/elasticsearch/show", "anon");
         // swagger
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/doc.html", "anon");
         filterChainDefinitionMap.put("/webjars/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/v2/api-docs/**", "anon");

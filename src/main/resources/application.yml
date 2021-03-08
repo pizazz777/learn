@@ -199,3 +199,6 @@ logging:
     root: info
   file:
     path: log/logs
+knife4j:
+  # 开启对swagger-ui的增强插件
+  enable: true

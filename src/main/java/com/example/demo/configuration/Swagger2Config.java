@@ -13,7 +13,7 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * @author Administrator
@@ -21,7 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @description: swagger2配置类
  */
 @Configuration
-@EnableSwagger2
+@EnableSwagger2WebMvc
 public class Swagger2Config implements WebMvcConfigurer {
 
     private ProjectProperties projectProperties;
@@ -37,6 +37,8 @@ public class Swagger2Config implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/doc.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");

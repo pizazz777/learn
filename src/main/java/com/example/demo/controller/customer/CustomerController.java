@@ -63,9 +63,8 @@ public class CustomerController {
 
     @RequiresPermissions("customer:save")
     @ApiOperation(value = SAVE_DESC)
-    @ApiImplicitParam(name = "customerDO", value = "客户表对象", required = true, dataTypeClass = CustomerDO.class)
     @PostMapping(value = "/save")
-    public String save(@ModelAttribute CustomerDO object) throws ServiceException {
+    public String save(@RequestBody CustomerDO object) throws ServiceException {
         // 接口校验
         String verifyResult = legalParam(object);
         if (Objects.nonNull(verifyResult)) {
@@ -79,9 +78,8 @@ public class CustomerController {
 
     @RequiresPermissions("customer:update")
     @ApiOperation(value = UPDATE_DESC)
-    @ApiImplicitParam(name = "customerDO", value = " 客户表对象", required = true, dataTypeClass = CustomerDO.class)
     @PostMapping(value = "/update")
-    public String update(@ModelAttribute CustomerDO object) throws ServiceException {
+    public String update(@RequestBody CustomerDO object) throws ServiceException {
         // 接口校验
         String verifyResult = legalParam(object);
         if (Objects.nonNull(verifyResult)) {
