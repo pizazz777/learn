@@ -2,7 +2,7 @@ package com.example.demo.listener;
 
 import com.example.demo.component.AuthComponent;
 import com.example.demo.component.exception.ServiceException;
-import com.example.demo.util.SpringContextHandler;
+import com.example.demo.component.SpringContextHandler;
 import com.example.demo.util.container.ContainerUtil;
 import com.google.common.collect.Lists;
 import org.activiti.engine.delegate.DelegateTask;

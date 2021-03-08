@@ -66,4 +66,12 @@ public interface SysResourceDao extends BaseDao<SysResourceDO> {
      */
     List<Long> listByUserId(@Param("userId") Long userId);
 
+
+    /**
+     * 获取全部的资源符
+     *
+     * @return string
+     */
+    List<String> listAllResource();
+
 }

@@ -1,16 +1,17 @@
 package com.example.demo.service.customer.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
+import com.example.demo.component.AuthComponent;
 import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
 import com.example.demo.component.response.ResResult;
-import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.dao.customer.CustomerDao;
+import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.customer.CustomerService;
 import com.example.demo.util.container.ContainerUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +31,12 @@ import java.util.Objects;
 public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao;
+    private AuthComponent authComponent;
 
     @Autowired
-    public CustomerServiceImpl(CustomerDao customerDao) {
+    public CustomerServiceImpl(CustomerDao customerDao, AuthComponent authComponent) {
         this.customerDao = customerDao;
+        this.authComponent = authComponent;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class CustomerServiceImpl implements CustomerService {
     public ResResult getById(Serializable id) {
         CustomerDO object = customerDao.getById(id);
         if (Objects.nonNull(object)) {
-        return ResResult.success(object);
+            return ResResult.success(object);
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }
@@ -63,9 +66,10 @@ public class CustomerServiceImpl implements CustomerService {
         LocalDateTime now = LocalDateTime.now();
         object.setCreateTime(now);
         object.setUpdateTime(now);
+        object.setCreateUserId(authComponent.getPrimaryPrincipal(Long.class));
         int save = customerDao.save(object);
         if (save > 0) {
-        return ResResult.success();
+            return ResResult.success();
         }
         return ResResult.fail();
     }
@@ -76,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
         object.setUpdateTime(LocalDateTime.now());
         int update = customerDao.update(object);
         if (update > 0) {
-        return ResResult.success();
+            return ResResult.success(object);
         }
         return ResResult.fail();
     }

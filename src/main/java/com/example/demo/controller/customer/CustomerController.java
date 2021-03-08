@@ -64,6 +64,7 @@ public class CustomerController {
     @RequiresPermissions("customer:save")
     @ApiOperation(value = SAVE_DESC)
     @PostMapping(value = "/save")
+    @Action(type = ActionLogEnum.SAVE, desc = SAVE_DESC)
     public String save(@RequestBody CustomerDO object) throws ServiceException {
         // 接口校验
         String verifyResult = legalParam(object);
@@ -79,6 +80,7 @@ public class CustomerController {
     @RequiresPermissions("customer:update")
     @ApiOperation(value = UPDATE_DESC)
     @PostMapping(value = "/update")
+    @Action(type = ActionLogEnum.UPDATE, desc = UPDATE_DESC)
     public String update(@RequestBody CustomerDO object) throws ServiceException {
         // 接口校验
         String verifyResult = legalParam(object);

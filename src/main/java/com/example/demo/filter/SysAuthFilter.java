@@ -6,7 +6,7 @@ import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.log.ExceptionLogDO;
 import com.example.demo.manager.log.ExceptionLogRequest;
-import com.example.demo.util.SpringContextHandler;
+import com.example.demo.component.SpringContextHandler;
 import com.example.demo.util.ip.IpUtil;
 import com.example.demo.util.secret.JwtUtil;
 import io.jsonwebtoken.Claims;

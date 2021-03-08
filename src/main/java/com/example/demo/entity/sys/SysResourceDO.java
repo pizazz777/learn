@@ -46,10 +46,10 @@ public class SysResourceDO extends PageBean implements Serializable {
     @ApiModelProperty("资源类型 1.系统资源,2.自定义资源")
     private Integer type;
 
-    @ApiModelProperty("资源状态")
+    @ApiModelProperty("资源状态 1.正常,2.禁用")
     private Integer status;
 
-    @ApiModelProperty("系统资源类型")
+    @ApiModelProperty("系统资源类型 1.是,2.不是")
     private Integer sysType;
 
     @ApiModelProperty("父级资源主键")

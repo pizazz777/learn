@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.component;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

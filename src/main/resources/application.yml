@@ -200,5 +200,12 @@ logging:
   file:
     path: log/logs
 knife4j:
-  # 开启对swagger-ui的增强插件
+  # 开启增强配置
   enable: true
+  # 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    # Basic认证用户名
+    username: admin
+    # Basic认证密码
+    password: admin
