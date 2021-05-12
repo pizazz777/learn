@@ -1,7 +1,7 @@
 package com.example.demo.annotation.elasticsearch;
 
-import com.example.demo.constant.es.AnalyzerTypeEnum;
-import com.example.demo.constant.es.FieldTypeEnum;
+import com.example.demo.constant.elasticsearch.AnalyzerTypeEnum;
+import com.example.demo.constant.elasticsearch.FieldTypeEnum;
 
 import java.lang.annotation.*;
 

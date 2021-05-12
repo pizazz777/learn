@@ -102,9 +102,4 @@ public class AuthComponentImpl implements AuthComponent {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(Md5Util.getMd5("123456"));
-    }
-
-
 }

@@ -1,4 +1,4 @@
-package com.example.demo.constant.es;
+package com.example.demo.constant.elasticsearch;
 
 /**
  * @author Administrator

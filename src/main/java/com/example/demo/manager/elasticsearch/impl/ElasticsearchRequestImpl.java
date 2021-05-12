@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
-import com.example.demo.constant.es.AnalyzerTypeEnum;
+import com.example.demo.constant.elasticsearch.AnalyzerTypeEnum;
 import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.example.demo.constant.es.IndexConst.DEFAULT_INDEX_NAME;
+import static com.example.demo.constant.elasticsearch.IndexConst.DEFAULT_INDEX_NAME;
 
 /**
  * @author Administrator

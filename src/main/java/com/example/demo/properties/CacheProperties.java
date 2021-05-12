@@ -17,7 +17,7 @@ public class CacheProperties {
     /**
      * key前缀
      */
-    private String prefixCacheName = "sys:cache";
+    private String prefixCacheName;
     /**
      * 超时时间(单位:秒)
      */

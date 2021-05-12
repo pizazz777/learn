@@ -26,51 +26,51 @@ public class ImageUtil {
      * 生成固定大小的图片
      *
      * @param srcPath  目标图片路径
-     * @param distPath 生成图片路径
+     * @param destPath 生成图片路径
      * @param width    宽
      * @param height   高
      * @throws IOException e
      */
-    public static void generateFixedSize(String srcPath, String distPath, int width, int height) throws IOException {
+    public static void generateFixedSize(String srcPath, String destPath, int width, int height) throws IOException {
         Thumbnails.of(srcPath)
                 .size(width, height)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
     /**
      * 按照比例缩放
      *
      * @param srcPath  目标图片路径
-     * @param distPath 生成图片路径
+     * @param destPath 生成图片路径
      * @param scale    比例
      * @throws IOException e
      */
-    public static void scale(String srcPath, String distPath, double scale) throws IOException {
+    public static void scale(String srcPath, String destPath, double scale) throws IOException {
         Thumbnails.of(srcPath)
                 .scale(scale)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
     /**
      * 旋转图像
      *
      * @param srcPath  目标图片路径
-     * @param distPath 生成图片路径
+     * @param destPath 生成图片路径
      * @param angle    旋转角度 正数:顺时针 负数:逆时针
      * @throws IOException e
      */
-    public static void rotate(String srcPath, String distPath, double angle) throws IOException {
+    public static void rotate(String srcPath, String destPath, double angle) throws IOException {
         Thumbnails.of(srcPath)
                 .scale(1)
                 .rotate(angle)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
     /**
      * 添加水印图片
      *
      * @param srcPath       目标地址
-     * @param distPath      生成地址
+     * @param destPath      生成地址
      * @param watermarkPath 水印地址
      * @param width         宽
      * @param height        高
@@ -79,13 +79,13 @@ public class ImageUtil {
      * @param position      水印的方向
      * @throws IOException e
      */
-    public static void watermark(String srcPath, String distPath, String watermarkPath, int width,
+    public static void watermark(String srcPath, String destPath, String watermarkPath, int width,
                                  int height, float alpha, float quality, Positions position) throws IOException {
         Thumbnails.of(srcPath)
                 .size(width, height)
                 .watermark(position, ImageIO.read(new File(watermarkPath)), alpha)
                 .outputQuality(quality)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
 
@@ -93,15 +93,15 @@ public class ImageUtil {
      * 转换图片类型
      *
      * @param srcPath  目标地址
-     * @param distPath 生成地址
+     * @param destPath 生成地址
      * @param type     图片类型
      * @throws IOException e
      */
-    public static void convert(String srcPath, String distPath, ImageTypeEnum type) throws IOException {
+    public static void convert(String srcPath, String destPath, ImageTypeEnum type) throws IOException {
         Thumbnails.of(srcPath)
                 .scale(1)
                 .outputFormat(type.name().toLowerCase())
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
 
@@ -109,35 +109,35 @@ public class ImageUtil {
      * 裁剪
      *
      * @param srcPath   目标地址
-     * @param distPath  生成地址
+     * @param destPath  生成地址
      * @param positions 位置
      * @param width     在该位置中的宽
      * @param height    在该位置中的宽
      * @throws IOException e
      */
-    public static void cutImage(String srcPath, String distPath, Positions positions, int width, int height) throws IOException {
+    public static void cutImage(String srcPath, String destPath, Positions positions, int width, int height) throws IOException {
         Thumbnails.of(srcPath)
                 .sourceRegion(positions, width, height)
                 .scale(1)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
     /**
      * 指定坐标裁剪
      *
      * @param srcPath  目标地址
-     * @param distPath 生成地址
+     * @param destPath 生成地址
      * @param x        x轴
      * @param y        y轴
      * @param width    宽
      * @param height   高
      * @throws IOException e
      */
-    public static void cutImage(String srcPath, String distPath, int x, int y, int width, int height) throws IOException {
+    public static void cutImage(String srcPath, String destPath, int x, int y, int width, int height) throws IOException {
         Thumbnails.of(srcPath)
                 .sourceRegion(x, y, width, height)
                 .scale(1)
-                .toFile(distPath);
+                .toFile(destPath);
     }
 
     /**

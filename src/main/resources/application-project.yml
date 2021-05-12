@@ -39,6 +39,7 @@ project:
     authentication-caching-enabled: true
     # 系统中是否需要对手机号码进行验证
     check-mobile: true
+  # json web token
   jwt:
     # JWT 接收方
     audience: admin

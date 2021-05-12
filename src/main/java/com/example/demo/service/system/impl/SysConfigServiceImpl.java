@@ -85,9 +85,11 @@ public class SysConfigServiceImpl implements SysConfigService, ApplicationRunner
                     .configValue(value)
                     .updateTime(now)
                     .build();
-            // 这里有可能会出现缓存一致性问题
-            // 并发不高采用先更新数据库,再删除缓存足矣
-            // 如果并发高可以采取订阅数据库的操作日志binlog,然后启用一段非业务代码通过消息队列操作
+            /*
+             * 这里有可能会出现缓存一致性问题
+             * 并发不高采用先更新数据库,再删除缓存足矣
+             * 如果并发高可以采取订阅数据库的操作日志binlog,然后启用一段非业务代码通过消息队列操作
+             */
             if (sysConfigDao.update(sysConfig) > 0) {
                 cacheRequest.deleteByKey(key);
             }

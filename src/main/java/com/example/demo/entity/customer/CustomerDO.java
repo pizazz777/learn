@@ -2,8 +2,8 @@ package com.example.demo.entity.customer;
 
 import com.example.demo.annotation.elasticsearch.Document;
 import com.example.demo.annotation.elasticsearch.Mapping;
-import com.example.demo.constant.es.AnalyzerTypeEnum;
-import com.example.demo.constant.es.FieldTypeEnum;
+import com.example.demo.constant.elasticsearch.AnalyzerTypeEnum;
+import com.example.demo.constant.elasticsearch.FieldTypeEnum;
 import com.example.demo.entity.PageBean;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

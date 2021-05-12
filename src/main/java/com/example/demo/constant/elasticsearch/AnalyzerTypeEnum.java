@@ -1,4 +1,4 @@
-package com.example.demo.constant.es;
+package com.example.demo.constant.elasticsearch;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

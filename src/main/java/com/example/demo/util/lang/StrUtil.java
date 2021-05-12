@@ -51,7 +51,7 @@ public class StrUtil {
      * @param limit    每段字符个数
      * @return string
      */
-    private static String insertByLimit(@NonNull String original, String insert, int limit) {
+    private static String insertByLimit(String original, String insert, int limit) {
         int length = original.length();
         if (length <= limit) {
             return original;
@@ -146,10 +146,6 @@ public class StrUtil {
         int month = Integer.valueOf(idCard.substring(10, 12));
         int day = Integer.valueOf(idCard.substring(12, 14));
 
-        if ((month < monthNow) || (month == monthNow && day <= dayNow)) {
-            return yearNow - year;
-        } else {
-            return yearNow - year - 1;
-        }
+        return ((month < monthNow) || (month == monthNow && day <= dayNow)) ? yearNow - year : yearNow - year - 1;
     }
 }

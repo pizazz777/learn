@@ -2,7 +2,7 @@ package com.example.demo.annotation.elasticsearch;
 
 import java.lang.annotation.*;
 
-import static com.example.demo.constant.es.IndexConst.DEFAULT_INDEX_NAME;
+import static com.example.demo.constant.elasticsearch.IndexConst.DEFAULT_INDEX_NAME;
 
 /**
  * @author Administrator

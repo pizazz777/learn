@@ -60,10 +60,10 @@ public class SysUserRealm extends AuthorizingRealm {
         this.sysResourceDao = sysResourceDao;
         this.sysRoleDao = sysRoleDao;
         //开启授权缓存
-        this.setAuthorizationCachingEnabled(true);
+        this.setAuthorizationCachingEnabled(authProperties.getAuthorizationCachingEnabled());
         this.setAuthorizationCacheName(AUTHORIZATION_CACHE_NAME);
         //开启认证缓存
-        this.setAuthenticationCachingEnabled(true);
+        this.setAuthenticationCachingEnabled(authProperties.getAuthenticationCachingEnabled());
         this.setAuthenticationCacheName(AUTHENTICATION_CACHE_NAME);
     }
 
