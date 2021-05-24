@@ -1,7 +1,6 @@
 package com.example.demo.service.sys.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -14,9 +13,9 @@ import com.example.demo.entity.sys.SysPermissionResourceMidDO;
 import com.example.demo.manager.sys.SysPermissionRequest;
 import com.example.demo.realm.SysUserRealm;
 import com.example.demo.service.sys.SysPermissionService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -71,8 +70,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
         PageHelper.startPage(query);
         List<SysPermissionDO> list = sysPermissionDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            ResList<SysPermissionDO> resList = ResList.page(list, ((Page) list).getTotal());
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

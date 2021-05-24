@@ -1,6 +1,6 @@
 package com.example.demo.constant.office;
 
-import com.example.demo.util.file.FileUtil;
+import com.huang.util.file.FileUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

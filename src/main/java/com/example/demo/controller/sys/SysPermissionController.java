@@ -1,21 +1,17 @@
 package com.example.demo.controller.sys;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
-import java.util.Objects;
+import com.example.demo.entity.sys.SysPermissionDO;
+import com.example.demo.service.sys.SysPermissionService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.example.demo.entity.sys.SysPermissionDO;
-import com.example.demo.service.sys.SysPermissionService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * @author hxx
@@ -97,8 +93,8 @@ public class SysPermissionController {
     }
 
     /**
-    * 参数校验
-    */
+     * 参数校验
+     */
     private String legalParam(SysPermissionDO object) {
 
         return null;

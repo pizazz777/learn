@@ -1,7 +1,6 @@
 package com.example.demo.service.sys.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -10,9 +9,9 @@ import com.example.demo.dao.sys.SysPermissionResourceMidDao;
 import com.example.demo.dao.sys.SysResourceDao;
 import com.example.demo.entity.sys.SysResourceDO;
 import com.example.demo.service.sys.SysResourceService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -54,9 +53,7 @@ public class SysResourceServiceImpl implements SysResourceService {
         PageHelper.startPage(query);
         List<SysResourceDO> list = sysResourceDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            long total = ((Page) list).getTotal();
-            ResList<SysResourceDO> resList = ResList.page(list, total);
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

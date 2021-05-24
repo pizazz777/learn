@@ -1,9 +1,9 @@
 package com.example.demo.office.excel.example;
 
-import com.example.demo.component.exception.ExcelException;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.office.excel.format.ExcelNumericFormat;
 import com.example.demo.office.excel.principal.AbstractUserExcelTemplateModel;
+import com.huang.exception.ExcelException;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 

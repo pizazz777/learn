@@ -27,8 +27,8 @@ public class ThreadTask implements Callable<String> {
     public String call() throws Exception {
 //        System.out.println("执行任务: " + taskName);
         // 睡1~3秒
-        int nextInt = new Random().nextInt(2000);
-        Thread.sleep(1000 + nextInt);
+        int nextInt = new Random().nextInt(2000) + 1000;
+        Thread.sleep(nextInt);
         System.out.println(Thread.currentThread().getName() + "  执行的  " + taskName);
         return taskName;
     }

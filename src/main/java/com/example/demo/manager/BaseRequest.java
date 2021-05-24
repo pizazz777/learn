@@ -1,7 +1,7 @@
 package com.example.demo.manager;
 
 
-import com.example.demo.component.exception.ServiceException;
+import com.huang.exception.ServiceException;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,12 +1,12 @@
 package com.example.demo.controller.customer;
 
 import com.example.demo.annotation.log.Action;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.constant.log.ActionLogEnum;
 import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.customer.CustomerService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

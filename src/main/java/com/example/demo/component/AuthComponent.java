@@ -1,6 +1,6 @@
 package com.example.demo.component;
 
-import com.example.demo.component.exception.ServiceException;
+import com.huang.exception.ServiceException;
 
 /**
  * @author Administrator

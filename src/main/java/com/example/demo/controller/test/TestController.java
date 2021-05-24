@@ -1,7 +1,6 @@
 package com.example.demo.controller.test;
 
 import com.example.demo.annotation.log.Action;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.constant.file.FileType;
 import com.example.demo.entity.sys.SysUserDO;
@@ -10,7 +9,8 @@ import com.example.demo.manager.video.VideoRequest;
 import com.example.demo.office.excel.example.ExampleImportHandler;
 import com.example.demo.office.excel.model.ImportResult;
 import com.example.demo.schdule.TimerTest;
-import com.example.demo.util.secret.JwtUtil;
+import com.huang.exception.ServiceException;
+import com.huang.util.secret.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

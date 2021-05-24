@@ -1,6 +1,5 @@
 package com.example.demo.service.sys.impl;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -8,9 +7,9 @@ import com.example.demo.component.response.ResResult;
 import com.example.demo.dao.sys.SysDeptDao;
 import com.example.demo.entity.sys.SysDeptDO;
 import com.example.demo.service.sys.SysDeptService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         PageHelper.startPage(query);
         List<SysDeptDO> list = sysDeptDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            ResList<SysDeptDO> resList = ResList.page(list, ((Page) list).getTotal());
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

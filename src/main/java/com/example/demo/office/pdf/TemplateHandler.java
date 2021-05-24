@@ -1,7 +1,7 @@
 package com.example.demo.office.pdf;
 
 import com.example.demo.office.pdf.model.TemplateVO;
-import com.example.demo.properties.OfficeProperties;
+import com.example.demo.properties.ProjectProperties;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -23,11 +23,11 @@ import java.util.Objects;
 @Component
 public class TemplateHandler {
 
-    private OfficeProperties officeProperties;
+    private ProjectProperties projectProperties;
 
     @Autowired
-    public TemplateHandler(OfficeProperties officeProperties) {
-        this.officeProperties = officeProperties;
+    public TemplateHandler(ProjectProperties projectProperties) {
+        this.projectProperties = projectProperties;
     }
 
     /**
@@ -61,7 +61,7 @@ public class TemplateHandler {
      */
     private Configuration getConfiguration() throws IOException {
         if (Objects.isNull(configuration)) {
-            File dir = new File(officeProperties.getPdf().getPdfTemplatePath());
+            File dir = new File(projectProperties.getOffice().getPdf().getPdfTemplatePath());
             if (!dir.exists()) {
                 dir.mkdirs();
             }

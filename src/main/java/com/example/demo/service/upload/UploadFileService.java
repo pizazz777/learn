@@ -1,9 +1,9 @@
 package com.example.demo.service.upload;
 
-import com.example.demo.component.exception.UploadException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.service.BaseService;
+import com.huang.exception.UploadException;
 
 import javax.servlet.http.HttpServletRequest;
 

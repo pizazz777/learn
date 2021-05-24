@@ -1,6 +1,6 @@
 package com.example.demo.manager.log;
 
-import com.example.demo.component.exception.ServiceException;
+import com.huang.exception.ServiceException;
 
 import java.time.LocalDateTime;
 

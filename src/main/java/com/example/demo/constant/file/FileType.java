@@ -1,9 +1,10 @@
 package com.example.demo.constant.file;
 
 
-import com.example.demo.component.exception.UploadException;
-import com.example.demo.util.file.FileUtil;
-import com.example.demo.util.lang.StrUtil;
+import com.example.demo.entity.upload.UploadFileDO;
+import com.huang.exception.UploadException;
+import com.huang.util.file.FileUtil;
+import com.huang.util.lang.StrUtil;
 
 import static com.example.demo.constant.file.FileTypeEnum.*;
 

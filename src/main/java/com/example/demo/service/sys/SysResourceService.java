@@ -1,9 +1,9 @@
 package com.example.demo.service.sys;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.sys.SysResourceDO;
 import com.example.demo.service.BaseService;
+import com.huang.exception.ServiceException;
 
 /**
  * @author hxx

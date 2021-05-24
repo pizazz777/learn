@@ -1,7 +1,7 @@
 package com.example.demo.office.pdf.output;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.upload.UploadFileDO;
+import com.huang.exception.ServiceException;
 
 import java.io.File;
 import java.io.OutputStream;

@@ -1,6 +1,6 @@
 package com.example.demo.configuration;
 
-import com.example.demo.util.time.DateUtil;
+import com.huang.util.time.DateUtil;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,7 @@ import java.util.Objects;
  * @date 2020-07-10 17:30
  * @description: quartz定时器配置类
  * 单个触发器只能单个任务,单个任务可以多个触发器触发
+ * 示例参考-{@link com.example.demo.controller.test.TestController#timer}
  */
 @Configuration
 public class TimerConfig {
@@ -61,7 +62,7 @@ public class TimerConfig {
      * @param jobName     任务名称
      * @throws SchedulerException e
      */
-    public void createJob(Class<? extends QuartzJobBean> clz, @NotBlank String cron, String triggerName, String jobName) throws SchedulerException{
+    public void createJob(Class<? extends QuartzJobBean> clz, @NotBlank String cron, String triggerName, String jobName) throws SchedulerException {
         createJob(clz, null, cron, triggerName, jobName);
     }
 

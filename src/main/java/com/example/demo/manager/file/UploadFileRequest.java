@@ -1,9 +1,9 @@
 package com.example.demo.manager.file;
 
-import com.example.demo.component.exception.ServiceException;
-import com.example.demo.component.exception.UploadException;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.BaseRequest;
+import com.huang.exception.ServiceException;
+import com.huang.exception.UploadException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;

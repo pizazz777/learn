@@ -1,7 +1,6 @@
 package com.example.demo.service.sys.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -15,10 +14,10 @@ import com.example.demo.entity.sys.SysUserRoleMidDO;
 import com.example.demo.manager.sys.SysUserRequest;
 import com.example.demo.realm.SysUserRealm;
 import com.example.demo.service.sys.SysUserService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -118,9 +117,7 @@ public class SysUserServiceImpl implements SysUserService {
         PageHelper.startPage(query);
         List<SysUserDO> list = sysUserDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            long total = ((Page) list).getTotal();
-            ResList<SysUserDO> resList = ResList.page(list, total);
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

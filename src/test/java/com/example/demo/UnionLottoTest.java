@@ -1,7 +1,7 @@
 package com.example.demo;
 
-import com.example.demo.util.lang.MathUtil;
 import com.google.common.collect.Lists;
+import com.huang.util.lang.MathUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author administrator
  * @version 1.0.0
  * @date 2021/05/12
- * @description 双色球机选  N红+N蓝,可以选复式选号
+ * @description 双色球机选  N红+M蓝,可以选复式选号
  */
 public class UnionLottoTest {
 
@@ -29,11 +29,10 @@ public class UnionLottoTest {
     // 几注 默认1注
     private static final int NUMBERS = 5;
     // 倍数 默认1倍
-    private static final int MULTIPLE = 5;
+    private static final int MULTIPLE = 1;
 
     @Test
     public void generateTest() {
-
         for (int index = 0; index < NUMBERS; index++) {
 
             List<String> redBallList = lottery("red", RED_NUMBER);
@@ -121,63 +120,63 @@ public class UnionLottoTest {
      * @return list
      */
     private List<Ball> getBallList(String type) {
-        List<Ball> ballList = Lists.newArrayList();
+        List<Ball> list = Lists.newArrayList();
         // 红球
         if (Objects.equals(type, "red")) {
-            ballList.add(new Ball(1, 20));
-            ballList.add(new Ball(2, 40));
-            ballList.add(new Ball(3, 25));
-            ballList.add(new Ball(4, 25));
-            ballList.add(new Ball(5, 25));
-            ballList.add(new Ball(6, 35));
-            ballList.add(new Ball(7, 40));
-            ballList.add(new Ball(8, 20));
-            ballList.add(new Ball(9, 15));
-            ballList.add(new Ball(10, 15));
-            ballList.add(new Ball(11, 30));
-            ballList.add(new Ball(12, 15));
-            ballList.add(new Ball(13, 20));
-            ballList.add(new Ball(14, 10));
-            ballList.add(new Ball(15, 10));
-            ballList.add(new Ball(16, 10));
-            ballList.add(new Ball(17, 30));
-            ballList.add(new Ball(18, 25));
-            ballList.add(new Ball(19, 30));
-            ballList.add(new Ball(20, 25));
-            ballList.add(new Ball(21, 25));
-            ballList.add(new Ball(22, 10));
-            ballList.add(new Ball(23, 2));
-            ballList.add(new Ball(24, 35));
-            ballList.add(new Ball(25, 2));
-            ballList.add(new Ball(26, 10));
-            ballList.add(new Ball(27, 15));
-            ballList.add(new Ball(28, 35));
-            ballList.add(new Ball(29, 10));
-            ballList.add(new Ball(30, 10));
-            ballList.add(new Ball(31, 80));
-            ballList.add(new Ball(32, 15));
-            ballList.add(new Ball(33, 10));
+            list.add(new Ball(1, 30));
+            list.add(new Ball(2, 20));
+            list.add(new Ball(3, 10));
+            list.add(new Ball(4, 10));
+            list.add(new Ball(5, 25));
+            list.add(new Ball(6, 5));
+            list.add(new Ball(7, 5));
+            list.add(new Ball(8, 10));
+            list.add(new Ball(9, 10));
+            list.add(new Ball(10, 3));
+            list.add(new Ball(11, 20));
+            list.add(new Ball(12, 35));
+            list.add(new Ball(13, 20));
+            list.add(new Ball(14, 3));
+            list.add(new Ball(15, 20));
+            list.add(new Ball(16, 2));
+            list.add(new Ball(17, 25));
+            list.add(new Ball(18, 35));
+            list.add(new Ball(19, 5));
+            list.add(new Ball(20, 35));
+            list.add(new Ball(21, 5));
+            list.add(new Ball(22, 15));
+            list.add(new Ball(23, 30));
+            list.add(new Ball(24, 3));
+            list.add(new Ball(25, 10));
+            list.add(new Ball(26, 20));
+            list.add(new Ball(27, 5));
+            list.add(new Ball(28, 10));
+            list.add(new Ball(29, 5));
+            list.add(new Ball(30, 5));
+            list.add(new Ball(31, 30));
+            list.add(new Ball(32, 20));
+            list.add(new Ball(33, 5));
         }
         // 蓝球
         if (Objects.equals(type, "blue")) {
-            ballList.add(new Ball(1, 5));
-            ballList.add(new Ball(2, 10));
-            ballList.add(new Ball(3, 30));
-            ballList.add(new Ball(4, 40));
-            ballList.add(new Ball(5, 35));
-            ballList.add(new Ball(6, 20));
-            ballList.add(new Ball(7, 40));
-            ballList.add(new Ball(8, 5));
-            ballList.add(new Ball(9, 30));
-            ballList.add(new Ball(10, 60));
-            ballList.add(new Ball(11, 30));
-            ballList.add(new Ball(12, 30));
-            ballList.add(new Ball(13, 20));
-            ballList.add(new Ball(14, 30));
-            ballList.add(new Ball(15, 5));
-            ballList.add(new Ball(16, 35));
+            list.add(new Ball(1, 5));
+            list.add(new Ball(2, 10));
+            list.add(new Ball(3, 5));
+            list.add(new Ball(4, 20));
+            list.add(new Ball(5, 13));
+            list.add(new Ball(6, 9));
+            list.add(new Ball(7, 15));
+            list.add(new Ball(8, 2));
+            list.add(new Ball(9, 30));
+            list.add(new Ball(10, 16));
+            list.add(new Ball(11, 10));
+            list.add(new Ball(12, 10));
+            list.add(new Ball(13, 8));
+            list.add(new Ball(14, 1));
+            list.add(new Ball(15, 1));
+            list.add(new Ball(16, 1));
         }
-        return ballList;
+        return list;
     }
 
     @Data

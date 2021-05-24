@@ -1,11 +1,11 @@
 package com.example.demo.controller.elasticsearch;
 
 import com.example.demo.annotation.log.Action;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;

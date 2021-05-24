@@ -74,7 +74,7 @@ public class PageBean {
             // 默认第一页
             page = PageBean.DEFAULT_PAGE;
         }
-        if (Objects.isNull(pageSize) || pageSize < PageBean.MIN_PAGE_SIZE) {
+        if (Objects.isNull(pageSize)) {
             // 默认每页10条数据
             pageSize = PageBean.MIN_PAGE_SIZE;
         }

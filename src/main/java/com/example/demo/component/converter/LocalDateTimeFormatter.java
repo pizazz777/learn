@@ -1,7 +1,7 @@
 package com.example.demo.component.converter;
 
-import com.example.demo.util.time.DateConst;
-import com.example.demo.util.time.DateUtil;
+import com.huang.util.time.DateConst;
+import com.huang.util.time.DateUtil;
 import org.springframework.format.Formatter;
 import org.springframework.lang.NonNull;
 

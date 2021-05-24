@@ -1,7 +1,7 @@
 package com.example.demo.schdule;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.configuration.TimerConfig;
+import com.huang.exception.ServiceException;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

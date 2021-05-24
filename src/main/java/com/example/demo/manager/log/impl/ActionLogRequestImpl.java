@@ -1,12 +1,12 @@
 package com.example.demo.manager.log.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.dao.log.ActionLogDao;
 import com.example.demo.entity.log.ActionLogDO;
 import com.example.demo.manager.log.ActionLogRequest;
-import com.example.demo.properties.LogProperties;
-import com.example.demo.util.ip.IpUtil;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ServiceException;
+import com.huang.util.ip.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,17 +24,17 @@ import java.time.LocalDateTime;
 public class ActionLogRequestImpl implements ActionLogRequest {
 
     private ActionLogDao actionLogDao;
-    private LogProperties logProperties;
+    private ProjectProperties projectProperties;
     private AuthComponent authComponent;
     private HttpServletRequest request;
 
     @Autowired
     public ActionLogRequestImpl(ActionLogDao actionLogDao,
-                                LogProperties logProperties,
+                                ProjectProperties projectProperties,
                                 AuthComponent authComponent,
                                 HttpServletRequest request) {
         this.actionLogDao = actionLogDao;
-        this.logProperties = logProperties;
+        this.projectProperties = projectProperties;
         this.authComponent = authComponent;
         this.request = request;
     }
@@ -64,7 +64,7 @@ public class ActionLogRequestImpl implements ActionLogRequest {
                 .visitTime(startTime)
                 .createTime(endTime)
                 .build();
-        if (logProperties.getWriteToDatabase()) {
+        if (projectProperties.getLog().getWriteToDatabase()) {
             actionLogDao.save(actionLog);
         } else {
             log.debug(actionLog.toString());

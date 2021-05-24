@@ -1,6 +1,5 @@
 package com.example.demo.service.sys.impl;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -14,9 +13,9 @@ import com.example.demo.entity.sys.SysRoleDeptMidDO;
 import com.example.demo.entity.sys.SysRolePermissionMidDO;
 import com.example.demo.realm.SysUserRealm;
 import com.example.demo.service.sys.SysRoleService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -71,8 +70,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         if (ContainerUtil.isNotEmpty(list)) {
             // 设置角色关联的权限和部门id
             setRolePermissionAndDeptId(list);
-            ResList<SysRoleDO> resList = ResList.page(list, ((Page) list).getTotal());
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }
@@ -104,6 +102,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      *  allEntries: 是否清空所有缓存内容,默认false.如果设置为true,忽略指定的key,方法调用后将立即清空该cacheNames所有缓存
      *  beforeInvocation: 是否在方法执行前就清空,默认false,如果设置为true,则在方法还没有执行的时候就清空缓存,出现异常不会执行清除
      */
+
     /**
      * 删除角色
      *

@@ -1,10 +1,9 @@
 package com.example.demo.component.response;
 
+import com.example.demo.entity.PageBean;
+import com.github.pagehelper.Page;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -14,54 +13,11 @@ import java.util.Collection;
  * @date 2020/04/30
  * @description: 响应 Data 为列表时的数据{@link ResResult#setData(Object)} )}
  **/
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class ResList<T> implements Serializable {
+public class ResList<T extends PageBean> implements Serializable {
 
     private static final long serialVersionUID = -1169851137828568674L;
-
-    /**
-     * 获取实例
-     *
-     * @param list
-     * @param count
-     * @param <T>
-     * @return
-     */
-    public static <T> ResList<T> page(Collection<T> list, Number count) {
-        return getInstance(list, count);
-    }
-
-    /**
-     * 获取实例
-     * new MethodName : {@link ResList#page(Collection, Number)}
-     *
-     * @param list
-     * @param count
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    public static <T> ResList<T> getList(Collection<T> list, Number count) {
-        return getInstance(list, count);
-    }
-
-    /**
-     * 获取实例
-     * new MethodName : {@link ResList#page(Collection, Number)}
-     *
-     * @param list
-     * @param count
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    public static <T> ResList<T> getInstance(Collection<T> list, Number count) {
-        return new ResList<>(list, count);
-    }
 
     /**
      * 返回的分页列表数据
@@ -69,7 +25,29 @@ public class ResList<T> implements Serializable {
     private Collection<T> list;
 
     /**
-     * 返回的总行数
+     * 总数量
      */
-    private Number count;
+    private Number totalCount;
+
+    /**
+     * 当前页
+     */
+    private Number currentPage;
+
+    /**
+     * 总页数
+     */
+    private Number totalPage;
+
+    /**
+     * 设置分页信息
+     *
+     * @param list 要处理的数据列表
+     * @return {@link ResList<T>}
+     */
+    public static <T extends PageBean> ResList<T> page(Collection<T> list) {
+        Page page = (Page) list;
+        return new ResList<>(list, page.getTotal(), page.getPageNum(), page.getPages());
+    }
+
 }

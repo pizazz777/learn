@@ -1,8 +1,8 @@
 package com.example.demo.manager.log;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.log.ExceptionLogDO;
 import com.example.demo.manager.BaseRequest;
+import com.huang.exception.ServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;

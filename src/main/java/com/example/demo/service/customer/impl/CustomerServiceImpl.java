@@ -1,7 +1,6 @@
 package com.example.demo.service.customer.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
@@ -9,9 +8,9 @@ import com.example.demo.component.response.ResResult;
 import com.example.demo.dao.customer.CustomerDao;
 import com.example.demo.entity.customer.CustomerDO;
 import com.example.demo.service.customer.CustomerService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,9 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
         PageHelper.startPage(query);
         List<CustomerDO> list = customerDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            long total = ((Page) list).getTotal();
-            ResList<CustomerDO> resList = ResList.page(list, total);
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

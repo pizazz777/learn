@@ -4,7 +4,7 @@ import com.example.demo.dao.sys.SysPermissionDao;
 import com.example.demo.dao.sys.SysResourceDao;
 import com.example.demo.entity.sys.SysPermissionDO;
 import com.example.demo.manager.sys.SysPermissionRequest;
-import com.example.demo.util.container.ContainerUtil;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

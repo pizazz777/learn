@@ -1,9 +1,9 @@
 package com.example.demo.controller.log;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.log.ApiLogDO;
 import com.example.demo.service.log.ApiLogService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

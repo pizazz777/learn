@@ -1,19 +1,19 @@
 package com.example.demo.manager.file.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
-import com.example.demo.component.exception.UploadException;
 import com.example.demo.constant.file.FileType;
 import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.dao.upload.UploadFileDao;
 import com.example.demo.entity.upload.Base64StringDO;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
-import com.example.demo.properties.FileProperties;
-import com.example.demo.util.container.ContainerUtil;
-import com.example.demo.util.file.FileUtil;
-import com.example.demo.util.time.DateConst;
+import com.example.demo.properties.ProjectProperties;
 import com.google.common.collect.Lists;
+import com.huang.exception.ServiceException;
+import com.huang.exception.UploadException;
+import com.huang.util.container.ContainerUtil;
+import com.huang.util.file.FileUtil;
+import com.huang.util.time.DateConst;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +47,13 @@ public class UploadFileRequestImpl implements UploadFileRequest {
 
     private AuthComponent authComponent;
     private UploadFileDao uploadFileDao;
-    private FileProperties fileProperties;
+    private ProjectProperties projectProperties;
 
     @Autowired
-    public UploadFileRequestImpl(AuthComponent authComponent, UploadFileDao uploadFileDao, FileProperties fileProperties) {
+    public UploadFileRequestImpl(AuthComponent authComponent, UploadFileDao uploadFileDao, ProjectProperties projectProperties) {
         this.authComponent = authComponent;
         this.uploadFileDao = uploadFileDao;
-        this.fileProperties = fileProperties;
+        this.projectProperties = projectProperties;
     }
 
     /**
@@ -259,7 +259,7 @@ public class UploadFileRequestImpl implements UploadFileRequest {
      * @return 访问路径
      */
     private String getUrl(String midDirsString, String fullFileName) {
-        String url = fileProperties.getUploadFileUrl() + "/" + midDirsString + "/" + fullFileName;
+        String url = projectProperties.getFile().getUploadFileUrl() + "/" + midDirsString + "/" + fullFileName;
         return url.replaceAll("\\\\", "/");
     }
 
@@ -270,7 +270,7 @@ public class UploadFileRequestImpl implements UploadFileRequest {
      * @return r
      */
     private String getSaveDir(String midDirsString) {
-        String saveDir = fileProperties.getUploadFileDir() + File.separator + midDirsString;
+        String saveDir = projectProperties.getFile().getUploadFileDir() + File.separator + midDirsString;
         saveDir = saveDir.replaceAll("/", Matcher.quoteReplacement(File.separator));
         // 使用 Matcher.quoteReplacement(File.separator): windows 中处理 \
         saveDir = saveDir.replaceAll("^\\\\$", Matcher.quoteReplacement(File.separator));

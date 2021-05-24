@@ -26,30 +26,25 @@
         <pagehelper.version>5.1.8</pagehelper.version>
         <pagehelper-spring.version>1.2.10</pagehelper-spring.version>
         <druid.version>1.1.10</druid.version>
-        <slf4j.version>1.6.4</slf4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <dom4j.version>1.6.1</dom4j.version>
         <poi.version>4.1.2</poi.version>
         <easyexcel.version>2.2.6</easyexcel.version>
         <itextpdf.version>5.5.13</itextpdf.version>
         <itext-asian.version>5.2.0</itext-asian.version>
         <jodconverter.version>1.0.5</jodconverter.version>
-        <thumbnailator.version>0.4.11</thumbnailator.version>
-        <httpclient.version>4.5.12</httpclient.version>
         <shiro.version>1.4.2</shiro.version>
         <shiro-redis.version>3.2.3</shiro-redis.version>
         <mybatis.version>3.5.0</mybatis.version>
         <mybatis-spring.version>2.0.0</mybatis-spring.version>
-        <jjwt.version>0.9.1</jjwt.version>
-        <commons-lang3.version>3.9</commons-lang3.version>
-        <commons-pool2.version>2.7.0</commons-pool2.version>
         <commons-codec.version>1.14</commons-codec.version>
         <elasticsearch.version>7.6.0</elasticsearch.version>
         <jsoup.version>1.13.1</jsoup.version>
-        <zxing.version>3.3.3</zxing.version>
         <javacv.version>1.4.4</javacv.version>
         <javacpp.version>1.4.4</javacpp.version>
         <javacpp-presets.ffmpeg.version>4.1-${javacpp.version}</javacpp-presets.ffmpeg.version>
         <javacpp-presets.opencv.version>4.0.1-${javacpp.version}</javacpp-presets.opencv.version>
+        <huang-util.version>1.0.0-SNAPSHOT</huang-util.version>
     </properties>
 
     <dependencies>
@@ -86,7 +81,7 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-        <!-- yml -->
+        <!-- config -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -246,29 +241,10 @@
             <version>${activiti.version}</version>
         </dependency>
 
-        <!-- json web token -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
-
         <!-- junit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-
-        <!-- commons -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-            <version>${commons-pool2.version}</version>
         </dependency>
 
         <!-- yaml -->
@@ -385,32 +361,6 @@
             <version>${jodconverter.version}</version>
         </dependency>
 
-        <!-- 缩略图生成器 -->
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>${thumbnailator.version}</version>
-        </dependency>
-
-        <!-- http client -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
-        </dependency>
-
-        <!-- 二维码 -->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-            <version>${zxing.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-            <version>${zxing.version}</version>
-        </dependency>
-
         <!-- javacv 操作视频 -->
         <!-- javacv.jar是对9个视觉库进行了二次封装 -->
         <dependency>
@@ -458,21 +408,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.tess4j</groupId>
-            <artifactId>tess4j</artifactId>
-            <version>3.4.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.huang</groupId>
+            <artifactId>util</artifactId>
+            <version>${huang-util.version}</version>
         </dependency>
 
     </dependencies>

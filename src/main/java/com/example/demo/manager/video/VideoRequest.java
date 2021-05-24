@@ -1,8 +1,8 @@
 package com.example.demo.manager.video;
 
-import com.example.demo.component.exception.VideoException;
 import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.entity.upload.UploadFileDO;
+import com.huang.exception.VideoException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

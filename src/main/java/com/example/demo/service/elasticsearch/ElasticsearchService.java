@@ -1,7 +1,7 @@
 package com.example.demo.service.elasticsearch;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
+import com.huang.exception.ServiceException;
 
 /**
  * @author Administrator

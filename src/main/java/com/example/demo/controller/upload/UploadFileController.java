@@ -1,11 +1,11 @@
 package com.example.demo.controller.upload;
 
 import com.example.demo.annotation.log.Action;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.constant.log.ActionLogEnum;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.service.upload.UploadFileService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

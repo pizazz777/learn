@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.util.thread.ThreadUtil;
+import com.huang.util.thread.ThreadUtil;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacv.Frame;

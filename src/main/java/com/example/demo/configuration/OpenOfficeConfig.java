@@ -1,7 +1,7 @@
 package com.example.demo.configuration;
 
 
-import com.example.demo.properties.OfficeProperties;
+import com.example.demo.properties.ProjectProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
@@ -19,14 +19,14 @@ import org.springframework.context.annotation.Configuration;
  * @description: open office配置类
  **/
 @Configuration
-@EnableConfigurationProperties(OfficeProperties.class)
+@EnableConfigurationProperties(ProjectProperties.class)
 @Slf4j
 public class OpenOfficeConfig {
 
-    private final OfficeProperties officeProperties;
+    private ProjectProperties projectProperties;
 
-    public OpenOfficeConfig(OfficeProperties officeProperties) {
-        this.officeProperties = officeProperties;
+    public OpenOfficeConfig(ProjectProperties projectProperties) {
+        this.projectProperties = projectProperties;
     }
 
     /**
@@ -41,7 +41,7 @@ public class OpenOfficeConfig {
         try {
             ExternalOfficeManagerConfiguration externalOfficeManagerConfiguration = new ExternalOfficeManagerConfiguration();
             externalOfficeManagerConfiguration.setConnectOnStart(true);
-            externalOfficeManagerConfiguration.setPortNumber(officeProperties.getOpenOffice().getPort());
+            externalOfficeManagerConfiguration.setPortNumber(projectProperties.getOffice().getOpenOffice().getPort());
             OfficeManager buildOfficeManager = externalOfficeManagerConfiguration.buildOfficeManager();
             buildOfficeManager.start();
             return buildOfficeManager;
@@ -51,9 +51,9 @@ public class OpenOfficeConfig {
         // open office 配置类
         DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
         // 设置安装路径
-        configuration.setOfficeHome(officeProperties.getOpenOffice().getPath());
+        configuration.setOfficeHome(projectProperties.getOffice().getOpenOffice().getPath());
         // 设置端口号
-        configuration.setPortNumber(officeProperties.getOpenOffice().getPort());
+        configuration.setPortNumber(projectProperties.getOffice().getOpenOffice().getPort());
         // 设置转换超时时间，5分中
         configuration.setTaskExecutionTimeout(1000 * 60 * 5L);
         // 设置队列超时时间 1天

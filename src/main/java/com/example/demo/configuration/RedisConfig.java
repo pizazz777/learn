@@ -3,7 +3,7 @@ package com.example.demo.configuration;
 import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import com.example.demo.properties.ProjectProperties;
-import com.example.demo.util.container.ContainerUtil;
+import com.huang.util.container.ContainerUtil;
 import org.crazycake.shiro.IRedisManager;
 import org.crazycake.shiro.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;

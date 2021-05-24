@@ -1,6 +1,5 @@
 package com.example.demo.constant.file;
 
-import com.example.demo.component.exception.UploadException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

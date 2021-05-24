@@ -1,10 +1,7 @@
 package com.example.demo.configuration;
 
 import com.example.demo.component.converter.LocalDateTimeFormatter;
-import com.example.demo.properties.FileProperties;
 import com.example.demo.properties.ProjectProperties;
-import com.example.demo.util.secret.JwtConst;
-import com.example.demo.util.time.DateConst;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -13,6 +10,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.google.common.collect.Lists;
+import com.huang.util.secret.JwtConst;
+import com.huang.util.time.DateConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -43,12 +42,10 @@ import java.util.Objects;
 public class ComponentConfig implements WebMvcConfigurer {
 
     private ProjectProperties projectProperties;
-    private FileProperties fileProperties;
 
     @Autowired
-    public ComponentConfig(ProjectProperties projectProperties, FileProperties fileProperties) {
+    public ComponentConfig(ProjectProperties projectProperties) {
         this.projectProperties = projectProperties;
-        this.fileProperties = fileProperties;
     }
 
     /**
@@ -128,12 +125,12 @@ public class ComponentConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 如果没有被其他服务器反向代理,则自身映射资源文件
         if (projectProperties.getReverseProxyByOtherServer()) {
-            File uploadDir = new File(fileProperties.getUploadFileDir());
+            File uploadDir = new File(projectProperties.getFile().getUploadFileDir());
             String uploadDirPath = uploadDir.getAbsolutePath();
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
-            String uploadFileUrl = fileProperties.getUploadFileUrl();
+            String uploadFileUrl = projectProperties.getFile().getUploadFileUrl();
             if (Objects.nonNull(uploadFileUrl)) {
                 // 去除最后的结尾分隔符
                 if (uploadFileUrl.endsWith("/")) {

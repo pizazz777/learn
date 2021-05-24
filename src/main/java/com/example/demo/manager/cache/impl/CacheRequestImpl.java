@@ -3,7 +3,7 @@ package com.example.demo.manager.cache.impl;
 import com.example.demo.dao.system.SysConfigDao;
 import com.example.demo.entity.system.SysConfigDO;
 import com.example.demo.manager.cache.CacheRequest;
-import com.example.demo.properties.CacheProperties;
+import com.example.demo.properties.ProjectProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -19,15 +19,15 @@ import java.util.Random;
 @Component
 public class CacheRequestImpl implements CacheRequest {
 
-    private CacheProperties cacheProperties;
+    private ProjectProperties projectProperties;
     private RedisTemplate<String, Object> redisTemplate;
     private SysConfigDao sysConfigDao;
 
     @Autowired
-    public CacheRequestImpl(CacheProperties cacheProperties,
+    public CacheRequestImpl(ProjectProperties projectProperties,
                             RedisTemplate<String, Object> redisTemplate,
                             SysConfigDao sysConfigDao) {
-        this.cacheProperties = cacheProperties;
+        this.projectProperties = projectProperties;
         this.redisTemplate = redisTemplate;
         this.sysConfigDao = sysConfigDao;
     }
@@ -40,7 +40,7 @@ public class CacheRequestImpl implements CacheRequest {
      */
     @Override
     public String getCacheKeyByKey(String key) {
-        return cacheProperties.getPrefixCacheName() + ":" + key;
+        return projectProperties.getCache().getPrefixCacheName() + ":" + key;
     }
 
 
@@ -97,7 +97,7 @@ public class CacheRequestImpl implements CacheRequest {
      */
     @Override
     public Duration generateCacheTimeOut() {
-        return Duration.ofSeconds(new Random().nextInt(cacheProperties.getTimeoutOfSeconds()) + (60 * 60 * 12));
+        return Duration.ofSeconds(new Random().nextInt(projectProperties.getCache().getTimeoutOfSeconds()) + (60 * 60 * 12));
     }
 
 }

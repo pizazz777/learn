@@ -2,14 +2,14 @@ package com.example.demo.realm;
 
 import com.example.demo.component.AuthComponent;
 import com.example.demo.component.exception.NoBackgroundAuthException;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.constant.sys.LoginTypeEnum;
 import com.example.demo.dao.sys.SysResourceDao;
 import com.example.demo.dao.sys.SysRoleDao;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.manager.sys.SysUserRequest;
-import com.example.demo.properties.AuthProperties;
-import com.example.demo.util.container.ContainerUtil;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -44,26 +44,26 @@ import static com.example.demo.constant.sys.PermissionConst.SYS_LOGIN;
 public class SysUserRealm extends AuthorizingRealm {
 
 
-    private AuthProperties authProperties;
+    private ProjectProperties projectProperties;
     private AuthComponent authComponent;
     private SysUserRequest sysUserRequest;
     private SysResourceDao sysResourceDao;
     private SysRoleDao sysRoleDao;
 
     @Autowired
-    public SysUserRealm(AuthProperties authProperties, AuthComponent authComponent,
+    public SysUserRealm(ProjectProperties projectProperties, AuthComponent authComponent,
                         SysUserRequest sysUserRequest, SysResourceDao sysResourceDao,
                         SysRoleDao sysRoleDao) {
-        this.authProperties = authProperties;
+        this.projectProperties = projectProperties;
         this.authComponent = authComponent;
         this.sysUserRequest = sysUserRequest;
         this.sysResourceDao = sysResourceDao;
         this.sysRoleDao = sysRoleDao;
         //开启授权缓存
-        this.setAuthorizationCachingEnabled(authProperties.getAuthorizationCachingEnabled());
+        this.setAuthorizationCachingEnabled(projectProperties.getAuth().getAuthorizationCachingEnabled());
         this.setAuthorizationCacheName(AUTHORIZATION_CACHE_NAME);
         //开启认证缓存
-        this.setAuthenticationCachingEnabled(authProperties.getAuthenticationCachingEnabled());
+        this.setAuthenticationCachingEnabled(projectProperties.getAuth().getAuthenticationCachingEnabled());
         this.setAuthenticationCacheName(AUTHENTICATION_CACHE_NAME);
     }
 
@@ -104,7 +104,7 @@ public class SysUserRealm extends AuthorizingRealm {
         String password = String.valueOf(token.getPassword());
         SysUserDO loginUser;
         boolean flag = false;
-        if (Objects.equals(username, authProperties.getManagerName()) && Objects.equals(password, authProperties.getManagerPassword())) {
+        if (Objects.equals(username, projectProperties.getAuth().getManagerName()) && Objects.equals(password, projectProperties.getAuth().getManagerPassword())) {
             // 超级管理员
             loginUser = SysUserDO.builder()
                     .id(ADMIN_ID)
@@ -131,7 +131,7 @@ public class SysUserRealm extends AuthorizingRealm {
             }
         }
         // 判断此用户是否有登录后台的权限
-        if (authProperties.getBackgroundManageSystem() && Objects.nonNull(loginUser) && Objects.equals(loginUser.getManager(), SysUserDO.MANAGER_NO)) {
+        if (projectProperties.getAuth().getBackgroundManageSystem() && Objects.nonNull(loginUser) && Objects.equals(loginUser.getManager(), SysUserDO.MANAGER_NO)) {
             //判断是否有指定权限
             if (!sysResourceDao.isExistByUserIdAndPermission(loginUser.getId(), SYS_LOGIN)) {
                 throw new NoBackgroundAuthException();
@@ -267,7 +267,7 @@ public class SysUserRealm extends AuthorizingRealm {
      */
     private SysUserDO loginByKeyWithSecret(String key) {
         SysUserDO loginUser = null;
-        List<LoginTypeEnum> loginTypeEnumList = authProperties.getLoginTypeEnumList();
+        List<LoginTypeEnum> loginTypeEnumList = projectProperties.getAuth().getLoginTypeEnumList();
         if (loginTypeEnumList.contains(LoginTypeEnum.ACCOUNT)) {
             loginUser = sysUserRequest.getByUniqueWithSecret(key, null, null);
         }

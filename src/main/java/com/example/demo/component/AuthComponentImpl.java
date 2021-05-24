@@ -2,11 +2,11 @@ package com.example.demo.component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.example.demo.component.exception.ServiceException;
-import com.example.demo.properties.JwtProperties;
-import com.example.demo.util.secret.JwtConst;
-import com.example.demo.util.secret.JwtUtil;
-import com.example.demo.util.secret.Md5Util;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ServiceException;
+import com.huang.util.secret.JwtConst;
+import com.huang.util.secret.JwtUtil;
+import com.huang.util.secret.Md5Util;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -26,11 +26,11 @@ import java.util.Objects;
 @Component
 public class AuthComponentImpl implements AuthComponent {
 
-    private JwtProperties jwtProperties;
+    private ProjectProperties projectProperties;
 
     @Autowired
-    public AuthComponentImpl(JwtProperties jwtProperties) {
-        this.jwtProperties = jwtProperties;
+    public AuthComponentImpl(ProjectProperties projectProperties) {
+        this.projectProperties = projectProperties;
     }
 
     /**
@@ -79,13 +79,14 @@ public class AuthComponentImpl implements AuthComponent {
         subject.login(token);
         // 获取登录用户信息中的自增id
         String id = String.valueOf(getPrimaryPrincipal(Long.class));
-        Map<String, Serializable> tokenMap = JSON.parseObject(JSON.toJSONString(token), new TypeReference<Map<String, Serializable>>() {});
+        Map<String, Serializable> tokenMap = JSON.parseObject(JSON.toJSONString(token), new TypeReference<Map<String, Serializable>>() {
+        });
         // 有效时间
-        long jwtTimeToLive = jwtProperties.getJwtTimeToLive();
+        long jwtTimeToLive = projectProperties.getJwt().getJwtTimeToLive();
         // 接收方
-        String audience = jwtProperties.getAudience();
+        String audience = projectProperties.getJwt().getAudience();
         // 签发方
-        String issuer = jwtProperties.getIssuer();
+        String issuer = projectProperties.getJwt().getIssuer();
 
         return JwtUtil.createJwt(tokenMap, id, audience, issuer, jwtTimeToLive, JwtConst.JWT_SECRET);
     }

@@ -1,7 +1,7 @@
 package com.example.demo.advise;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.manager.log.ExceptionLogRequest;
+import com.huang.exception.ServiceException;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.AsyncConfigurer;

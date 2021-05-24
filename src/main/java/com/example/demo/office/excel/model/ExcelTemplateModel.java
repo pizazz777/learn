@@ -1,6 +1,6 @@
 package com.example.demo.office.excel.model;
 
-import com.example.demo.component.exception.ExcelException;
+import com.huang.exception.ExcelException;
 import org.apache.poi.ss.usermodel.Cell;
 
 /**

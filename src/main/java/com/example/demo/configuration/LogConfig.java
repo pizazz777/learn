@@ -8,7 +8,7 @@ import com.example.demo.dao.log.ExceptionLogDao;
 import com.example.demo.manager.log.ActionLogRequest;
 import com.example.demo.manager.log.ExceptionLogRequest;
 import com.example.demo.manager.log.impl.ExceptionLogRequestImpl;
-import com.example.demo.properties.LogProperties;
+import com.example.demo.properties.ProjectProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,11 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Administrator
  * @date 2020-05-15 16:56
- * @description: 如果容器中不存在指定bean,就注入,存在就不注入
+ * @description: 如果容器中不存在指定bean, 就注入, 存在就不注入
  */
 @Configuration
 @ConditionalOnWebApplication
-@EnableConfigurationProperties(LogProperties.class)
+@EnableConfigurationProperties(ProjectProperties.class)
 public class LogConfig {
 
     @Bean
@@ -35,8 +35,8 @@ public class LogConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    public ExceptionLogRequest exceptionLogRequest(LogProperties logProperties, AuthComponent authComponent, ExceptionLogDao exceptionLogDao) {
-        return new ExceptionLogRequestImpl(logProperties, authComponent, exceptionLogDao);
+    public ExceptionLogRequest exceptionLogRequest(ProjectProperties projectProperties, AuthComponent authComponent, ExceptionLogDao exceptionLogDao) {
+        return new ExceptionLogRequestImpl(projectProperties, authComponent, exceptionLogDao);
     }
 
     @Bean

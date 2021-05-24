@@ -2,12 +2,12 @@ package com.example.demo.manager.log.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.dao.log.ExceptionLogDao;
 import com.example.demo.entity.log.ExceptionLogDO;
 import com.example.demo.manager.log.ExceptionLogRequest;
-import com.example.demo.properties.LogProperties;
-import com.example.demo.util.ip.IpUtil;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ServiceException;
+import com.huang.util.ip.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +25,15 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ExceptionLogRequestImpl implements ExceptionLogRequest {
 
-    private LogProperties logProperties;
+    private ProjectProperties projectProperties;
     private AuthComponent authComponent;
     private ExceptionLogDao exceptionLogDao;
 
     @Autowired
-    public ExceptionLogRequestImpl(LogProperties logProperties,
+    public ExceptionLogRequestImpl(ProjectProperties projectProperties,
                                    AuthComponent authComponent,
                                    ExceptionLogDao exceptionLogDao) {
-        this.logProperties = logProperties;
+        this.projectProperties = projectProperties;
         this.authComponent = authComponent;
         this.exceptionLogDao = exceptionLogDao;
     }
@@ -77,7 +77,7 @@ public class ExceptionLogRequestImpl implements ExceptionLogRequest {
                 .uri(request.getRequestURI())
                 .createTime(LocalDateTime.now())
                 .build();
-        if (logProperties.getWriteToDatabase()) {
+        if (projectProperties.getLog().getWriteToDatabase()) {
             exceptionLogDao.save(exceptionLog);
         } else {
             log.debug(exceptionLog.toString());
@@ -104,7 +104,7 @@ public class ExceptionLogRequestImpl implements ExceptionLogRequest {
                 .uri(request.getRequestURI())
                 .createTime(LocalDateTime.now())
                 .build();
-        if (logProperties.getWriteToDatabase()) {
+        if (projectProperties.getLog().getWriteToDatabase()) {
             exceptionLogDao.save(exceptionLog);
         } else {
             log.debug(exceptionLog.toString());
@@ -128,7 +128,7 @@ public class ExceptionLogRequestImpl implements ExceptionLogRequest {
                 .param(JSON.toJSONString(objects))
                 .createTime(LocalDateTime.now())
                 .build();
-        if (logProperties.getWriteToDatabase()) {
+        if (projectProperties.getLog().getWriteToDatabase()) {
             exceptionLogDao.save(exceptionLog);
         } else {
             log.debug(exceptionLog.toString());

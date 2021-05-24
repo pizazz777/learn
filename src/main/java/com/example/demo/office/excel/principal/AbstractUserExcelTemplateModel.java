@@ -1,13 +1,13 @@
 package com.example.demo.office.excel.principal;
 
-import com.example.demo.component.exception.ExcelException;
+import com.example.demo.component.SpringContextHandler;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.office.excel.format.ExcelNumericFormat;
 import com.example.demo.office.excel.model.ExcelTemplateModel;
 import com.example.demo.office.excel.model.ExcelWorkbook;
-import com.example.demo.properties.AuthProperties;
-import com.example.demo.component.SpringContextHandler;
-import com.example.demo.util.lang.StrUtil;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ExcelException;
+import com.huang.util.lang.StrUtil;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -137,8 +137,8 @@ public abstract class AbstractUserExcelTemplateModel<M extends AbstractUserExcel
      * @throws ExcelException e
      */
     private void verifierMobile(String cellValue) throws ExcelException {
-        AuthProperties authProperties = SpringContextHandler.getBean(AuthProperties.class);
-        if (StringUtils.isNotBlank(cellValue) && authProperties.getCheckMobile() && !StrUtil.isMobile(cellValue)) {
+        ProjectProperties projectProperties = SpringContextHandler.getBean(ProjectProperties.class);
+        if (StringUtils.isNotBlank(cellValue) && projectProperties.getAuth().getCheckMobile() && !StrUtil.isMobile(cellValue)) {
             throw new ExcelException("手机号格式错误");
         }
     }

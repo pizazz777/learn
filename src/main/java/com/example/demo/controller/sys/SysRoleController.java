@@ -1,10 +1,10 @@
 package com.example.demo.controller.sys;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.entity.sys.SysRoleDO;
 import com.example.demo.service.sys.SysRoleService;
+import com.huang.exception.ServiceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;

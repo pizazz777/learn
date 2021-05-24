@@ -142,7 +142,7 @@
                 </if>
                 <if test="query.username != null">
                     AND
-                    username = #{query.username}
+                    username like concat('%', #{query.username}, '%')
                 </if>
                 <if test="query.mobile != null">
                     AND

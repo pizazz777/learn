@@ -1,8 +1,6 @@
 package com.example.demo.service.upload.impl;
 
 import com.example.demo.component.AuthComponent;
-import com.example.demo.component.exception.ServiceException;
-import com.example.demo.component.exception.UploadException;
 import com.example.demo.component.response.DelResInfo;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
@@ -10,9 +8,11 @@ import com.example.demo.dao.upload.UploadFileDao;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
 import com.example.demo.service.upload.UploadFileService;
-import com.example.demo.util.container.ContainerUtil;
-import com.example.demo.util.file.FileUtil;
 import com.google.common.collect.Lists;
+import com.huang.exception.ServiceException;
+import com.huang.exception.UploadException;
+import com.huang.util.container.ContainerUtil;
+import com.huang.util.file.FileUtil;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

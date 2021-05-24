@@ -1,6 +1,6 @@
 package com.example.demo.entity.upload;
 
-import com.example.demo.component.exception.UploadException;
+import com.huang.exception.UploadException;
 import lombok.*;
 
 import java.io.Serializable;

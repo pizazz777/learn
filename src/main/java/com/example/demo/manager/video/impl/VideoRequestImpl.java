@@ -1,15 +1,15 @@
 package com.example.demo.manager.video.impl;
 
-import com.example.demo.component.exception.VideoException;
 import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
 import com.example.demo.manager.video.VideoRequest;
-import com.example.demo.properties.VideoProperties;
-import com.example.demo.util.file.FileUtil;
-import com.example.demo.util.io.IOUtil;
-import com.example.demo.util.thread.ThreadUtil;
+import com.example.demo.properties.ProjectProperties;
 import com.google.common.collect.Lists;
+import com.huang.exception.VideoException;
+import com.huang.util.file.FileUtil;
+import com.huang.util.io.IOUtil;
+import com.huang.util.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -38,12 +38,12 @@ import java.util.zip.ZipFile;
 public class VideoRequestImpl implements VideoRequest {
 
     private UploadFileRequest uploadFileRequest;
-    private VideoProperties videoProperties;
+    private ProjectProperties projectProperties;
 
     @Autowired
-    public VideoRequestImpl(UploadFileRequest uploadFileRequest, VideoProperties videoProperties) {
+    public VideoRequestImpl(UploadFileRequest uploadFileRequest, ProjectProperties projectProperties) {
         this.uploadFileRequest = uploadFileRequest;
-        this.videoProperties = videoProperties;
+        this.projectProperties = projectProperties;
     }
 
     /**
@@ -148,7 +148,7 @@ public class VideoRequestImpl implements VideoRequest {
 
     private UploadFileDO convertByFfmpeg(String videoPath, FileTypeEnum type) throws VideoException {
         List<String> command = Lists.newArrayList();
-        command.add(videoProperties.getFfmpegPath());
+        command.add(projectProperties.getVideo().getFfmpegPath());
         command.add("-i");
         command.add(videoPath);
         UploadFileDO emptyFile;

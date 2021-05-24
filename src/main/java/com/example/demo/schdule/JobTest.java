@@ -1,7 +1,7 @@
 package com.example.demo.schdule;
 
-import com.example.demo.util.time.DateConst;
-import com.example.demo.util.time.DateUtil;
+import com.huang.util.time.DateConst;
+import com.huang.util.time.DateUtil;
 import org.quartz.JobExecutionContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 

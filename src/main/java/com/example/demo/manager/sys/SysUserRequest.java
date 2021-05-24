@@ -1,7 +1,7 @@
 package com.example.demo.manager.sys;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.sys.SysUserDO;
+import com.huang.exception.ServiceException;
 
 import java.util.List;
 

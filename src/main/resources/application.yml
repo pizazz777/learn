@@ -175,8 +175,10 @@ spring:
 # page helper
 pagehelper:
   params: pageNum=page;pageSize=pageSize
-  # 传入页数大于总页数,修改传入页数为总页数
+  # 分页合理化 传入页数大于总页数,修改传入页数为总页数
   reasonable: false
+  # 当设置为true的时候,如果pageSize设置为0,就不执行分页,返回全部结果
+  page-size-zero: true
 mybatis:
   configuration:
     # 关闭侵入式延迟加载,字段按需加载
@@ -199,6 +201,7 @@ logging:
     root: info
   file:
     path: log/logs
+# 对swagger的增强   访问方式: http://127.0.0.1:9000/doc.html
 knife4j:
   # 开启增强配置
   enable: true

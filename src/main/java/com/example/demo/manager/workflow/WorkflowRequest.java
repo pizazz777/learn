@@ -1,9 +1,9 @@
 package com.example.demo.manager.workflow;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.entity.activiti.ActivityInfoDTO;
 import com.example.demo.entity.activiti.CheckHistoryDTO;
 import com.example.demo.entity.activiti.CompleteDTO;
+import com.huang.exception.ServiceException;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.engine.history.HistoricActivityInstance;

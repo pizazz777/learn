@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
+import com.huang.exception.ServiceException;
 
 import java.io.Serializable;
 

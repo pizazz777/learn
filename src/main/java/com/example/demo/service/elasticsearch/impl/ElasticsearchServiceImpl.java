@@ -1,14 +1,14 @@
 package com.example.demo.service.elasticsearch.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
-import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResResult;
+import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.entity.customer.CustomerDO;
+import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
 import com.example.demo.service.elasticsearch.ElasticsearchService;
-import com.example.demo.util.container.ContainerUtil;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -180,8 +180,8 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     /**
      * 修改文档
      *
-     * @param index  索引
-     * @param docId  文档id
+     * @param index      索引
+     * @param docId      文档id
      * @param jsonString object
      * @return r
      */

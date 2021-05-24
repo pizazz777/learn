@@ -2,7 +2,7 @@ project:
   # 项目包路径
   project-package: com.example.demo
   # 项目名称
-  project-name: 这是项目名称
+  project-name: learn项目
   # 是否开启swagger
   enable-swagger: true
   # 项目描述

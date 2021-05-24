@@ -1,6 +1,5 @@
 package com.example.demo.service.log.impl;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResCode;
 import com.example.demo.component.response.ResList;
 import com.example.demo.component.response.ResResult;
@@ -8,11 +7,11 @@ import com.example.demo.dao.log.ActionLogDao;
 import com.example.demo.entity.log.ActionLogDO;
 import com.example.demo.entity.sys.SysUserDO;
 import com.example.demo.manager.sys.SysUserRequest;
-import com.example.demo.properties.LogProperties;
+import com.example.demo.properties.ProjectProperties;
 import com.example.demo.service.log.ActionLogService;
-import com.example.demo.util.container.ContainerUtil;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.huang.exception.ServiceException;
+import com.huang.util.container.ContainerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +28,13 @@ import java.util.Objects;
 public class ActionLogServiceImpl implements ActionLogService {
 
     private ActionLogDao actionLogDao;
-    private LogProperties logProperties;
+    private ProjectProperties projectProperties;
     private SysUserRequest sysUserRequest;
 
     @Autowired
-    public ActionLogServiceImpl(ActionLogDao actionLogDao, LogProperties logProperties, SysUserRequest sysUserRequest) {
+    public ActionLogServiceImpl(ActionLogDao actionLogDao, ProjectProperties projectProperties, SysUserRequest sysUserRequest) {
         this.actionLogDao = actionLogDao;
-        this.logProperties = logProperties;
+        this.projectProperties = projectProperties;
         this.sysUserRequest = sysUserRequest;
     }
 
@@ -44,7 +43,7 @@ public class ActionLogServiceImpl implements ActionLogService {
         PageHelper.startPage(query);
         List<ActionLogDO> list = actionLogDao.list(query);
         if (ContainerUtil.isNotEmpty(list)) {
-            if (logProperties.getShowUserInfo()) {
+            if (projectProperties.getLog().getShowUserInfo()) {
                 for (ActionLogDO actionLog : list) {
                     Long id = Long.valueOf(actionLog.getIdentify());
                     if (Objects.equals(id, 0L)) {
@@ -55,8 +54,7 @@ public class ActionLogServiceImpl implements ActionLogService {
                     }
                 }
             }
-            ResList<ActionLogDO> resList = ResList.page(list, ((Page) list).getTotal());
-            return ResResult.success(resList);
+            return ResResult.success(ResList.page(list));
         }
         return ResResult.fail(ResCode.NOT_FOUND);
     }

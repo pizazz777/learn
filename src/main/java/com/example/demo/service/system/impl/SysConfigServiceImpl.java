@@ -1,6 +1,5 @@
 package com.example.demo.service.system.impl;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.component.response.ResResult;
 import com.example.demo.configuration.SystemConfig;
 import com.example.demo.dao.system.SysConfigDao;
@@ -8,6 +7,7 @@ import com.example.demo.entity.system.SysConfigDO;
 import com.example.demo.manager.cache.CacheRequest;
 import com.example.demo.service.system.SysConfigService;
 import com.google.common.collect.Maps;
+import com.huang.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

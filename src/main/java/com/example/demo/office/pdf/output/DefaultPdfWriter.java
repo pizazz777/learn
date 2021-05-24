@@ -1,12 +1,12 @@
 package com.example.demo.office.pdf.output;
 
-import com.example.demo.component.exception.ServiceException;
 import com.example.demo.constant.file.FileTypeEnum;
 import com.example.demo.entity.upload.UploadFileDO;
 import com.example.demo.manager.file.UploadFileRequest;
-import com.example.demo.office.pdf.model.HtmlToPdfTemplateVO;
-import com.example.demo.properties.OfficeProperties;
 import com.example.demo.office.pdf.TemplateHandler;
+import com.example.demo.office.pdf.model.HtmlToPdfTemplateVO;
+import com.example.demo.properties.ProjectProperties;
+import com.huang.exception.ServiceException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
@@ -41,7 +41,7 @@ public class DefaultPdfWriter implements PdfWriter {
 
     private UploadFileRequest uploadFileRequest;
     private OfficeDocumentConverter officeDocumentConverter;
-    private OfficeProperties officeProperties;
+    private ProjectProperties projectProperties;
     private TemplateHandler templateHandler;
     /**
      * html to pdf 上下文
@@ -49,10 +49,10 @@ public class DefaultPdfWriter implements PdfWriter {
     private HtmlPipelineContext htmlPipelineContext;
 
     @Autowired
-    public DefaultPdfWriter(UploadFileRequest uploadFileRequest, OfficeDocumentConverter officeDocumentConverter, OfficeProperties officeProperties, TemplateHandler templateHandler) {
+    public DefaultPdfWriter(UploadFileRequest uploadFileRequest, OfficeDocumentConverter officeDocumentConverter, ProjectProperties projectProperties, TemplateHandler templateHandler) {
         this.uploadFileRequest = uploadFileRequest;
         this.officeDocumentConverter = officeDocumentConverter;
-        this.officeProperties = officeProperties;
+        this.projectProperties = projectProperties;
         this.templateHandler = templateHandler;
     }
 
@@ -95,7 +95,7 @@ public class DefaultPdfWriter implements PdfWriter {
     private void parseToDocument(XMLParser xmlParser, Document document, String htmlContent) throws IOException, TemplateException, ServiceException {
         HtmlToPdfTemplateVO htmlToPdfTemplateVO = new HtmlToPdfTemplateVO();
         htmlToPdfTemplateVO.setHtmlContent(htmlContent);
-        try (InputStream inputStream = new ByteArrayInputStream(templateHandler.getHtmlString(htmlToPdfTemplateVO, officeProperties.getPdf().getHtmlToPdfTemplateName()).getBytes())) {
+        try (InputStream inputStream = new ByteArrayInputStream(templateHandler.getHtmlString(htmlToPdfTemplateVO, projectProperties.getOffice().getPdf().getHtmlToPdfTemplateName()).getBytes())) {
             xmlParser.parse(inputStream);
             document.newPage();
         }
@@ -120,7 +120,7 @@ public class DefaultPdfWriter implements PdfWriter {
 
 
     private String getFontsUrl() {
-        String pdfFondsRootPath = officeProperties.getPdf().getPdfFontsPath();
+        String pdfFondsRootPath = projectProperties.getOffice().getPdf().getPdfFontsPath();
         File fontDir = new File(pdfFondsRootPath);
         if (!fontDir.exists()) {
             fontDir.getParentFile().mkdirs();
