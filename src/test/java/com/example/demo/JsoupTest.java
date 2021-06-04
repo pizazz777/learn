@@ -4,7 +4,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.platform.commons.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,7 +23,7 @@ public class JsoupTest {
     private static final String HREF = "href";
     private static final String CONTENT = "content";
     private static final String CSS_QUERY_A = "div[class = bottem1] > a[href]";
-//    private static final String CSS_QUERY_A = "div[class = page_chapter] > ul > li > a[href]";
+    //    private static final String CSS_QUERY_A = "div[class = page_chapter] > ul > li > a[href]";
     private static final String CSS_QUERY_BOOK_NAME = "div.bookname > h1";
     private static final String NEXT = "下一章";
     private static final String PATH = "D:/Text/url.txt";
@@ -34,7 +33,6 @@ public class JsoupTest {
 //         name = "大丰打更人";
 //        name = "修仙从沙漠开始";
 //        name = "人魔之路";
-//        name = "洪主";
 //        name = "黑暗血时代";
 //        name = "我是葫芦仙";
 //        name = "北渊仙族";
@@ -42,6 +40,10 @@ public class JsoupTest {
 //        name = "废土";
 //        name = "教授的日常小男友";
 //        name = "从红月开始";
+//        name = "黑暗文明";
+//        name = "黑暗王者";
+//        name = "全球妖变";
+//        name = "全球妖变2";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
@@ -101,12 +103,12 @@ public class JsoupTest {
     }
 
     private static String read(String name, String newUrl) throws IOException {
-        if (StringUtils.isNotBlank(newUrl)) {
+        if (isNotBlank(newUrl)) {
             return newUrl;
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(PATH), StandardCharsets.UTF_8))) {
             String url;
-            while (StringUtils.isNotBlank(url = reader.readLine())) {
+            while (isNotBlank(url = reader.readLine())) {
                 if (url.startsWith(name)) {
                     return url.split("-")[1];
                 }
@@ -119,9 +121,9 @@ public class JsoupTest {
         StringBuilder text = new StringBuilder();
         boolean hasUrlFlag = true;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(PATH), StandardCharsets.UTF_8))) {
-            if (StringUtils.isNotBlank(url)) {
+            if (isNotBlank(url)) {
                 String line;
-                while (StringUtils.isNotBlank(line = reader.readLine())) {
+                while (isNotBlank(line = reader.readLine())) {
                     if (line.startsWith(name)) {
                         text.append(name).append("-").append(url).append("\n");
                         if (hasUrlFlag) {
@@ -162,6 +164,23 @@ public class JsoupTest {
             }
         }
         return url.substring(0, sub);
+    }
+
+    private static boolean isBlank(final CharSequence cs) {
+        int strLen;
+        if (cs == null || (strLen = cs.length()) == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isNotBlank(final CharSequence cs) {
+        return !isBlank(cs);
     }
 
 }

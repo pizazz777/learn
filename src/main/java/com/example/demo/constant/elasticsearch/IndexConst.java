@@ -9,6 +9,6 @@ public class IndexConst {
     /**
      * 默认的索引名称
      */
-    public static final String DEFAULT_INDEX_NAME = "_index";
+    public static final String DEFAULT_INDEX_NAME = "index";
 
 }

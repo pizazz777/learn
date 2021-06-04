@@ -3,8 +3,8 @@ package com.example.demo.manager.elasticsearch.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.annotation.elasticsearch.Document;
-import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.constant.elasticsearch.AnalyzerTypeEnum;
+import com.example.demo.constant.elasticsearch.ElasticsearchHitResult;
 import com.example.demo.manager.elasticsearch.ElasticsearchRequest;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -25,12 +25,11 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -297,9 +296,9 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
         // 多字段匹配查询,匹配字段名为field1,filed2,值为value的文档
         // MultiMatchQueryBuilder multiMatchQueryBuilder = QueryBuilders.multiMatchQuery(value, filed1, filed2);
         // 模糊查询,不能用通配符
-        // FuzzyQueryBuilder fuzzyQueryBuilder = QueryBuilders.fuzzyQuery(field, value).fuzziness(Fuzziness.AUTO);
+        FuzzyQueryBuilder fuzzyQueryBuilder = QueryBuilders.fuzzyQuery(field, value).fuzziness(Fuzziness.AUTO);
         // 前缀查询
-        // PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery(field, value);
+        PrefixQueryBuilder prefixQueryBuilder = QueryBuilders.prefixQuery(field, value);
         // 范围查询 左右闭合
         // RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("filed");
         // rangeQueryBuilder.gte("max");
@@ -345,13 +344,15 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
         // 组合查询
         boolQueryBuilder
                 // must=and 代表返回的文档必须满足must子句的条件,会参与计算分值
-                .must(matchQueryBuilder);
-        // mustNot=not 代表必须不满足子句的条件
-        // .mustNot(termQueryBuilder)
-        // filter=and 代表返回的文档必须满足filter子句的条件,但不会参与计算分值
-        // .filter(rangeQueryBuilder)
-        // should=or 代表返回的文档可能满足should子句的条件,也可能不满足,有多个should时满足任何一个就可以
-        // .should(wildcardQueryBuilder)
+                //.must(matchQueryBuilder);
+                // mustNot=not 代表必须不满足子句的条件
+                // .mustNot(termQueryBuilder)
+                // filter=and 代表返回的文档必须满足filter子句的条件,但不会参与计算分值
+                // .filter(rangeQueryBuilder)
+                // should=or 代表返回的文档可能满足should子句的条件,也可能不满足,有多个should时满足任何一个就可以
+                .should(matchQueryBuilder)
+                .should(fuzzyQueryBuilder)
+                .should(prefixQueryBuilder);
 
         // 分页+排序+搜索时长
         sourceBuilder.query(boolQueryBuilder)
