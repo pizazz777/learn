@@ -31,19 +31,15 @@ public class JsoupTest {
     public static void main(String[] args) throws IOException {
         String name = "";
 //         name = "大丰打更人";
-//        name = "修仙从沙漠开始";
 //        name = "人魔之路";
-//        name = "黑暗血时代";
-//        name = "我是葫芦仙";
 //        name = "北渊仙族";
 //        name = "韩式仙路";
 //        name = "废土";
 //        name = "教授的日常小男友";
-//        name = "从红月开始";
-//        name = "黑暗文明";
-//        name = "黑暗王者";
-//        name = "全球妖变";
-//        name = "全球妖变2";
+//        name = "出生就被包养的龙";
+//        name = "逐道长青";
+        name = "青莲之巅";
+//        name = "青云仙途";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
@@ -61,6 +57,7 @@ public class JsoupTest {
                 } else {
                     url = preUrl + suffixUrl;
                 }
+                url = url.startsWith("/") ? url.substring(1) : url;
                 Document document = connect(url);
                 if (null == document) {
                     break;
@@ -76,7 +73,7 @@ public class JsoupTest {
                             preUrl = subUrl(read, i);
                             flag = false;
                         }
-                        // suffixUrl = suffixUrl.startsWith("/") ? suffixUrl : "/" + suffixUrl;
+                        suffixUrl = suffixUrl.startsWith("/") ? suffixUrl : "/" + suffixUrl;
                         break;
                     }
                 }

@@ -80,87 +80,71 @@ public class ExceptionLogControllerAdvice {
         // 自定义异常
         if (clazz.equals(ServiceException.class) && StringUtils.isNotBlank(e.getMessage())) {
             result.setMsg(e.getMessage());
-            return result;
         }
         if (clazz.equals(UploadException.class)) {
             result.setMsg(e.getMessage());
-            return result;
         }
         if (clazz.equals(MissingServletRequestParameterException.class)) {
             MissingServletRequestParameterException exception = (MissingServletRequestParameterException) e;
             result.setMsg("请求参数不全,参数名:" + exception.getParameterName() + ";参数类型:" + exception.getParameterType());
             result.setResCode(FAILED);
-            return result;
         }
         if (clazz.equals(HttpRequestMethodNotSupportedException.class)) {
             HttpRequestMethodNotSupportedException exception = (HttpRequestMethodNotSupportedException) e;
             result.setMsg("当前请求方式" + exception.getMethod() + "不支持");
             result.setResCode(FAILED);
-            return result;
         }
         // shiro 登录
         if (e instanceof AuthenticationException) {
-            return getAuthenticationExceptionResult(result, clazz);
+            getAuthenticationExceptionResult(result, clazz);
         }
         // shiro 权限
         if (e instanceof AuthorizationException) {
-            return getAuthorizationExceptionResult(result, clazz);
+            getAuthorizationExceptionResult(result, clazz);
         }
         if (clazz.equals(NullPointerException.class)) {
-            result.setMsg(getExceptionMsg("调用了未经初始化或者是不存在的对象", e));
-            return result;
+            result.setMsg(getExceptionMsg("调用了未经初始化或是不存在的对象", e));
         }
         if (clazz.equals(NotFoundException.class)) {
             result.setResCode(NOT_FOUND);
-            return result;
         }
         if (clazz.equals(IllegalParamException.class)) {
+            result.setResCode(FAILED);
             result.setResCode(ILLEGAL_PARAM);
-            return result;
         }
         if (clazz.equals(IllegalArgumentException.class)) {
+            result.setResCode(FAILED);
             result.setMsg(getExceptionMsg("方法参数错误", e));
-            return result;
         }
         if (clazz.equals(SQLException.class)) {
             result.setMsg("操作数据库异常");
-            return result;
         }
         if (clazz.equals(UncategorizedSQLException.class)) {
             result.setMsg("操作数据库异常");
-            return result;
         }
         if (clazz.equals(IOException.class)) {
             result.setMsg(getExceptionMsg("IO异常", e));
-            return result;
         }
         if (clazz.equals(ClassNotFoundException.class)) {
             result.setMsg("指定的类不存在");
-            return result;
         }
         if (clazz.equals(ArithmeticException.class)) {
             result.setMsg("数学运算异常");
-            return result;
         }
         if (clazz.equals(ArrayIndexOutOfBoundsException.class)) {
             result.setMsg("数组下标越界");
-            return result;
         }
         if (clazz.equals(ClassCastException.class)) {
             result.setMsg("类型强制转换错误");
-            return result;
         }
         if (clazz.equals(SecurityException.class)) {
             result.setMsg("违背安全原则异常");
-            return result;
         }
         if (clazz.equals(NoSuchMethodError.class)) {
             result.setMsg("方法末找到异常");
-            return result;
         }
         if (clazz.equals(InternalError.class)) {
             result.setMsg("Java虚拟机发生内部错误");
-            return result;
         }
         return result;
     }
@@ -169,7 +153,7 @@ public class ExceptionLogControllerAdvice {
     /**
      * 获取验证异常的结果
      */
-    private ResResult getAuthenticationExceptionResult(ResResult result, Class clazz) {
+    private void getAuthenticationExceptionResult(ResResult result, Class clazz) {
         result.setResCode(INCORRECT_LOGIN_INFO);
         if (clazz.equals(UnknownAccountException.class)) {
             result.setMsg("用户名密码错误");
@@ -183,13 +167,12 @@ public class ExceptionLogControllerAdvice {
         } else {
             result.setMsg("登录信息错误");
         }
-        return result;
     }
 
     /**
      * 获取权限异常的结果
      */
-    private ResResult getAuthorizationExceptionResult(ResResult result, Class clazz) {
+    private void getAuthorizationExceptionResult(ResResult result, Class clazz) {
         result.setResCode(NO_AUTH);
         if (clazz.equals(UnauthorizedException.class)) {
             result.setMsg("没有权限");
@@ -201,7 +184,6 @@ public class ExceptionLogControllerAdvice {
         } else {
             result.setMsg("没有权限");
         }
-        return result;
     }
 
 //    /**
