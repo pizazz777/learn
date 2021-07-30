@@ -191,10 +191,10 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
     public GetResponse getDoc(String index, String docId) throws IOException {
         GetRequest request = new GetRequest(index, docId);
         GetResponse response = client.get(request, RequestOptions.DEFAULT);
-        if (response.isExists()) {
-            return response;
+        if (!response.isExists()) {
+            throw new IllegalArgumentException("文档不存在!");
         }
-        return null;
+        return response;
     }
 
 
@@ -208,13 +208,8 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
      */
     @Override
     public <T> T getDoc(String index, String docId, Class<T> clz) throws IOException {
-        GetRequest request = new GetRequest(index, docId);
-        GetResponse response = client.get(request, RequestOptions.DEFAULT);
-        if (response.isExists()) {
-            String string = response.getSourceAsString();
-            return JSONObject.parseObject(string, clz);
-        }
-        return null;
+        GetResponse response = getDoc(index, docId);
+        return JSONObject.parseObject(response.getSourceAsString(), clz);
     }
 
     /**
@@ -228,7 +223,7 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
     public <T> T getDoc(String docId, Class<T> clz) throws IOException {
         Document document = clz.getDeclaredAnnotation(Document.class);
         if (Objects.isNull(document)) {
-            throw new IllegalArgumentException("没有设置索性!");
+            throw new IllegalArgumentException("没有设置索引!");
         }
         String indexName = document.indexName();
         return getDoc(indexName, docId, clz);
@@ -282,9 +277,9 @@ public class ElasticsearchRequestImpl implements ElasticsearchRequest {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         // 通配符查询,?匹配单个字符,*匹配多个字符
         // WildcardQueryBuilder wildcardQueryBuilder = QueryBuilders.wildcardQuery(field, value);
-        // 词条查询 注:会对传入的文本原封不动地(不分词)去查询,所以使用该查询需要在建立索引的时候没有使用分词器(no_analyze)
+        // 词条查询 注:会对传入的文本原封不动地(不分词)去查询,所以使用该查询需要在建立索引的时候没有使用分词器(no_analyze);速度快一点
         // TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("remark", "过期手机号码".toLowerCase());
-        // 匹配查询,会对传入的文本进行分词处理后再去查询,部分命中的结果也会按照评分由高到底显示出来
+        // 匹配查询,会对传入的文本进行分词处理后再去查询,部分命中的结果也会按照评分由高到底显示出来,速度要慢一点
         MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery(field, value).analyzer(AnalyzerTypeEnum.ik_max_word.getValue());
         // 短语查询,会先进行分词,然后文档需要包含分词后的所有词并且还要保持这些分词的相对顺序和文档中的一致
         // MatchPhrasePrefixQueryBuilder matchPhrasePrefixQueryBuilder = QueryBuilders.matchPhrasePrefixQuery(field, value);

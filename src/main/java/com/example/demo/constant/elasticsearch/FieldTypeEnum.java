@@ -26,6 +26,7 @@ public enum  FieldTypeEnum {
     Nested("nested"),
     Ip("ip"),
     Attachment("attachment"),
+    // keyword修饰的字段不会分割,也就不会被分词器分词  而text可以
     Keyword("keyword");
 
     private String value;

@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
  * indexName: 索引库的名字,建议以项目的名称命名
  * type: 类型,建议以实体的名称命名
  * shards: 默认分区数
- * replica: 每个分区默认的备份数
+ * replica: 每个分区默认的副本
  * refreshInterval: 刷新间隔
  * indexStoreType: 索引文件存储类型
  * createIndex: 是否创建索引

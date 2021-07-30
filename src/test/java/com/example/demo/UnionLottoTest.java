@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.huang.util.lang.MathUtil;
 import com.huang.util.time.DateUtil;
 import lombok.AllArgsConstructor;
@@ -76,7 +77,7 @@ public class UnionLottoTest {
         // 打乱顺序
         Collections.shuffle(ballNumberList);
         // 生成球号
-        List<Integer> retBallList = Lists.newArrayList();
+        Set<Integer> retBallList = Sets.newHashSet();
         int size = 0;
         while (size < number) {
             // 0.0-1.0的伪随机数
@@ -86,10 +87,8 @@ public class UnionLottoTest {
             index = index < 0 ? 0 : index;
             Integer ballNumber = ballNumberList.get(index);
             // 不能添加重复的
-            if (!retBallList.contains(ballNumber)) {
-                retBallList.add(ballNumber);
-                size++;
-            }
+            retBallList.add(ballNumber);
+            size++;
         }
         // 为了美观,个位数在前面补0
         return retBallList.stream().sorted().map(item -> StringUtils.leftPad(String.valueOf(item), 2, "0")).collect(Collectors.toList());
