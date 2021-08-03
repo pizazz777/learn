@@ -16,7 +16,7 @@
         * 文件上传
         * Swagger2
         * Activiti工作流
-        * Elasticsearch全文搜索
+        * Elasticsearch7.6.x全文搜索
         * Quartz定时器
         * 视频转换
         * 多线程
@@ -24,7 +24,6 @@
 
     * 待完成功能
         
-        * docker
         * jenkins, kubernetes
         * Redis分布式缓存
         * 消息队列 RabbitMQ Kafka

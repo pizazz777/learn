@@ -1,11 +1,14 @@
 package 设计模式.观察者模式;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author administrator
  * @version 1.0.0
  * @date 2021/06/01
  * @description
  */
+@EqualsAndHashCode
 public class User implements Observer {
 
     private String name;

@@ -8,7 +8,6 @@ package 设计模式.责任链模式;
  */
 public class SubjectOneServiceImpl<T> extends ServiceImpl<T> implements SubjectService<T> {
 
-
     /**
      * 考试
      *

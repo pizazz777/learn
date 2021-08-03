@@ -30,15 +30,13 @@ public class JsoupTest {
 
     public static void main(String[] args) throws IOException {
         String name = "";
-//         name = "大丰打更人";
-//        name = "人魔之路";
-//        name = "北渊仙族";
+//         name = "大奉打更人";
 //        name = "韩式仙路";
 //        name = "废土";
 //        name = "教授的日常小男友";
 //        name = "出生就被包养的龙";
 //        name = "逐道长青";
-        name = "青莲之巅";
+//        name = "青莲之巅";
 //        name = "青云仙途";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
@@ -90,7 +88,6 @@ public class JsoupTest {
         }
         System.out.println("最新的啦!");
     }
-
 
     private static Document connect(String url) throws IOException {
         return Jsoup.connect(url)

@@ -1,0 +1,23 @@
+Nginx提供的负载均衡有两种:
+	内置策略: 轮询,权重,IPHash
+	扩展策略: 自定义
+
+反向代理,负载均衡,动静分离
+
+Linux下的Nginx命令
+cd /usr/local/nginx/sbin/
+./nginx				启动
+./nginx -s stop		停止
+./nginx -s quit		安全退出
+./nginx -s reload	重新加载配置文件
+ps aux|grep nginx 	查看nginx进程
+
+
+
+
+
+
+
+
+
+

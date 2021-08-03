@@ -155,8 +155,8 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(redisProperties.getJedis().getPool().getMaxIdle());
-        jedisPoolConfig.setMaxTotal(redisProperties.getJedis().getPool().getMaxActive());
+        jedisPoolConfig.setMaxIdle(redisProperties.getLettuce().getPool().getMaxIdle());
+        jedisPoolConfig.setMaxTotal(redisProperties.getLettuce().getPool().getMaxActive());
         return jedisPoolConfig;
     }
 

@@ -9,62 +9,79 @@
 	request.doc(JSON.toJSONString(object), XContentType.JSON);
 3. 查询报错ORA-00918: column ambiguously defined
 	可能是查询结果的两个字段用了同一个别名
+4. idea连接不上MySQL数据库
+	在URL后面加serverTimezone=Asia/Shanghai
 ====================================================================================================================================================	
 	
 	
 	
 =====================================================================命令积累=====================================================================
 
-Linux 命令积累
+Linux 命令
 
-1. 查找文件位置
+# 查找文件位置
 whereis 文件名
-2. 查找命令位置
+# 查找命令位置
 which virtualenvwrapper.sh
-3. 切换用户到root
+# 切换用户到root
 sudo -i
-4. 卸载使用pip安装的软件
+# 卸载使用pip安装的软件
 pip uninstall 软件名
-5. 查询jar包服务
+# 查看服务
+ps -ef|grep 服务名
+# 查询jar包服务
 ps -ef|grep /usr/local/gis.jar
-6. 启动jar包服务
+# 启动jar包服务
 nohup java -jar /usr/local/gis.jar >/usr/local/gis-logs.txt 2>&1 &
-7. 查看文件内容
+# 查看文件内容
 cat 文件名
-8. 打开文件
+# 打开文件
 vi 文件名
-9. 查看当前用户
+# 编辑文件
+	使用vim知识进入了命令模式,i切换到输入模式,esc退出输入模式,切换到命令模式, 使用冒号+wq :wq退出命令模式
+vim 文件名
+# 查看当前用户
 who
-10. 从root用户切换到普通用户
+# 从root用户切换到普通用户
 su -用户名
-11. 将文件所有者改为指定用户
+# 将文件所有者改为指定用户
 chown 用户名 文件路径/文件名
-12. 查看ss端口服务是否正常
+# 查看ss端口服务是否正常
 netstat -autn
-13. 查看文件夹大小
+# 查看文件夹大小
 du -sh
+# EOF用法
+<<EOF   ##开始
+EOF		##结束	[EOF也可以为自定义字符串]
+< :输入重定向
+> :输出重定向,会覆盖之前的内容
+>> :输出重定向,进行追加,不会覆盖之前内容
+<< :标准输入来自命令行的一对分隔号的中间内容
+#解压文件
+tar -zxvf 文件名
 
 shadowsocks相关命令
 1. 卸载shadowsocks
 pip uninstall shadowsocks
 
 Open Office相关命令
-1. 查看进程
+# 查看进程
 ps -ef|grep soffice / netstat -lnp |grep 8100 / netstat -anp|grep 8100
-2. 杀死进程
+# 杀死进程
 sudo kill -9 进程号
 
 windows命令积累
-1. 查看端口
+# 查看端口
 netstat -ano|findstr "端口号"
-2. 通过端口查进程
+# 通过端口查进程
 tasklist | findstr 进程号
-3. 杀死进程
+# 杀死进程
 taskkill /f /pid 进程号
 
 
 Oracle命令
-1. Oracle锁表查询
+
+# Oracle锁表查询
 SELECT t2.username,t2.sid,t2.serial#,t3.object_name,t2.OSUSER,t2.MACHINE,t2.PROGRAM,t2.LOGON_TIME,t2.COMMAND,t2.LOCKWAIT,t2.SADDR,
 t2.PADDR,t2.TADDR,t2.SQL_ADDRESS,t1.LOCKED_MODE 
 FROM v$locked_object t1,v$session t2,dba_objects t3 
@@ -72,11 +89,95 @@ WHERE t1.session_id = t2.sid
 AND t1.object_id = t3.object_id 
 ORDER BY t2.logon_time
 
-2. Oracle锁表解锁
+# Oracle锁表解锁
 alter system kill session 'sid,seial#';
 
-3. 查看Oracle数据文件的大小
+# 查看Oracle数据文件的大小
 SELECT ROUND(SUM(BYTES)/1024/1024/1024,2)||'GB' FROM DBA_DATA_FILES
+
+# 查看重复数据
+select field_name from table_name group by field_name having count(1) > 1
+
+
+Docker镜像命令
+# 启动 docker
+systemctl start docker
+# 停止 docker
+systemctl stop docker
+# 重启 docker
+systemctl restart docker
+# 设置开机启动
+systemctl enable docker
+# 查看 docker 状态
+systemctl status docker
+# 查看 docker 内容器的运行状态
+docker stats
+# 查看 docker 概要信息
+docker info
+# 查看 docker 帮助文档
+docker --help
+# 镜像查找
+docker search 镜像名		示例:docker search java
+# 查看docker版本
+docker version / docker -v
+# 下载镜像
+docker pull 镜像名:TAG	示例:docker pull java:8
+# 删除镜像
+docker rmi -f 镜像ID或者镜像名:TAG
+# 查看所有镜像
+docker image ls
+# 访问容器
+curl localhost:端口号
+
+Docker容器命令
+# 启动容器
+docker run --name xxx -d -p 宿主机端口:容器端口 镜像名
+	--name 指定容器名,可自定义,不指定自动命名
+	-i 以交互模式运行容器
+	-t 分配一个伪终端,即命令行,通常-it组合使用
+	-d 后台运行
+	-p 指定映射端口,将主机端口映射到容器内的端口  大写"P"随机映射端口
+	-v 指定挂在主机目录到容器目录,默认为rw读写模式,ro表示只读
+# 查看所有的容器
+docker container ps
+# 查看运行中的容器
+docker ps -aq
+	-a 查看所有容器
+	-q 只查看容器的ID
+# 重启容器
+docker restart 容器ID或容器名:TAG
+# 查看容器日志
+docker container logs --tail 20 容器名	
+# 进入容器
+docker exec -it 容器ID或容器名 /bin/bash		# 方式一	进入容器后开启一个新的终端,可以在里面操作
+	进入正在进行的容器并且开启交互模式终端
+	/bin/bash是固有写法,作用是因为docker后台必须运行一个进程,否则容器就会退出,在这里表示启动容器后启动bash
+	也可以用docker exec在运行中的容器执行命令
+docker attach 容器ID或容器名   # 方式二		进入容器正在执行的终端,不会启动新的进程
+
+
+# 停止容器并退出
+exit
+# 不停止容器退出
+Ctrl+P+Q
+# 删除容器
+docker rm 容器ID或容器名
+docker rm -f $(docker ps -aq)  -- 递归删除全部容器
+# 拷贝文件
+docker cp 主机文件路径 容器ID或容器名:容器路径	--主机中的文件拷贝到容器中
+docker cp 容器ID或容器名:容器路径 主机文件路径	--容器中的文件拷贝到主机中
+# 查看容器中进程信息
+docker top 容器ID或容器名
+# 查看容器元信息
+docker inspect 容器名
+# 查看CPU状态
+docker stats
+
+docker file 编写
+FROM 引用依赖镜像
+ENV	配置环境变量(等同于windows的环境变量 JAVA HOME)
+RUN 跟上一个想要执行的命令(比如创建一个文件夹 mkdir -p "abc")
+EXPOSE 开放的端口号
 
 ====================================================================================================================================================
 
@@ -86,7 +187,7 @@ SELECT ROUND(SUM(BYTES)/1024/1024/1024,2)||'GB' FROM DBA_DATA_FILES
 
 lombok中 @Data = @Getter + @Setter + @ToString + @EqualsAndHashCode + @RequiredArgsConstructor
 
-1. 两个List根据某个字段属性值相同处理逻辑
+#. 两个List根据某个字段属性值相同处理逻辑
 	progressResultList = progressResultList.stream()
 		.map(e -> progressCompleteList.stream()
 			.filter(k -> Objects.equals(e.getKeyName(), k.getItemName()))
@@ -96,14 +197,17 @@ lombok中 @Data = @Getter + @Setter + @ToString + @EqualsAndHashCode + @Required
 				return e;
 			}).orElse(e))
 		.collect(Collectors.toList());
-2. 一个对象列表根据其中某个字段进程去重
+#. 一个对象列表根据其中某个字段进程去重
 
-3. 参数非空校验
+#. 参数非空校验
 	java.util.Objects.requireNonNull(value, "key must not be null");
 	
-4. stream对列表进行多字段分组
-	list.stream()..collect(Collectors.groupingBy(Object::getField1, Collectors.groupingBy(Object::getField2)));
-
+#. stream对列表进行多字段分组
+	list.stream().collect(Collectors.groupingBy(Object::getField1, Collectors.groupingBy(Object::getField2)));
+	
+#. stream对列表分组并统计每个字段出现的次数
+	list.stream().collect(Collectors.groupingBy(Object::getField, Collectors.counting()));
+		
 ====================================================================================================================================================
 
 
@@ -125,13 +229,32 @@ http://www.hostbuf.com/t/988.html
 banner生成网站
 https://www.degraeve.com/img2txt.php
 maven repository 版本
-https://mvnrepository.com/search
+https://mvnrepository.com
 windows10系统停止操作自动休眠
 https://zhidao.baidu.com/question/2080103391483178908.html
 FFmpeg视频操作
 https://blog.csdn.net/hemingwang0902/article/details/4382429
 javaCV操作摄像头,视频推流/拉流
 https://blog.csdn.net/eguid_1/article/details/52680802
+mall商城网站学习(超值)
+http://www.macrozheng.com
+https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzU1Nzg4NjgyMw==&action=getalbum&album_id=1347208014788526081&scene=173&from_msgid=2247483776&from_itemidx=1&count=3#wechat_redirect
+Nacos学习
+https://blog.csdn.net/qq_33619378
+安装erlang和rabbitmq及操作
+https://www.freesion.com/article/867628421/
+Sa-Token权限验证框架
+http://sa-token.dev33.cn/doc/index.html#/
+idea的插件官网
+http://plugins.jetbrains.com/
+Mybatis源码分析
+https://www.jianshu.com/p/cb9c1297f8ec
+阿里云 云效 maven仓库
+https://packages.aliyun.com/maven
+学习笔记
+https://u19900101.github.io/#blog
+Redis中文官网
+http://www.redis.cn
 
 ====================================================================================================================================================
 
@@ -159,6 +282,11 @@ JavaDoc					-------添加注解之后生成java文档
 RegexpTester			-------正则表达式测试工具
 BackgroundImage			-------背景图片
 String Manipulation		-------操作字符串(例如格式化,转为驼峰,中横线)
+AiXcoder Code Completer	-------较强大的代码补全,预测功能
+Java Stream Debugger	-------java8的Streeam API debug功能
+easy_javadoc			-------快速为java的类,方法,属性生成注释	  快捷键：crtl + \
+Key promoter X			-------idea的快捷键提示插件
+docker					-------docker插件
 Alibaba Java Coding Guidelines			-------阿里巴巴提供的java代码格式检查
 ====================================================================================================================================================
 
@@ -182,9 +310,10 @@ Alibaba Java Coding Guidelines			-------阿里巴巴提供的java代码格式检
 		2. 执行命令, 注意版本号
 		elasticsearch-plugin.bat install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.6.0/elasticsearch-analysis-ik-7.6.0.zip
 
-4. maven打包命令
-	mvn package -Dmaven.test.skip=true
-	clean package -Dmaven.test.skip=true
+4. maven命令
+	mvn package -Dmaven.test.skip=true		--打包
+	clean package -Dmaven.test.skip=true	--打包
+	mvn clean deploy -Dmaven.test.skip		--部署
 	
 5. idea移动包之后提示Cannot access
 	File -> Invalidate Caches / Restart... -> INVALIDATE AND RESTART
@@ -203,6 +332,25 @@ Alibaba Java Coding Guidelines			-------阿里巴巴提供的java代码格式检
 	exp xue/123456@localhost:1521/orcl file=G:\Oracle\backups_20180718.dmp owner=xue
 	导入表结构和数据
 	imp xue/123456@localhost:1521/orcl file=G:\Oracle\backups_20180718.dmp full=y ignore=y
+	
+8. idea多模块使用RUN DashBoard启动
+	打开.idea/workspace.xml
+	搜索RunDashboard
+	在<component name="RunDashboard">标签中添加如下配置：
+	<option name="configurationTypes">
+		<set>
+			<option value="SpringBootApplicationConfigurationType" />
+		</set>
+	</option>
+	
+9. 阿里云的镜像加速器
+	{
+	  "registry-mirrors": ["https://6d7piqrh.mirror.aliyuncs.com"]
+	}
+
+10. 乐观锁
+	总结一条sql: update table set value=newValue, version=versionValue+1 where version=versionValue;
+	
 ====================================================================================================================================================	
 
 

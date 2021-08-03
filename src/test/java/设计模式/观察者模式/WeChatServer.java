@@ -38,6 +38,7 @@ public class WeChatServer implements Observerable {
     @Override
     public void removeObserver(Observer observer) {
         if (!vector.isEmpty()) {
+            // 这个移除需要重写equals方法
             vector.remove(observer);
         }
     }

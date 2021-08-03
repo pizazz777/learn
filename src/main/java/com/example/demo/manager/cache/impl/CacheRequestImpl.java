@@ -5,7 +5,7 @@ import com.example.demo.entity.system.SysConfigDO;
 import com.example.demo.manager.cache.CacheRequest;
 import com.example.demo.properties.ProjectProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -54,6 +54,30 @@ public class CacheRequestImpl implements CacheRequest {
     public void putValue(String key, Object value) {
         redisTemplate.opsForValue().set(getCacheKeyByKey(key), value, generateCacheTimeOut());
     }
+
+//    public void test() {
+//
+//        // ############################## Redis五大基本类型 ####################################
+//        // 操作String的
+//        ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
+//        // 操作list的
+//        ListOperations<String, Object> opsForList = redisTemplate.opsForList();
+//        // 操作Set的
+//        SetOperations<String, Object> opsForSet = redisTemplate.opsForSet();
+//        // 操作Hash的
+//        HashOperations<String, Object, Object> opsForHash = redisTemplate.opsForHash();
+//        // 操作Zset的
+//        ZSetOperations<String, Object> opsForZSet = redisTemplate.opsForZSet();
+//
+//        // ############################## Redis三种特殊类型 ####################################
+//        // 操作地理位置geo的
+//        GeoOperations<String, Object> opsForGeo = redisTemplate.opsForGeo();
+//        // 操作数据结构的
+//        HyperLogLogOperations<String, Object> opsForHyperLogLog = redisTemplate.opsForHyperLogLog();
+//        //
+//        StreamOperations<String, Object, Object> opsForStream = redisTemplate.opsForStream();
+//
+//    }
 
 
     /**
