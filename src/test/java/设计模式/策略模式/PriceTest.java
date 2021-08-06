@@ -12,7 +12,7 @@ public class PriceTest {
 
     @Test
     public void test() {
-        AdvancedMemberStrategy strategy = new AdvancedMemberStrategy();
+        MemberStrategy strategy = new AdvancedMemberStrategy();
         Price price = new Price(strategy);
         double quote = price.quote(10);
         System.out.println(quote);

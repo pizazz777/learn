@@ -45,6 +45,7 @@
         <javacpp-presets.ffmpeg.version>4.1-${javacpp.version}</javacpp-presets.ffmpeg.version>
         <javacpp-presets.opencv.version>4.0.1-${javacpp.version}</javacpp-presets.opencv.version>
         <huang-util.version>1.0.0-SNAPSHOT</huang-util.version>
+        <minio.version>8.0.0</minio.version>
     </properties>
 
     <dependencies>
@@ -391,6 +392,12 @@
             <groupId>com.huang</groupId>
             <artifactId>util</artifactId>
             <version>${huang-util.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
         </dependency>
 
     </dependencies>

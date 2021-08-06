@@ -32,6 +32,7 @@ public class AutoConfig {
 
     @Bean
     @ConditionalOnMissingBean
+    // ConditionalOnMissingBean 不存在使用该bean
     public ExcelReader excelReader() {
         return new DefaultExcelReader();
     }

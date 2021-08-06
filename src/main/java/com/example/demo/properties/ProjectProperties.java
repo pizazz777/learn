@@ -101,6 +101,10 @@ public class ProjectProperties {
      * 音视频
      */
     private Video video;
+    /**
+     * 文件对象存储
+     */
+    private Minio minio;
 
     @Data
     public static class Video {
@@ -278,5 +282,26 @@ public class ProjectProperties {
 
     }
 
+    @Data
+    public static class Minio {
+
+        /**
+         * 服务端访问地址
+         */
+        private String endPoint;
+        /**
+         * 访问账号
+         */
+        private String accessKey;
+        /**
+         * 访问密码
+         */
+        private String secretKey;
+        /**
+         * 分区大小
+         */
+        private Long partSize;
+
+    }
 
 }

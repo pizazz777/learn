@@ -1,7 +1,5 @@
 package 设计模式.适配器模式.对象适配器;
 
-import 设计模式.适配器模式.类的适配器.Sourceable;
-
 /**
  * @author administrator
  * @version 1.0.0

@@ -167,7 +167,6 @@ spring:
       # 上传大小限制
       max-file-size: 100MB
       max-request-size: 100MB
-      enabled: true
       file-size-threshold: 0
   mvc:
     # 设定静态文件路径，js,css等

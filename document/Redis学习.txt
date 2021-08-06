@@ -170,7 +170,7 @@ Redis是单线程的,基于内存操作,CPU不是Redis性能瓶颈,Redis的瓶�
 		getbit key offset		获取值
 		bitcount key 			统计value为1的
 		
-	数据结构hyperloglogs
+	数据结构hyperloglog
 		PFadd key element ... 	添加值
 		PFcount key				查看key中元素的数量
 		PFmerge destkey sourcekey1 sourcekey2	合并1,2到目标,不重复
