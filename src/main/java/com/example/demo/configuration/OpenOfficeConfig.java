@@ -54,7 +54,7 @@ public class OpenOfficeConfig {
         configuration.setOfficeHome(projectProperties.getOffice().getOpenOffice().getPath());
         // 设置端口号
         configuration.setPortNumber(projectProperties.getOffice().getOpenOffice().getPort());
-        // 设置转换超时时间，5分中
+        // 设置转换超时时间，5分钟
         configuration.setTaskExecutionTimeout(1000 * 60 * 5L);
         // 设置队列超时时间 1天
         configuration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);

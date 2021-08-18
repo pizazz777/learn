@@ -37,6 +37,7 @@ public class JsoupTest {
 //        name = "逐道长青";
 //        name = "青莲之巅";
 //        name = "青云仙途";
+        name = "保护我方族长";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);

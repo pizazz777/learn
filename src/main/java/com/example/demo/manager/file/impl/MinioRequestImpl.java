@@ -8,6 +8,8 @@ import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Decoder;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @description 文件对象存储操作类
  */
 @Component
+@ConditionalOnBean(MinioClient.class)
 public class MinioRequestImpl implements MinioRequest {
 
     private MinioClient client;

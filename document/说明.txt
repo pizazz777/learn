@@ -1,0 +1,12 @@
+启动本项目需要先启动中间件 Redis + Elasticsearch
+Redis启动:
+    redis目录下执行 redis-server.exe redis.windows.conf
+Elasticsearch启动:
+    D:\java\elasticsearch-7.6.0\bin\elasticsearch.bat 双击启动
+Minio启动:
+    minio.exe目录下执行命令 minio.exe server D:\java\minio --console-address "ip:port" --address "ip:port"
+    minio.exe server D:\java\minio --console-address "192.168.2.134:9003" --address "192.168.2.134:9002"
+    D:\java\minio                   # 代表文件保存路径
+    --console-address "ip:port"   	# 页面控制台访问端口
+    --address "ip:port"				# 服务端访问端口[Spring项目的minio client应该配置该信息]
+    如果不按照上面的命令启动,账号密码正确也会报错

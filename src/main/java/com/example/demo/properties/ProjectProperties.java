@@ -290,6 +290,10 @@ public class ProjectProperties {
          */
         private String endPoint;
         /**
+         * 服务端访问端口
+         */
+        private Integer endPort;
+        /**
          * 访问账号
          */
         private String accessKey;

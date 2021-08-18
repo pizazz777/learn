@@ -205,7 +205,7 @@ logging:
     root: info
   file:
     path: log/logs
-# 对swagger的增强   访问方式: http://127.0.0.1:9000/doc.html
+# 对swagger的增强   访问方式: http://ip:port/doc.html
 knife4j:
   # 开启增强配置
   enable: true

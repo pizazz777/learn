@@ -81,7 +81,7 @@ project:
     m-encoder-path: D:/java/MPlayer-1.4
   minio:
     # 服务端访问地址
-    end-point: 192.168.2.134:9002
+    end-point: http://192.168.2.134:9002
     # 访问账号
     access-key: admin123
     # 访问密码

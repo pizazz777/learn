@@ -394,6 +394,7 @@
             <version>${huang-util.version}</version>
         </dependency>
 
+        <!-- 操作minio oos对象存储服务 -->
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
