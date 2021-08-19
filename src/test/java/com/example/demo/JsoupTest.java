@@ -30,14 +30,14 @@ public class JsoupTest {
 
     public static void main(String[] args) throws IOException {
         String name = "";
-//        name = "韩式仙路";
+        name = "韩式仙路";
 //        name = "废土";
 //        name = "教授的日常小男友";
 //        name = "出生就被包养的龙";
 //        name = "逐道长青";
 //        name = "青莲之巅";
 //        name = "青云仙途";
-        name = "保护我方族长";
+//        name = "保护我方族长";
         String read = read(name, "");
         int index = read.lastIndexOf("/") + 1;
         String preUrl = read.substring(0, index);
