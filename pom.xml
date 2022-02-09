@@ -33,7 +33,7 @@
         <itextpdf.version>5.5.13</itextpdf.version>
         <itext-asian.version>5.2.0</itext-asian.version>
         <jodconverter.version>1.0.5</jodconverter.version>
-        <shiro.version>1.4.2</shiro.version>
+        <shiro.version>1.7.1</shiro.version>
         <shiro-redis.version>3.2.3</shiro-redis.version>
         <mybatis.version>3.5.0</mybatis.version>
         <mybatis-spring.version>2.0.0</mybatis-spring.version>
